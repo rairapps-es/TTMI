@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Telegram Tycoon: Master Infinite</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root { --bg: #050508; --cyan: #00f3ff; --gold: #ffd700; --mag: #ff00ff; --red: #ff3333; --green: #00ff66; --purple: #9d4edd; --orange: #ff9f1c; }
+        body { background: #050508; color: #fff; font-family: 'Courier New', monospace; display: flex; justify-content: center; padding: 10px; overflow-x: hidden; }
+        .game-container { width: 100%; max-width: 500px; padding: 20px; border: 1px solid #333; border-radius: 15px; position: relative; background: #050508; }
+        .btn-game { width: 100%; padding: 8px; margin: 3px 0; background: #111; border: 1px solid var(--cyan); color: #fff; cursor: pointer; border-radius: 5px; font-size: 0.8rem; position: relative; overflow: hidden; }
+        .btn-game:disabled { border-color: #444; color: #666; cursor: not-allowed; }
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin: 10px 0; }
+        .stat-card { border: 1px solid #333; padding: 8px; text-align: center; font-size: 0.7rem; position: relative; }
+        #log { height: 100px; overflow-y: auto; font-size: 0.7rem; color: #888; border-top: 1px solid #333; padding-top: 5px; margin-top: 10px; }
+        
+        /* Sistema de Progresos Dinámico por JS */
+        .cooldown-bar { position: absolute; bottom: 0; left: 0; height: 3px; background: rgba(0, 243, 255, 0.8); width: 0%; }
+        
+        .golden-deals-box { border: 2px solid var(--gold); border-radius: 10px; padding: 12px; margin: 12px 0; background: linear-gradient(135deg, #110f05 0%, #050508 100%); }
+        .deal-item { background: rgba(20, 18, 10, 0.7); border: 1px solid #443a15; border-radius: 6px; padding: 8px; margin: 6px 0; font-size: 0.72rem; }
+        .deal-header { font-weight: bold; color: var(--gold); display: flex; justify-content: space-between; margin-bottom: 3px; }
+        .btn-buy-deal { background: #152915; border: 1px solid var(--green); color: #fff; width: 100%; padding: 5px; margin-top: 4px; border-radius: 4px; cursor: pointer; font-size: 0.7rem; }
+        
+        .time-badge { background: #0c0d14; border: 1px solid var(--cyan); border-radius: 4px; padding: 4px 10px; font-size: 0.75rem; text-align: center; color: var(--cyan); margin-bottom: 10px; font-weight: bold; }
+        .coin-particle { position: fixed; font-size: 1.2rem; z-index: 9999; pointer-events: none; transition: transform 0.8s ease-out, opacity 0.8s; opacity: 1; }
+        .confetti-particle { position: fixed; width: 8px; height: 8px; z-index: 9998; pointer-events: none; border-radius: 50%; }
+        
+        .reaction-display { text-align: center; background: #111; font-size: 0.8rem; padding: 4px; margin: 5px 0; border: 1px solid #222; border-radius: 5px; }
+        .epic-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 10000; display: none; }
+        .epic-box { background: #111; border: 2px solid var(--gold); padding: 30px; text-align: center; border-radius: 10px; }
+        .premium-input { background: #111; border: 1px solid var(--gold); color: #fff; padding: 8px; width: calc(100% - 18px); margin-bottom: 5px; font-family: monospace; text-align: center; }
+
+        .tg-profile-badge { display: flex; align-items: center; background: #111; border: 1px solid #333; border-radius: 30px; padding: 5px 12px; position: absolute; top: 15px; right: 20px; font-size: 0.65rem; }
+        .tg-avatar { width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--cyan); margin-right: 8px; background: #222; }
+
+        .character-box { margin: 10px 0; padding: 10px; border: 1px solid #444; border-radius: 8px; background: #0b0b10; font-size: 0.75rem; }
+        .character-title { font-weight: bold; margin-bottom: 5px; display: flex; justify-content: space-between; }
+
+        .missions-box { border: 2px dashed var(--cyan); background: #060d14; border-radius: 8px; padding: 10px; margin: 10px 0; }
+        .mission-item { background: rgba(0, 243, 255, 0.05); border: 1px solid #143542; padding: 6px; margin: 5px 0; border-radius: 4px; font-size: 0.68rem; display: flex; justify-content: space-between; align-items: center; }
+        .mission-info { display: flex; flex-direction: column; width: 70%; }
+        .mission-reward-pill { font-size: 0.58rem; color: var(--gold); margin-top: 2px; }
+        .cosmetic-inventory { background: #100614; border: 1px solid var(--mag); border-radius: 8px; padding: 10px; margin: 10px 0; font-size: 0.7rem; }
+        .cosmetic-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 5px; }
+        .cosmetic-item { border: 1px solid #3d1b4f; background: #170b1e; padding: 4px; text-align: center; font-size: 0.62rem; cursor: pointer; border-radius: 3px; }
+        .cosmetic-item.equipped { border-color: var(--green); box-shadow: 0 0 5px var(--green); }
+
+        .fanatics-box { background: #0b1410; border: 1px dashed var(--green); border-radius: 8px; padding: 10px; margin: 10px 0; font-size: 0.7rem; }
+        .fanatic-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid #132b1e; }
+    </style>
+</head>
+<body>
+
+<div class="epic-overlay" id="epic-modal">
+    <div class="epic-box">
+        <h2 id="epic-title" style="color: var(--gold); margin: 0 0 10px 0; font-size: 1.8rem;">🏆 ¡ÉPICO!</h2>
+        <p id="epic-message" style="font-size: 1rem; color: #fff;"></p>
+        <button class="btn-game" style="border-color: var(--gold); width: auto; padding: 10px 30px;" onclick="cerrarEpic()">CONTINUAR</button>
+    </div>
+</div>
+
+<div class="game-container">
+    <div class="tg-profile-badge" id="tg-user-badge">
+        <img src="https://i.imgur.com/w2Y7g9W.png" alt="avatar" class="tg-avatar" id="user-avatar">
+        <span id="user-name" style="color: var(--cyan);">@TycoonPlayer</span>
+    </div>
+
+    <h2 style="margin-top: 5px;">📱 TYCOON INFINITE</h2>
+    
+    <div class="time-badge" id="game-clock">📆 Año 1, Mes 1, Día 1</div>
+    <div style="height:80px;"><canvas id="chart"></canvas></div>
+    <div class="reaction-display" id="reactions-ui">Último Post: Esperando actividad...</div>
+
+    <div class="stat-grid">
+        <div class="stat-card">Subs: <strong id="subs">0</strong></div>
+        <div class="stat-card" id="cash-card">Cash: $<strong id="cash">1000</strong></div>
+        <div class="stat-card">⭐ Estrellas: <strong id="stars-ui" style="color:var(--gold);">0</strong></div>
+        <div class="stat-card">Rep: <strong id="rep">100</strong>%</div>
+    </div>
+
+    <div class="fanatics-box">
+        <strong style="color: var(--green)">⭐ COMUNIDAD DE FANÁTICOS (VIP)</strong>
+        <div id="fanatics-list-ui"></div>
+    </div>
+
+    <div class="missions-box">
+        <strong style="color: var(--cyan)">📡 TERMINAL DE MISIONES DIARIAS</strong>
+        <div id="daily-missions-list"></div>
+    </div>
+
+    <div class="cosmetic-inventory">
+        <strong style="color: var(--mag)">✨ ARMARIO COSMÉTICO</strong>
+        <div class="cosmetic-grid" id="cosmetic-grid-list"></div>
+    </div>
+
+    <div class="character-box" style="border-color: var(--purple); background: #0b0714;">
+        <strong style="color: var(--purple)">🎲 LA TABERNA DEL ALGORITMO</strong>
+        <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 5px;">
+            <div>
+                <div class="character-title"><span style="color: var(--cyan)">🎲 Dados "Siete Seguro"</span> <span>$100</span></div>
+                <button class="btn-game" style="border-color: var(--cyan);" onclick="jugarTaberna('dados', event)">Lanzar Dados</button>
+            </div>
+            <div>
+                <div class="character-title"><span style="color: var(--orange)">🎯 Tiro al Arco Clásico</span> <span>$300</span></div>
+                <button class="btn-game" style="border-color: var(--orange);" onclick="jugarTaberna('arco', event)">Disparar Flecha</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="character-box" style="border-color: var(--red); background: #120505;">
+        <strong style="color: var(--red)">🐀 EL PRESTAMISTA & BANCO CENTRAL</strong>
+        <button class="btn-game" style="border-color: var(--gold); margin: 5px 0;" onclick="canjearEstrellasBanco(event)">💱 Convertir 1,000 ⭐ en +$1,500 Cash</button>
+        <div id="loan-status-ui" style="font-size:0.68rem; color:var(--orange); font-weight:bold; margin-bottom:5px;">Sin deudas activas.</div>
+        <button class="btn-game" style="border-color: var(--red);" onclick="solicitarCredito(1000, 100, 10)">Solicitar Crédito Micro ($1000)</button>
+        <button class="btn-game" style="border-color: var(--green);" id="btn-pay-loan" disabled onclick="liquidarDeudaCompleta()">Liquidar Deuda</button>
+    </div>
+
+    <div class="golden-deals-box">
+        <strong style="color: var(--gold)">💼 LISTA GOLDEN: OFERTAS EXCLUSIVAS</strong>
+        <div id="rair-deals-list"></div>
+    </div>
+
+    <div class="character-box" style="border-color: var(--orange);">
+        <strong style="color: var(--orange)">🛠️ OPTIMIZACIÓN DE CANALES</strong>
+        <div style="margin-top: 5px;">
+            <div class="character-title"><span style="color: var(--cyan)">🎨 Diseño Pro</span> <span>$600</span></div>
+            <button class="btn-game" id="btn-tune-diseno" onclick="comprarTuning('diseno', 600, event)">
+                <span class="btn-txt">Optimizar Identidad Visual</span>
+                <div class="cooldown-bar" id="bar-tune-diseno"></div>
+            </button>
+        </div>
+        <div style="margin-top: 5px;">
+            <div class="character-title"><span style="color: var(--mag)">📦 Infoproductos</span> <span>$1,000</span></div>
+            <button class="btn-game" id="btn-infoproducto" onclick="lanzarInfoproducto(event)">
+                <span class="btn-txt">Lanzar Ebook Informativo</span>
+                <div class="cooldown-bar" id="bar-infoproducto"></div>
+            </button>
+        </div>
+    </div>
+
+    <div class="character-box" style="border-color: var(--cyan); background: #050b14;">
+        <strong style="color: var(--cyan)">🚀 ACCIONES PRINCIPALES DE RED</strong>
+        <button class="btn-game" style="margin-top:5px;" onclick="accion('post', event)">Publicar Contenido</button>
+        <button class="btn-game" onclick="accion('copyright', event)" style="border-color:var(--red)">Publicar (Copyright) ⚠️</button>
+        <button class="btn-game" onclick="accion('ads', event)" style="border-color:var(--mag)">Vender Ads</button>
+    </div>
+
+    <button class="btn-game" onclick="hacerPrestigio()" style="border-color:var(--gold); margin-top:10px; font-weight: bold;">🔥 HACER PRESTIGIO (5k Subs)</button>
+    <div id="log">Imperio iniciado.</div>
+</div>
+
+<script>
+    let bancoMisionesPool = [
+        { id: "m1", texto: "Publicar 5 Contenidos masivos", clave: "post", max: 5, rCash: 300, rRep: 5, cosm: null },
+        { id: "m2", texto: "Ejecutar 3 campañas de Ads", clave: "ads", max: 3, rCash: 500, rRep: 2, cosm: null },
+        { id: "m4", texto: "Arriesgarse con 2 publicaciones Copyright", clave: "copyright", max: 2, rCash: 800, rRep: 0, cosm: "Avatar Cyber-Punk" }
+    ];
+
+    let poolCosmeticos = {
+        "Avatar Base": { tipo: "avatar", src: "https://i.imgur.com/w2Y7g9W.png" },
+        "Avatar Cyber-Punk": { tipo: "avatar", src: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150" }
+    };
+
+    let g = { 
+        subs: 0, cash: 1000, stars: 0, rep: 100, prestige: 1, 
+        isBanned: false, tuning: { diseno: false, seo: false },
+        rairDeals: [], tiempo: { anio: 1, mes: 1, dia: 1, ticks: 0 },
+        credito: { deudaActiva: false, capitalOriginal: 0, interesesDiarios: 0, diasRestantes: 0 },
+        misionesActivas: [], cosmeticosDesbloqueados: ["Avatar Base"],
+        cosmeticosEquipados: { avatar: "Avatar Base" },
+        fanaticos: [
+            { nombre: "@CyberDonador99", fanatismo: 85, estrellasDonadas: 0, avatar: "🤖" },
+            { nombre: "@CryptoSoporte_Vx", fanatismo: 92, estrellasDonadas: 0, avatar: "🐋" }
+        ]
+    };
+
+    let cookingQueue = {}; 
+    let chartInstance;
+
+    function renderFanaticosUI() {
+        let container = document.getElementById('fanatics-list-ui');
+        if (!container) return; container.innerHTML = "";
+        g.fanaticos.forEach(f => {
+            container.innerHTML += `<div class="fanatic-row"><span>${f.avatar} <strong>${f.nombre}</strong></span><span style="color:var(--green)">${f.fanatismo}% Fid</span><span style="color:var(--gold)">${f.estrellasDonadas} ⭐</span></div>`;
+        });
+    }
+
+    function canjearEstrellasBanco(event) {
+        if (g.stars < 1000) { log("❌ Exige al menos 1,000 ⭐ Estrellas.", "var(--orange)"); return; }
+        g.stars -= 1000; g.cash += 1500;
+        log("🏛️ BANCO: Cambiaste 1,000 ⭐ por +$1,500 Cash.", "var(--green)");
+        animarMonedas(event); render(); guardarPartida();
+    }
+
+    function simularInteraccionFanaticos() {
+        if (g.isBanned) return;
+        if (Math.random() < 0.5) {
+            let fan = g.fanaticos[Math.floor(Math.random() * g.fanaticos.length)];
+            let est = Math.floor((Math.random() * 50 + 20));
+            g.stars += est; fan.estrellasDonadas += est;
+            log(`💬 ${fan.nombre} donó ${est} ⭐`, "var(--gold)");
+            renderFanaticosUI();
+        }
+    }
+
+    function generarMisionesDiarias() {
+        g.misionesActivas = bancoMisionesPool.map(m => ({...m, progreso: 0, reclamada: false}));
+        renderMisionesUI();
+    }
+
+    function registrarProgresoMision(clave, cantidad = 1) {
+        g.misionesActivas.forEach(m => {
+            if (m.clave === clave && m.progreso < m.max && !m.reclamada) {
+                m.progreso = Math.min(m.max, m.progreso + cantidad);
+            }
+        });
+        renderMisionesUI();
+    }
+
+    function reclamarMision(idx) {
+        let m = g.misionesActivas[idx]; if (!m || m.progreso < m.max || m.reclamada) return;
+        m.reclamada = true; g.cash += m.rCash; g.rep = Math.min(100, g.rep + m.rRep);
+        if (m.cosm && !g.cosmeticosDesbloqueados.includes(m.cosm)) g.cosmeticosDesbloqueados.push(m.cosm);
+        mostrarEpic(`Misión Completada: +$${m.rCash} Cash`);
+        renderMisionesUI(); renderCosmeticosUI(); render(); guardarPartida();
+    }
+
+    function renderMisionesUI() {
+        let container = document.getElementById('daily-missions-list'); if (!container) return; container.innerHTML = "";
+        g.misionesActivas.forEach((m, idx) => {
+            let btnHtml = m.reclamada ? `<button class="btn-game" disabled>OK</button>` : (m.progreso >= m.max ? `<button class="btn-game" onclick="reclamarMision(${idx})">RECLAMAR</button>` : `<button class="btn-game" disabled>${m.progreso}/${m.max}</button>`);
+            container.innerHTML += `<div class="mission-item"><div class="mission-info"><span>${m.texto}</span></div><div style="width:35%">${btnHtml}</div></div>`;
+        });
+    }
+
+    function renderCosmeticosUI() {
+        let container = document.getElementById('cosmetic-grid-list'); if (!container) return; container.innerHTML = "";
+        Object.keys(poolCosmeticos).forEach(name => {
+            let disponible = g.cosmeticosDesbloqueados.includes(name);
+            container.innerHTML += `<div class="cosmetic-item ${g.cosmeticosEquipados.avatar === name ? 'equipped' : ''}">${disponible ? name : '🔒'}</div>`;
+        });
+    }
+
+    function jugarTaberna(juego, event) {
+        if (g.isBanned) return;
+        let costos = { dados: 100, arco: 300 };
+        if (g.cash < costos[juego]) { log("❌ Dinero insuficiente.", "var(--red)"); return; }
+        g.cash -= costos[juego];
+        registrarProgresoMision("taberna", 1);
+        if (Math.random() > 0.5) {
+            let premio = costos[juego] * 2; g.cash += premio;
+            log(`🎉 ¡Ganaste! +$${premio} Cash.`, "var(--green)"); animarMonedas(event);
+        } else { log(`💸 Perdiste la apuesta.`, "var(--red)"); }
+        render(); guardarPartida();
+    }
+
+    function solicitarCredito(capital, interes, plazo) {
+        if (g.credito.deudaActiva) { log("⚠️ Ya tienes una deuda.", "var(--orange)"); return; }
+        g.cash += capital; g.credito = { deudaActiva: true, capitalOriginal: capital, interesesDiarios: interes, diasRestantes: plazo };
+        renderCreditoUI(); render(); guardarPartida();
+    }
+
+    function liquidarDeudaCompleta() {
+        if (!g.credito.deudaActiva || g.cash < g.credito.capitalOriginal) return;
+        g.cash -= g.credito.capitalOriginal; g.credito.deudaActiva = false;
+        renderCreditoUI(); render(); guardarPartida();
+    }
+
+    function renderCreditoUI() {
+        let statusTxt = document.getElementById('loan-status-ui'); let btnPay = document.getElementById('btn-pay-loan');
+        if (g.credito.deudaActiva) { statusTxt.innerText = `⚠️ DEUDA: $${g.credito.capitalOriginal} | ${g.credito.diasRestantes}d`; btnPay.disabled = false; } 
+        else { statusTxt.innerText = "Sin deudas activas."; btnPay.disabled = true; }
+    }
+
+    function startProgressBar(barId, duration, callback) {
+        let bar = document.getElementById(barId);
+        if (!bar) return;
+        let start = null;
+        bar.style.width = "0%";
+        
+        function animate(timestamp) {
+            if (!start) start = timestamp;
+            let progress = timestamp - start;
+            let percent = Math.min((progress / duration) * 100, 100);
+            bar.style.width = percent + "%";
+            if (progress < duration) {
+                requestAnimationFrame(animate);
+            } else {
+                bar.style.width = "0%";
+                callback();
+            }
+        }
+        requestAnimationFrame(animate);
+    }
+
+    function comprarTuning(tipo, costo, event) {
+        if (g.cash < costo) { log("❌ Fondos insuficientes.", "var(--red)"); return; }
+        if (cookingQueue[tipo]) return;
+        
+        g.cash -= costo;
+        cookingQueue[tipo] = true;
+        render();
+
+        startProgressBar(`bar-tune-${tipo}`, 3000, () => {
+            g.tuning[tipo] = true;
+            delete cookingQueue[tipo];
+            log(`🛠️ Optimización [${tipo.toUpperCase()}] completada.`, "var(--cyan)"); 
+            render(); guardarPartida();
+        });
+    }
+
+    function lanzarInfoproducto(event) {
+        let costo = 1000;
+        if (g.cash < costo || cookingQueue['infoproducto']) return;
+        
+        g.cash -= costo;
+        cookingQueue['infoproducto'] = true;
+        render();
+
+        startProgressBar('bar-infoproducto', 4000, () => {
+            g.cash += 2500;
+            delete cookingQueue['infoproducto'];
+            log(`📦 ¡Lanzamiento Exitoso! Generó $2,500`, "var(--mag)"); 
+            render(); guardarPartida();
+        });
+    }
+
+    function avanzarTiempoDeJuego() {
+        g.tiempo.dia++;
+        if (g.tiempo.dia > 30) { g.tiempo.dia = 1; g.tiempo.mes++; }
+        document.getElementById('game-clock').innerText = `📆 Año ${g.tiempo.anio}, Mes ${g.tiempo.mes}, Día ${g.tiempo.dia}`;
+        if(g.credito.deudaActiva) {
+            g.credito.diasRestantes--;
+            g.cash -= g.credito.interesesDiarios;
+            if(g.credito.diasRestantes <= 0) { g.credito.deudaActiva = false; g.subs = Math.max(0, g.subs - 300); }
+            renderCreditoUI();
+        }
+        actualizarGrafico();
+    }
+
+    function accion(tipo, event) {
+        if (g.isBanned) return;
+        if (tipo === 'post') {
+            g.subs += 25; log(`📝 Post publicado. +25 subs.`, "var(--cyan)");
+            registrarProgresoMision("post", 1);
+        } else if (tipo === 'copyright') {
+            g.subs += 80; g.rep -= 20; log(`⚠️ Copyright detectado.`, "var(--red)");
+            registrarProgresoMision("copyright", 1);
+            if(g.rep < 30) g.isBanned = true;
+        } else if (tipo === 'ads') {
+            g.cash += 150; log(`💸 Publicidad vendida. +$150`, "var(--mag)");
+            registrarProgresoMision("ads", 1); animarMonedas(event);
+        }
+        simularInteraccionFanaticos(); render(); guardarPartida();
+    }
+
+    function hacerPrestigio() {
+        if (g.subs < 5000) return;
+        g.prestige++; g.subs = 0; g.cash = 1000; g.rep = 100;
+        mostrarEpic(`Prestigio alcanzado Multiplicador x${g.prestige}`);
+        render(); guardarPartida();
+    }
+
+    function cerrarEpic() { document.getElementById('epic-modal').style.display = 'none'; }
+    function mostrarEpic(msg) { document.getElementById('epic-message').innerText = msg; document.getElementById('epic-modal').style.display = 'flex'; }
+    function log(msg, color) { const l = document.getElementById('log'); if(l) { l.innerHTML += `<br><span style="color:${color}">${msg}</span>`; l.scrollTop = l.scrollHeight; } }
+    
+    function render() {
+        document.getElementById('subs').innerText = Math.floor(g.subs);
+        document.getElementById('cash').innerText = Math.floor(g.cash);
+        document.getElementById('stars-ui').innerText = Math.floor(g.stars);
+        document.getElementById('rep').innerText = Math.floor(g.rep);
+    }
+
+    function animarMonedas(e) {
+        if (!e || !e.clientX) return;
+        for (let i = 0; i < 5; i++) {
+            let coin = document.createElement('div'); coin.className = "coin-particle"; coin.innerText = "$"; coin.style.color = "var(--green)";
+            coin.style.left = e.clientX + 'px'; coin.style.top = e.clientY + 'px'; document.body.appendChild(coin);
+            setTimeout(() => { coin.style.transform = `translate(${(Math.random()-0.5)*60}px, -40px) scale(0)`; coin.style.opacity = '0'; }, 50);
+            setTimeout(() => coin.remove(), 800);
+        }
+    }
+
+    function actualizarGrafico() {
+        if (!chartInstance) return;
+        chartInstance.data.datasets[0].data.shift();
+        chartInstance.data.datasets[0].data.push(g.subs);
+        chartInstance.update();
+    }
+
+    function guardarPartida() { localStorage.setItem('tg_tycoon_v3', JSON.stringify(g)); }
+    function cargarPartida() {
+        const data = localStorage.getItem('tg_tycoon_v3');
+        if (data) { try { g = Object.assign(g, JSON.parse(data)); } catch (e) {} }
+    }
+
+    setInterval(() => {
+        avanzarTiempoDeJuego();
+        if(g.isBanned && Math.random() < 0.2) { g.isBanned = false; g.rep = 50; log("🔓 Desbaneado.", "var(--green)"); }
+        render();
+    }, 4000);
+
+    window.onload = function() {
+        cargarPartida();
+        chartInstance = new Chart(document.getElementById('chart'), { type: 'line', data: { labels: Array(10).fill(""), datasets: [{ data: Array(10).fill(g.subs), borderColor: '#00f3ff', borderWidth: 1.5, pointRadius: 0, fill: false }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } } });
+        generarMisionesDiarias();
+        renderFanaticosUI(); renderCosmeticosUI(); renderCreditoUI(); render();
+    };
+</script>
+</body>
+</html>
