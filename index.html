@@ -672,9 +672,9 @@
                     </div>
 
                     <div class="energy-section">
-                        <div class="energy-meta"><span>ESTABILIDAD DEL NÚCLEO</span><span class="energy-count-node">${item.sponsors_count}/${item.sponsors_target} <span style="color:${plasmaColor}">${pct}%</span></span></div>
+                        <div class="energy-meta"><span>Patrocinadores</span><span class="energy-count-node">${item.sponsors_count}/${item.sponsors_target} <span style="color:${plasmaColor}">${pct}%</span></span></div>
                         <div class="energy-container-bar"><div class="energy-plasma-fill" style="width: ${pct}%; background-color: ${plasmaColor}; box-shadow: 0 0 10px ${plasmaColor};"></div></div>
-                        <div class="energy-tooltip"><i data-lucide="activity" style="width:12px; height:12px; display:inline; vertical-align:middle;"></i> Core requiere ${item.sponsors_target} sponsors para estabilidad total.</div>
+                        <div class="energy-tooltip"><i data-lucide="activity" style="width:12px; height:12px; display:inline; vertical-align:middle;"></i> Lista Golden ${item.sponsors_target} sponsors para estabilidad total.</div>
                     </div>
                     
                     <div class="actions-grid">
@@ -683,8 +683,8 @@
                         <div class="sliding-drawer" id="drawer-${item.id}">
                             <div class="more-text">${item.descripcion_larga}</div>
                             <div class="links-row">
-                                ${item.url_bot ? `<button class="btn-cyber btn-open-bot" onclick="abrirEnlace('${item.url_bot}')"><i data-lucide="bot"></i>Bot</button>` : ''}
-                                ${item.url_miniapp ? `<button class="btn-cyber btn-open-ma" onclick="abrirEnlace('${item.url_miniapp}')"><i data-lucide="cpu"></i>Mini App</button>` : ''}
+                                ${item.url_bot ? `<button class="btn-cyber btn-open-bot" onclick="abrirEnlace('${item.url_bot}')"><i data-lucide="bot"></i>Abrir Bot</button>` : ''}
+                                ${item.url_miniapp ? `<button class="btn-cyber btn-open-ma" onclick="abrirEnlace('${item.url_miniapp}')"><i data-lucide="cpu"></i>Ver Mini App</button>` : ''}
                             </div>
                             <div class="monetization-row">
                                 ${item.sponsor ? `<button class="btn-cyber btn-sponsor" onclick="abrirEnlace('${item.url_sponsor}')"><i data-lucide="heart-handshake"></i>Apoyar</button>` : ''}
@@ -785,12 +785,12 @@
         }
 
         function ejecutarMensajePrivado(motivo) {
-            let userTag = "@Soporte";
+            let userTag = "@Airdayz";
             if (window.Telegram?.WebApp?.initDataUnsafe?.user?.username) {
                 userTag = `@${window.Telegram.WebApp.initDataUnsafe.user.username}`;
             }
             const textRaw = encodeURIComponent(`[CORE MATRIX] ${motivo}\nCuenta ID: ${cachedUserId}\nUsuario: ${userTag}`);
-            abrirEnlace(`https://t.me/SoporteListaGoldenBot?start=${textRaw}`);
+            abrirEnlace(`https://t.me/Airdayz?start=${textRaw}`);
         }
 
         // Auto-scroll para el carrusel de reseñas
