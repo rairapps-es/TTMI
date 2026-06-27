@@ -174,7 +174,7 @@
         .tab-btn { flex: 1; background: none; border: none; padding: 10px 4px; color: #64748b; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; cursor: pointer; border-radius: 6px; transition: all 0.2s; }
         .tab-btn.active { background: var(--neon-cyan); color: #020205; box-shadow: 0 0 12px rgba(0, 240, 255, 0.35); }
         .subfilters-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
-        .subfilter-pill { background: rgba(8, 8, 15, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); color: var(--text-main); padding: 6px 14px; border-radius: 20px; font-size: 0.7Gram; font-weight: 700; white-space: nowrap; }
+        .subfilter-pill { background: rgba(8, 8, 15, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); color: var(--text-main); padding: 6px 14px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; white-space: nowrap; cursor: pointer; transition: all 0.2s; }
         .subfilter-pill.active { border-color: var(--neon-magenta); color: var(--neon-magenta); box-shadow: 0 0 8px rgba(255, 0, 127, 0.25); }
 
         /* =========================================================================
@@ -189,9 +189,15 @@
         /* Contenedor Cabecera con Imagen Integrada */
         .card-top-identity { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
         .card-custom-img { width: 50px; height: 50px; border-radius: 10px; object-fit: cover; border: 1px solid var(--border-neon); background: #0c0b14; flex-shrink: 0; }
-        .card-title-block { display: flex; flex-direction: column; gap: 2px; }
+        .card-title-block { display: flex; flex-direction: column; gap: 4px; width: 100%; }
+        .card-title-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
         .card-title { font-size: 1.15rem; font-weight: 800; color: #fff; }
         
+        /* Badges de Tipo Telegram */
+        .badge-tg-type { font-size: 0.58rem; font-weight: 900; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .badge-tg-type.canal { background: rgba(0, 240, 255, 0.15); color: var(--neon-cyan); border: 1px solid var(--neon-cyan); }
+        .badge-tg-type.grupo { background: rgba(157, 78, 221, 0.15); color: var(--neon-purple); border: 1px solid var(--neon-purple); }
+
         .badge-row { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 12px; }
         .tag-status { font-size: 0.55rem; font-weight: 900; padding: 3px 7px; border-radius: 4px; text-transform: uppercase; }
         .status-alpha .tag-status { background: rgba(255, 0, 127, 0.15); color: var(--neon-magenta); border: 1px solid rgba(255, 0, 127, 0.3); }
@@ -413,6 +419,19 @@
             <h3 class="info-panel-title"><i data-lucide="network"></i>Nuestra Red Operativa</h3>
             <p class="info-panel-desc">Sintoniza de forma directa los nodos informativos y canales estratégicos que componen la infraestructura orgánica de la Lista Golden.</p>
         </div>
+
+        <div class="filter-section" style="margin-bottom: 16px;">
+            <div class="subfilters-scroll" id="network-categories-scroll">
+                <span class="subfilter-pill active" id="pill-net-todos" onclick="setNetworkFilter('Todos')">Todos</span>
+                <span class="subfilter-pill" id="pill-net-entretenimiento" onclick="setNetworkFilter('Entretenimiento')">Entretenimiento</span>
+                <span class="subfilter-pill" id="pill-net-herramientas" onclick="setNetworkFilter('Herramientas')">Herramientas</span>
+                <span class="subfilter-pill" id="pill-net-finanzas" onclick="setNetworkFilter('Finanzas')">Finanzas</span>
+                <span class="subfilter-pill" id="pill-net-cripto" onclick="setNetworkFilter('Cripto')">Cripto</span>
+                <span class="subfilter-pill" id="pill-net-apuestas" onclick="setNetworkFilter('Apuestas')">Apuestas</span>
+                <span class="subfilter-pill" id="pill-net-comunidad" onclick="setNetworkFilter('Comunidad')">Comunidad</span>
+            </div>
+        </div>
+
         <div class="cards-container" id="network-channels-wrapper"></div>
     </section>
 
@@ -476,7 +495,7 @@
                 </div>
                 <div class="benefit-item">
                     <i data-lucide="gift"></i>
-                    <div><strong>Sorteos Comunitarios:</strong> Capacidad nativa de realizar y validar sorteos masivos directo en tus propios canales y grupos.</div>
+                    <div><strong>Sorteos Comunitarios:</strong> Capacidad nativa de realizar y validar sorteos masivos directo en tus propios canales and grupos.</div>
                 </div>
                 <div class="benefit-item">
                     <i data-lucide="megaphone"></i>
@@ -497,7 +516,7 @@
 
     <script>
         // =========================================================================
-        // 🗃️ CONFIGURACIÓN DE DATA MASTER (Actualizada con Imágenes Propias)
+        // 🗃️ CONFIGURACIÓN DE DATA MASTER
         // =========================================================================
         const MAESTRO_DATA = [
             {
@@ -541,10 +560,14 @@
             }
         ];
 
+        // DATA ACTUALIZADA CON TIPO (CANAL/GRUPO), IMÁGENES Y CATEGORÍAS
         const RED_SITIOS_DATA = [
-            { titulo: "Canal Core Golden", desc: "Notificaciones centrales de la red de desarrollo.", suscriptores: "12K", url: "https://t.me/ejemplo" },
-            { titulo: "Avisos Alpha Matrix", desc: "Logs de actualizaciones críticas de nuestros bots.", suscriptores: "4.5K", url: "https://t.me/ejemplo" },
-            { titulo: "Comunidad VIP Global", desc: "Foro de debate para patrocinadores verificados.", suscriptores: "1.2K", url: "https://t.me/ejemplo" }
+            { titulo: "Canal Core Golden", tipo: "CANAL", categoria: "Herramientas", desc: "Notificaciones centrales de la red de desarrollo.", suscriptores: "12K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150" },
+            { titulo: "Avisos Alpha Matrix", tipo: "CANAL", categoria: "Cripto", desc: "Logs de actualizaciones críticas de nuestros bots.", suscriptores: "4.5K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=150" },
+            { titulo: "Comunidad VIP Global", tipo: "GRUPO", categoria: "Comunidad", desc: "Foro de debate para patrocinadores verificados.", suscriptores: "1.2K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=150" },
+            { titulo: "Golden Matrix Chat", tipo: "GRUPO", categoria: "Entretenimiento", desc: "Grupo de entretenimiento general de la comunidad.", suscriptores: "8.9K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=150" },
+            { titulo: "Señales de Inversión", tipo: "CANAL", categoria: "Finanzas", desc: "Análisis y proyecciones de mercados macroeconómicos.", suscriptores: "21K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=150" },
+            { titulo: "Green Cluster Apuestas", tipo: "CANAL", categoria: "Apuestas", desc: "Estadísticas algorítmicas de eventos deportivos de alto valor.", suscriptores: "5.4K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1518133295134-7689972d4203?w=150" }
         ];
 
         const REVIEWS_DATA = [
@@ -555,37 +578,27 @@
 
         let activeTab = "all";
         let activeSubFilter = "Todos";
-        let cachedUserId = "548930211"; // Fallback estático de desarrollo
+        let activeNetworkFilter = "Todos";
+        let cachedUserId = "548930211";
 
         // =========================================================================
-        // 📢 INICIO: NUEVO SCRIPTING LOGIC PARA EL ANUNCIO FLOTANTE
+        // 📢 ANUNCIO FLOTANTE SCRIPTING LOGIC
         // =========================================================================
         let autoCloseTimeout;
         let countdownInterval;
 
         function checkAndShowAd() {
-            const hoy = new Date().toISOString().slice(0, 10); // Formato YYYY-MM-DD
+            const hoy = new Date().toISOString().slice(0, 10);
             const ultimoRegistro = localStorage.getItem('last_ad_view_date');
 
             if (ultimoRegistro !== hoy) {
-                // Configurar cuenta regresiva de 1 hora (3600 segundos)
                 initAdCountdown(3600);
-                
-                // Mostrar el anuncio
                 const overlay = document.getElementById("fomo-ad-overlay");
                 overlay.classList.add("is-visible");
-                
-                // Animación visual de la barra de progreso reduciéndose a los 15s
                 setTimeout(() => {
                     document.getElementById("ad-progress-bar").style.width = "0%";
                 }, 100);
-
-                // Forzar auto-cierre a los 15 segundos
-                autoCloseTimeout = setTimeout(() => {
-                    closeFloatingAd();
-                }, 15000);
-
-                // Marcar el día de hoy como mostrado
+                autoCloseTimeout = setTimeout(() => { closeFloatingAd(); }, 15000);
                 localStorage.setItem('last_ad_view_date', hoy);
             }
         }
@@ -593,16 +606,12 @@
         function initAdCountdown(durationInSeconds) {
             let timer = durationInSeconds;
             const targetDisplay = document.getElementById("ad-countdown");
-            
             countdownInterval = setInterval(() => {
                 let minutes = parseInt(timer / 60, 10);
                 let seconds = parseInt(timer % 60, 10);
-
                 minutes = minutes < 10 ? "0" + minutes : minutes;
                 seconds = seconds < 10 ? "0" + seconds : seconds;
-
                 targetDisplay.textContent = minutes + ":" + seconds;
-
                 if (--timer < 0) {
                     clearInterval(countdownInterval);
                     targetDisplay.textContent = "00:00";
@@ -612,10 +621,7 @@
 
         function closeFloatingAd() {
             const overlay = document.getElementById("fomo-ad-overlay");
-            if (overlay) {
-                overlay.classList.remove("is-visible");
-            }
-            // Limpiar los procesos en segundo plano
+            if (overlay) overlay.classList.remove("is-visible");
             clearTimeout(autoCloseTimeout);
             clearInterval(countdownInterval);
         }
@@ -624,9 +630,6 @@
             closeFloatingAd();
             ejecutarMensajePrivado('Me interesa aplicar a una de las 3/5 plazas VIP disponibles para Sponsors.');
         }
-        // =========================================================================
-        // 📢 FIN: SCRIPTING LOGIC PARA EL ANUNCIO FLOTANTE
-        // =========================================================================
 
         // =========================================================================
         // 🔄 RENDERING PIPELINES & SPA NAVIGATION
@@ -696,21 +699,61 @@
             `;
         }
 
+        // CONTROL DE FILTRADO RED DE SITIOS (7 CATEGORÍAS)
+        function setNetworkFilter(cat) {
+            activeNetworkFilter = cat;
+            document.querySelectorAll("#network-categories-scroll .subfilter-pill").forEach(p => {
+                p.classList.toggle("active", p.innerText === cat);
+            });
+            renderizarRedSitios();
+        }
+
+        // RENDERIZADO AVANZADO DE RED DE SITIOS CON IMÁGENES, TAGS DINÁMICOS Y FILTRADO
         function renderizarRedSitios() {
             const container = document.getElementById("network-channels-wrapper");
-            container.innerHTML = RED_SITIOS_DATA.map(ch => `
-                <div class="cyber-card status-prod" style="--border-neon: rgba(0, 240, 255, 0.2);">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                        <h3 class="card-title" style="margin:0;">${ch.titulo}</h3>
-                        <span style="font-size:0.65rem; color:var(--neon-cyan); background:rgba(0,240,255,0.1); padding:2px 6px; border-radius:4px; font-weight:800;">${ch.suscriptores} Nodos</span>
+            
+            const filtrados = RED_SITIOS_DATA.filter(ch => {
+                return activeNetworkFilter === "Todos" || ch.categoria === activeNetworkFilter;
+            });
+
+            if (filtrados.length === 0) {
+                container.innerHTML = `<p style="font-size:0.8rem; color:var(--text-muted); text-align:center; padding:20px;">Ningún nodo operativo en esta categoría.</p>`;
+                return;
+            }
+
+            container.innerHTML = filtrados.map(ch => {
+                const esCanal = ch.tipo === "CANAL";
+                const badgeClass = esCanal ? "canal" : "grupo";
+                const botonTexto = esCanal ? "Abrir Canal" : "Abrir Grupo";
+                const iconoBoton = esCanal ? "megaphone" : "users";
+
+                return `
+                    <div class="cyber-card status-prod" style="--border-neon: rgba(0, 240, 255, 0.2);">
+                        <div class="card-top-identity">
+                            <img src="${ch.imagen}" class="card-custom-img" alt="${ch.titulo}">
+                            <div class="card-title-block">
+                                <div class="card-title-row">
+                                    <h3 class="card-title" style="margin:0;">${ch.titulo}</h3>
+                                    <span class="badge-tg-type ${badgeClass}">${ch.tipo}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; margin-top: 4px;">
+                            <span style="font-size:0.6rem; color:var(--neon-gold); background:rgba(255,215,0,0.05); padding:2px 6px; border-radius:4px; font-weight:800; text-transform:uppercase;">${ch.categoria}</span>
+                            <span style="font-size:0.65rem; color:var(--neon-cyan); background:rgba(0,240,255,0.1); padding:2px 6px; border-radius:4px; font-weight:800;">${ch.suscriptores} Nodos</span>
+                        </div>
+                        
+                        <p class="card-desc">${ch.desc}</p>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+                            <button class="btn-cyber btn-read-more" onclick="showToast('Módulo informativo extendido en canal principal.')"><i data-lucide="info"></i>Saber Más</button>
+                            <button class="btn-cyber btn-open-web" onclick="abrirEnlace('${ch.url}')"><i data-lucide="${iconoBoton}"></i>${botonTexto}</button>
+                        </div>
                     </div>
-                    <p class="card-desc">${ch.desc}</p>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
-                        <button class="btn-cyber btn-read-more" onclick="showToast('Módulo informativo extendido en canal principal.')"><i data-lucide="info"></i>Saber Más</button>
-                        <button class="btn-cyber btn-open-web" onclick="abrirEnlace('${ch.url}')"><i data-lucide="external-link"></i>Abrir Canal</button>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
+
+            if(window.lucide) window.lucide.createIcons();
         }
 
         function renderizarReviews() {
@@ -746,7 +789,6 @@
             });
             wrapper.innerHTML = filtrados.map(item => construirTarjeta(item)).join('');
             
-            // Re-calcular métricas estructurales
             document.getElementById("count-total").innerText = filtrados.length;
             document.getElementById("count-beta").innerText = MAESTRO_DATA.filter(i => i.estado_codigo === "beta").length;
             document.getElementById("count-dev").innerText = MAESTRO_DATA.filter(i => i.estado_codigo === "alpha" || i.estado_codigo === "prod").length;
@@ -755,7 +797,7 @@
         }
 
         // =========================================================================
-        // 🛠专 UTILITIES & TELEGRAM TELEMETRY INTERFACES
+        // 🛠 UTILITIES & TELEGRAM TELEMETRY INTERFACES
         // =========================================================================
         function syncTelegramUser() {
             if (window.Telegram?.WebApp?.initDataUnsafe?.user) {
@@ -793,7 +835,6 @@
             abrirEnlace(`https://t.me/Airdayz?start=${textRaw}`);
         }
 
-        // Auto-scroll para el carrusel de reseñas
         function initCarouselAutoScroll() {
             const track = document.getElementById("carousel-target-track");
             let index = 0;
@@ -801,7 +842,7 @@
                 if(!track) return;
                 const max = REVIEWS_DATA.length - 1;
                 index = index >= max ? 0 : index + 1;
-                const offset = index * 294; // Ancho de la tarjeta + gap
+                const offset = index * 294;
                 track.style.transform = `translateX(-${offset}px)`;
             }, 3500);
         }
@@ -811,13 +852,11 @@
         
         function toggleReadMore(id) { 
             const card = document.getElementById(`card-${id}`); 
-            if(card) {
-                card.classList.toggle("is-expanded");
-            }
+            if(card) card.classList.toggle("is-expanded");
         }
         
         function openSponsorModal() { document.getElementById("modal-sponsor").classList.add("is-open"); }
-        function closeSponsorModal() { document.getElementById("modal-sponsor").classList.remove("is-remove"); document.getElementById("modal-sponsor").classList.remove("is-open"); }
+        function closeSponsorModal() { document.getElementById("modal-sponsor").classList.remove("is-open"); }
         function abrirEnlace(url) { if (window.Telegram?.WebApp?.openTelegramLink) { window.Telegram.WebApp.openTelegramLink(url); } else { window.open(url, '_blank'); } }
 
         document.addEventListener("DOMContentLoaded", () => {
@@ -830,8 +869,6 @@
             renderizarRedSitios();
             renderizarReviews();
             initCarouselAutoScroll();
-            
-            // Lanzar validador automático del anuncio diario
             checkAndShowAd();
         });
     </script>
