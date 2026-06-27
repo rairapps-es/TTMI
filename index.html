@@ -2,413 +2,657 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Telegram Tycoon: Master Infinite</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Lista Golden Hub | Core Matrix</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        :root { --bg: #050508; --cyan: #00f3ff; --gold: #ffd700; --mag: #ff00ff; --red: #ff3333; --green: #00ff66; --purple: #9d4edd; --orange: #ff9f1c; }
-        body { background: #050508; color: #fff; font-family: 'Courier New', monospace; display: flex; justify-content: center; padding: 10px; overflow-x: hidden; }
-        .game-container { width: 100%; max-width: 500px; padding: 20px; border: 1px solid #333; border-radius: 15px; position: relative; background: #050508; }
-        .btn-game { width: 100%; padding: 8px; margin: 3px 0; background: #111; border: 1px solid var(--cyan); color: #fff; cursor: pointer; border-radius: 5px; font-size: 0.8rem; position: relative; overflow: hidden; }
-        .btn-game:disabled { border-color: #444; color: #666; cursor: not-allowed; }
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin: 10px 0; }
-        .stat-card { border: 1px solid #333; padding: 8px; text-align: center; font-size: 0.7rem; position: relative; }
-        #log { height: 100px; overflow-y: auto; font-size: 0.7rem; color: #888; border-top: 1px solid #333; padding-top: 5px; margin-top: 10px; }
-        
-        /* Sistema de Progresos Dinámico por JS */
-        .cooldown-bar { position: absolute; bottom: 0; left: 0; height: 3px; background: rgba(0, 243, 255, 0.8); width: 0%; }
-        
-        .golden-deals-box { border: 2px solid var(--gold); border-radius: 10px; padding: 12px; margin: 12px 0; background: linear-gradient(135deg, #110f05 0%, #050508 100%); }
-        .deal-item { background: rgba(20, 18, 10, 0.7); border: 1px solid #443a15; border-radius: 6px; padding: 8px; margin: 6px 0; font-size: 0.72rem; }
-        .deal-header { font-weight: bold; color: var(--gold); display: flex; justify-content: space-between; margin-bottom: 3px; }
-        .btn-buy-deal { background: #152915; border: 1px solid var(--green); color: #fff; width: 100%; padding: 5px; margin-top: 4px; border-radius: 4px; cursor: pointer; font-size: 0.7rem; }
-        
-        .time-badge { background: #0c0d14; border: 1px solid var(--cyan); border-radius: 4px; padding: 4px 10px; font-size: 0.75rem; text-align: center; color: var(--cyan); margin-bottom: 10px; font-weight: bold; }
-        .coin-particle { position: fixed; font-size: 1.2rem; z-index: 9999; pointer-events: none; transition: transform 0.8s ease-out, opacity 0.8s; opacity: 1; }
-        .confetti-particle { position: fixed; width: 8px; height: 8px; z-index: 9998; pointer-events: none; border-radius: 50%; }
-        
-        .reaction-display { text-align: center; background: #111; font-size: 0.8rem; padding: 4px; margin: 5px 0; border: 1px solid #222; border-radius: 5px; }
-        .epic-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 10000; display: none; }
-        .epic-box { background: #111; border: 2px solid var(--gold); padding: 30px; text-align: center; border-radius: 10px; }
-        .premium-input { background: #111; border: 1px solid var(--gold); color: #fff; padding: 8px; width: calc(100% - 18px); margin-bottom: 5px; font-family: monospace; text-align: center; }
+        /* =========================================================================
+           🌌 CORE & NEO-CYBERPUNK VARIABLES
+           ========================================================================= */
+        :root {
+            --bg-cyber: #020205;
+            --card-bg: rgba(8, 8, 15, 0.95);
+            --neon-cyan: #00f0ff;
+            --neon-magenta: #ff007f;
+            --neon-green: #39ff14;
+            --neon-amber: #ffaa00;
+            --neon-gold: #ffd700;
+            --neon-purple: #9d4edd;
+            --text-main: #f1f5f9;
+            --text-muted: #475569;
+            --border-neon: rgba(0, 240, 255, 0.15);
+        }
 
-        .tg-profile-badge { display: flex; align-items: center; background: #111; border: 1px solid #333; border-radius: 30px; padding: 5px 12px; position: absolute; top: 15px; right: 20px; font-size: 0.65rem; }
-        .tg-avatar { width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--cyan); margin-right: 8px; background: #222; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            background-color: var(--bg-cyber);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(255, 0, 127, 0.1) 0px, transparent 45%),
+                radial-gradient(at 100% 0%, rgba(157, 78, 221, 0.1) 0px, transparent 45%);
+            color: var(--text-main); 
+            padding: 76px 16px 90px 16px; 
+            min-height: 100vh; 
+            overflow-x: hidden;
+        }
 
-        .character-box { margin: 10px 0; padding: 10px; border: 1px solid #444; border-radius: 8px; background: #0b0b10; font-size: 0.75rem; }
-        .character-title { font-weight: bold; margin-bottom: 5px; display: flex; justify-content: space-between; }
+        /* Modificadores de secciones SPA */
+        .app-section { display: none; }
+        .app-section.active { display: block; animation: sectionFade 0.3s ease-out; }
+        @keyframes sectionFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-        .missions-box { border: 2px dashed var(--cyan); background: #060d14; border-radius: 8px; padding: 10px; margin: 10px 0; }
-        .mission-item { background: rgba(0, 243, 255, 0.05); border: 1px solid #143542; padding: 6px; margin: 5px 0; border-radius: 4px; font-size: 0.68rem; display: flex; justify-content: space-between; align-items: center; }
-        .mission-info { display: flex; flex-direction: column; width: 70%; }
-        .mission-reward-pill { font-size: 0.58rem; color: var(--gold); margin-top: 2px; }
-        .cosmetic-inventory { background: #100614; border: 1px solid var(--mag); border-radius: 8px; padding: 10px; margin: 10px 0; font-size: 0.7rem; }
-        .cosmetic-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 5px; }
-        .cosmetic-item { border: 1px solid #3d1b4f; background: #170b1e; padding: 4px; text-align: center; font-size: 0.62rem; cursor: pointer; border-radius: 3px; }
-        .cosmetic-item.equipped { border-color: var(--green); box-shadow: 0 0 5px var(--green); }
+        /* =========================================================================
+           👤 NATIVE USERSTICKY HEADER & TOAST
+           ========================================================================= */
+        .cyber-header {
+            position: fixed; top: 0; left: 0; width: 100%; height: 64px;
+            background: rgba(2, 2, 5, 0.96); backdrop-filter: blur(12px);
+            border-bottom: 2px solid var(--neon-cyan); box-shadow: 0 2px 20px rgba(0, 240, 255, 0.25);
+            display: flex; justify-content: space-between; align-items: center; padding: 0 16px; z-index: 999;
+        }
+        .user-profile-block { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .user-avatar { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--neon-cyan); object-fit: cover; background: #0c0b14; }
+        .user-meta-data { display: flex; flex-direction: column; }
+        .user-name { font-size: 0.8rem; font-weight: 800; color: #fff; }
+        .user-tg-id { font-size: 0.65rem; color: var(--neon-cyan); font-family: monospace; letter-spacing: 0.5px; }
+        
+        .header-logo { font-size: 1.1rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; color: #fff; }
+        .header-logo span { color: var(--neon-magenta); }
 
-        .fanatics-box { background: #0b1410; border: 1px dashed var(--green); border-radius: 8px; padding: 10px; margin: 10px 0; font-size: 0.7rem; }
-        .fanatic-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid #132b1e; }
+        .toast-notify {
+            position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(30px);
+            background: rgba(0, 240, 255, 0.9); color: #000; padding: 8px 16px; border-radius: 6px;
+            font-size: 0.75rem; font-weight: 800; opacity: 0; pointer-events: none; transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 99999;
+        }
+        .toast-notify.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* =========================================================================
+           👑 COMPONENTE: PATROCINADORES OFICIALES
+           ========================================================================= */
+        .global-sponsor-panel {
+            background: linear-gradient(135deg, rgba(20, 15, 40, 0.9), rgba(10, 8, 20, 0.95));
+            border: 2px dashed var(--neon-gold); border-radius: 14px; padding: 16px; margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.15); position: relative; overflow: hidden;
+        }
+        .global-sponsor-panel::before {
+            content: 'VIP'; position: absolute; top: -10px; right: -10px; background: var(--neon-gold);
+            color: #000; font-size: 0.6rem; font-weight: 900; padding: 15px 15px 5px 15px; transform: rotate(45deg);
+        }
+        .sponsor-panel-title { font-size: 1.05rem; font-weight: 800; color: #fff; text-shadow: 0 0 8px var(--neon-gold); display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+        .sponsor-panel-desc { font-size: 0.75rem; color: #cbd5e1; line-height: 1.4; margin-bottom: 12px; }
+        .sponsor-meta-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; background: rgba(0,0,0,0.3); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255, 215, 0, 0.1); }
+        .sponsor-count-label { font-size: 0.65rem; color: #94a3b8; text-transform: uppercase; font-weight: 700; }
+        .sponsor-count-value { font-size: 1.1rem; font-weight: 900; color: var(--neon-gold); text-shadow: 0 0 6px var(--neon-gold); }
+        .sponsor-panel-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+        /* =========================================================================
+           📅 NUEVO: METADATOS DE CICLO DE VIDA (FECHAS ALPHA, BETA, LANZAMIENTO)
+           ========================================================================= */
+        .timeline-box {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
+            background: rgba(0,0,0,0.25); border-radius: 8px; padding: 8px; margin-bottom: 12px;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+        .timeline-node { text-align: center; display: flex; flex-direction: column; gap: 2px; }
+        .timeline-node-title { font-size: 0.55rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
+        .timeline-node-date { font-size: 0.65rem; font-weight: 700; color: #fff; }
+        .status-alpha .timeline-node:nth-child(1) .timeline-node-title { color: var(--neon-magenta); }
+        .status-beta .timeline-node:nth-child(2) .timeline-node-title { color: var(--neon-amber); }
+        .status-prod .timeline-node:nth-child(3) .timeline-node-title { color: var(--neon-green); }
+
+        /* =========================================================================
+           📊 MONITOR METRICS PANEL & FILTERS
+           ========================================================================= */
+        .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .metric-box { background: var(--card-bg); border: 1px solid var(--border-neon); border-radius: 10px; padding: 12px 6px; text-align: center; position: relative; }
+        .metric-box::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; }
+        .box-total::before { background: var(--neon-cyan); }
+        .box-beta::before { background: var(--neon-amber); }
+        .box-dev::before { background: var(--neon-green); }
+        .metric-value { font-size: 1.4rem; font-weight: 900; color: #fff; display: block; }
+        .box-total .metric-value { text-shadow: 0 0 8px var(--neon-cyan); }
+        .box-beta .metric-value { text-shadow: 0 0 8px var(--neon-amber); }
+        .box-dev .metric-value { text-shadow: 0 0 8px var(--neon-green); }
+        .metric-label { font-size: 0.62rem; color: #94a3b8; text-transform: uppercase; font-weight: 800; margin-top: 4px; }
+
+        .filter-section { margin-bottom: 22px; display: flex; flex-direction: column; gap: 12px; }
+        .tabs-container { display: flex; background: rgba(255, 255, 255, 0.03); border-radius: 8px; padding: 4px; border: 1px solid rgba(255, 255, 255, 0.06); }
+        .tab-btn { flex: 1; background: none; border: none; padding: 10px 4px; color: #64748b; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; cursor: pointer; border-radius: 6px; transition: all 0.2s; }
+        .tab-btn.active { background: var(--neon-cyan); color: #020205; box-shadow: 0 0 12px rgba(0, 240, 255, 0.35); }
+        .subfilters-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+        .subfilter-pill { background: rgba(8, 8, 15, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); color: var(--text-main); padding: 6px 14px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; white-space: nowrap; }
+        .subfilter-pill.active { border-color: var(--neon-magenta); color: var(--neon-magenta); box-shadow: 0 0 8px rgba(255, 0, 127, 0.25); }
+
+        /* =========================================================================
+           🎴 CYBER CARDS SYSTEM
+           ========================================================================= */
+        .cards-container { display: flex; flex-direction: column; gap: 18px; }
+        .cyber-card { background: var(--card-bg); border: 1px solid var(--border-neon); border-radius: 14px; padding: 18px; position: relative; box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6); }
+        .cyber-card.status-alpha { --border-neon: rgba(255, 0, 127, 0.25); }
+        .cyber-card.status-beta { --border-neon: rgba(255, 170, 0, 0.25); }
+        .cyber-card.status-prod { --border-neon: rgba(57, 255, 20, 0.25); }
+        .card-title { font-size: 1.15rem; font-weight: 800; color: #fff; margin-bottom: 6px; }
+        .badge-row { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 12px; }
+        .tag-status { font-size: 0.55rem; font-weight: 900; padding: 3px 7px; border-radius: 4px; text-transform: uppercase; }
+        .status-alpha .tag-status { background: rgba(255, 0, 127, 0.15); color: var(--neon-magenta); border: 1px solid rgba(255, 0, 127, 0.3); }
+        .status-beta .tag-status { background: rgba(255, 170, 0, 0.15); color: var(--neon-amber); border: 1px solid rgba(255, 170, 0, 0.3); }
+        .status-prod .tag-status { background: rgba(57, 255, 20, 0.15); color: var(--neon-green); border: 1px solid rgba(57, 255, 20, 0.3); }
+        .tag-type { font-size: 0.55rem; font-weight: 900; padding: 3px 7px; border-radius: 4px; background: rgba(0, 240, 255, 0.08); color: var(--neon-cyan); border: 1px solid rgba(0, 240, 255, 0.2); text-transform: uppercase; }
+        .card-desc { font-size: 0.8rem; color: #94a3b8; line-height: 1.45; margin-bottom: 14px; }
+
+        .more-text { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; font-size: 0.78rem; color: #cbd5e1; background: rgba(0,0,0,0.3); border-radius: 8px; padding: 0 10px; }
+        .cyber-card.is-expanded .more-text { max-height: 200px; padding: 10px; margin-bottom: 14px; border-left: 2px solid var(--neon-cyan); overflow-y: auto; }
+
+        /* =========================================================================
+           🔋 BARRA DE ENERGÍA DE SPONSORS (PLASMA ENERGY BAR)
+           ========================================================================= */
+        .energy-section { margin-bottom: 14px; position: relative; }
+        .energy-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; font-size: 0.68rem; font-weight: 700; color: #94a3b8; }
+        .energy-count-node { color: #fff; font-weight: 800; }
+        
+        .energy-container-bar {
+            width: 100%; height: 12px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 4px; padding: 1px; position: relative; cursor: pointer; overflow: hidden;
+        }
+        .energy-plasma-fill {
+            height: 100%; width: 0%; border-radius: 2px; transition: width 0.6s ease-out;
+            background-size: 30px 30px;
+            background-image: linear-gradient(135deg, rgba(255,255,255,0.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.15) 75%, transparent 75%, transparent);
+            animation: movePlasma 1s linear infinite;
+        }
+        @keyframes movePlasma { 0% { background-position: 0 0; } 100% { background-position: 30px 0; } }
+
+        .energy-tooltip {
+            position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%) translateY(5px);
+            background: #1e1b4b; border: 1px solid var(--neon-cyan); color: #fff; padding: 6px 10px;
+            font-size: 0.65rem; border-radius: 6px; pointer-events: none; opacity: 0; transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5); width: 85%; text-align: center; z-index: 10;
+        }
+        .energy-container-bar:active + .energy-tooltip { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* =========================================================================
+           🕹️ CONTROLES & BOTONES GLOBALES
+           ========================================================================= */
+        .actions-grid { display: flex; flex-direction: column; gap: 8px; }
+        .btn-cyber {
+            width: 100%; background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.1);
+            padding: 9px; font-size: 0.72rem; font-weight: 800; text-transform: uppercase;
+            border-radius: 7px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;
+        }
+        .btn-read-more { border-color: rgba(255, 255, 255, 0.15); color: #e2e8f0; }
+        .cyber-card.is-expanded .btn-read-more { background: rgba(255,255,255,0.05); color: var(--neon-cyan); border-color: var(--neon-cyan); }
+        
+        .links-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 6px; }
+        .btn-open-bot { background: rgba(0, 240, 255, 0.03); border-color: var(--neon-cyan); color: var(--neon-cyan); }
+        .btn-open-ma { background: rgba(255, 0, 127, 0.03); border-color: var(--neon-magenta); color: var(--neon-magenta); }
+        .btn-open-web { background: rgba(57, 255, 20, 0.03); border-color: var(--neon-green); color: var(--neon-green); }
+
+        .monetization-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 6px; margin-top: 4px; border-top: 1px dashed rgba(255,255,255,0.06); padding-top: 8px; }
+        .monetization-row:empty { display: none; padding: 0; border: none; }
+        .btn-sponsor { background: rgba(255, 215, 0, 0.04); border-color: var(--neon-gold); color: var(--neon-gold); }
+        .btn-premium-sell { background: rgba(157, 78, 221, 0.06); border-color: var(--neon-purple); color: var(--neon-purple); }
+
+        /* Estilos específicos para Bloques Informativos de Menú Inferior */
+        .info-panel-box { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 18px; margin-bottom: 16px; }
+        .info-panel-title { font-size: 1.1rem; font-weight: 800; color: #fff; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; border-b: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px;}
+        .info-panel-desc { font-size: 0.8rem; color: #cbd5e1; line-height: 1.5; margin-bottom: 14px; }
+        
+        .promo-grid-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 12px; }
+        .btn-promo-tier { background: rgba(0, 240, 255, 0.02); border-color: var(--neon-cyan); color: #fff; font-size: 0.65rem; }
+        .btn-bot-link { background: rgba(157, 78, 221, 0.02); border-color: var(--neon-purple); color: var(--neon-purple); }
+
+        /* =========================================================================
+           🎠 NUEVO: CAROUSEL DE RESEÑAS ULTRA-MODERNO
+           ========================================================================= */
+        .reviews-section-wrapper { margin-top: 30px; margin-bottom: 20px; overflow: hidden; position: relative; width: 100%; }
+        .reviews-section-title { font-size: 0.9rem; font-weight: 800; text-transform: uppercase; color: var(--neon-cyan); letter-spacing: 1px; margin-bottom: 12px; text-align: center; }
+        .carousel-track-container { width: 100%; overflow: hidden; }
+        .carousel-track { display: flex; gap: 14px; transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .review-card-item {
+            background: rgba(15, 15, 25, 0.9); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px; padding: 14px; min-width: 280px; max-width: 280px; flex-shrink: 0;
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .review-header-node { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .review-img { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 1px solid var(--neon-gold); }
+        .review-author { font-size: 0.75rem; font-weight: 800; color: #fff; }
+        .review-stars { color: var(--neon-gold); font-size: 0.65rem; display: flex; gap: 1px; }
+        .review-text-quote { font-size: 0.72rem; color: #94a3b8; line-height: 1.4; font-style: italic; margin-bottom: 12px; }
+
+        /* =========================================================================
+           📱 NUEVO: FIXED BOTTOM NAVIGATION BAR
+           ========================================================================= */
+        .cyber-bottom-navbar {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 68px;
+            background: rgba(4, 4, 10, 0.97); backdrop-filter: blur(16px);
+            border-top: 2px solid rgba(0, 240, 255, 0.2);
+            display: flex; justify-content: space-around; align-items: center;
+            padding: 0 8px; z-index: 9999;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.8);
+        }
+        .nav-item-btn {
+            background: none; border: none; color: #475569;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 4px; cursor: pointer; transition: all 0.2s; width: 22%; height: 100%;
+        }
+        .nav-item-btn i { width: 20px; height: 20px; transition: transform 0.2s; }
+        .nav-item-btn span { font-size: 0.58rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px; white-space: nowrap; }
+        
+        /* Modos Activos del Menú inferior */
+        .nav-item-btn.active-nav { color: var(--neon-cyan); text-shadow: 0 0 6px rgba(0, 240, 255, 0.4); }
+        .nav-item-btn.active-nav i { transform: translateY(-2px); color: var(--neon-cyan); }
+
+        /* Modales */
+        .cyber-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(2,2,5,0.85); backdrop-filter: blur(8px);
+            display: flex; align-items: center; justify-content: center; padding: 20px;
+            z-index: 10000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+        }
+        .cyber-modal.is-open { opacity: 1; pointer-events: auto; }
+        .modal-content {
+            background: #0d0d14; border: 2px solid var(--neon-gold); border-radius: 14px;
+            width: 100%; max-width: 400px; padding: 20px; box-shadow: 0 0 25px rgba(255,215,0,0.3);
+            position: relative; transform: scale(0.9); transition: transform 0.3s ease;
+        }
+        .cyber-modal.is-open .modal-content { transform: scale(1); }
+        .modal-title { font-size: 1.15rem; font-weight: 900; text-transform: uppercase; color: #fff; text-shadow: 0 0 8px var(--neon-gold); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+        .modal-body { font-size: 0.8rem; color: #cbd5e1; line-height: 1.5; margin-bottom: 18px; max-height: 280px; overflow-y: auto; }
+        .benefit-item { display: flex; gap: 8px; margin-bottom: 10px; background: rgba(255,255,255,0.02); padding: 8px; border-radius: 6px; border-left: 2px solid var(--neon-gold); }
+        .benefit-item i { color: var(--neon-gold); shrink: 0; }
+        .btn-modal-close { position: absolute; top: 12px; right: 12px; background: none; border: none; color: #64748b; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div class="epic-overlay" id="epic-modal">
-    <div class="epic-box">
-        <h2 id="epic-title" style="color: var(--gold); margin: 0 0 10px 0; font-size: 1.8rem;">🏆 ¡ÉPICO!</h2>
-        <p id="epic-message" style="font-size: 1rem; color: #fff;"></p>
-        <button class="btn-game" style="border-color: var(--gold); width: auto; padding: 10px 30px;" onclick="cerrarEpic()">CONTINUAR</button>
-    </div>
-</div>
-
-<div class="game-container">
-    <div class="tg-profile-badge" id="tg-user-badge">
-        <img src="https://i.imgur.com/w2Y7g9W.png" alt="avatar" class="tg-avatar" id="user-avatar">
-        <span id="user-name" style="color: var(--cyan);">@TycoonPlayer</span>
-    </div>
-
-    <h2 style="margin-top: 5px;">📱 TYCOON INFINITE</h2>
-    
-    <div class="time-badge" id="game-clock">📆 Año 1, Mes 1, Día 1</div>
-    <div style="height:80px;"><canvas id="chart"></canvas></div>
-    <div class="reaction-display" id="reactions-ui">Último Post: Esperando actividad...</div>
-
-    <div class="stat-grid">
-        <div class="stat-card">Subs: <strong id="subs">0</strong></div>
-        <div class="stat-card" id="cash-card">Cash: $<strong id="cash">1000</strong></div>
-        <div class="stat-card">⭐ Estrellas: <strong id="stars-ui" style="color:var(--gold);">0</strong></div>
-        <div class="stat-card">Rep: <strong id="rep">100</strong>%</div>
-    </div>
-
-    <div class="fanatics-box">
-        <strong style="color: var(--green)">⭐ COMUNIDAD DE FANÁTICOS (VIP)</strong>
-        <div id="fanatics-list-ui"></div>
-    </div>
-
-    <div class="missions-box">
-        <strong style="color: var(--cyan)">📡 TERMINAL DE MISIONES DIARIAS</strong>
-        <div id="daily-missions-list"></div>
-    </div>
-
-    <div class="cosmetic-inventory">
-        <strong style="color: var(--mag)">✨ ARMARIO COSMÉTICO</strong>
-        <div class="cosmetic-grid" id="cosmetic-grid-list"></div>
-    </div>
-
-    <div class="character-box" style="border-color: var(--purple); background: #0b0714;">
-        <strong style="color: var(--purple)">🎲 LA TABERNA DEL ALGORITMO</strong>
-        <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 5px;">
-            <div>
-                <div class="character-title"><span style="color: var(--cyan)">🎲 Dados "Siete Seguro"</span> <span>$100</span></div>
-                <button class="btn-game" style="border-color: var(--cyan);" onclick="jugarTaberna('dados', event)">Lanzar Dados</button>
-            </div>
-            <div>
-                <div class="character-title"><span style="color: var(--orange)">🎯 Tiro al Arco Clásico</span> <span>$300</span></div>
-                <button class="btn-game" style="border-color: var(--orange);" onclick="jugarTaberna('arco', event)">Disparar Flecha</button>
+    <header class="cyber-header">
+        <div class="user-profile-block" onclick="copiarTelegramIdInfo()" id="user-header-trigger">
+            <img class="user-avatar" id="tg-user-avatar" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150" alt="Avatar">
+            <div class="user-meta-data">
+                <span class="user-name" id="tg-user-name">Hola, @Cargando</span>
+                <span class="user-id-row" style="display:flex; align-items:center; gap:3px;">
+                    <span class="user-tg-id" id="tg-user-id">ID: ---------</span>
+                    <i data-lucide="copy" style="width:10px; height:10px; color: var(--neon-cyan);"></i>
+                </span>
             </div>
         </div>
-    </div>
+        <div class="header-logo">Core <span>Matrix</span></div>
+    </header>
 
-    <div class="character-box" style="border-color: var(--red); background: #120505;">
-        <strong style="color: var(--red)">🐀 EL PRESTAMISTA & BANCO CENTRAL</strong>
-        <button class="btn-game" style="border-color: var(--gold); margin: 5px 0;" onclick="canjearEstrellasBanco(event)">💱 Convertir 1,000 ⭐ en +$1,500 Cash</button>
-        <div id="loan-status-ui" style="font-size:0.68rem; color:var(--orange); font-weight:bold; margin-bottom:5px;">Sin deudas activas.</div>
-        <button class="btn-game" style="border-color: var(--red);" onclick="solicitarCredito(1000, 100, 10)">Solicitar Crédito Micro ($1000)</button>
-        <button class="btn-game" style="border-color: var(--green);" id="btn-pay-loan" disabled onclick="liquidarDeudaCompleta()">Liquidar Deuda</button>
-    </div>
+    <div class="toast-notify" id="app-toast">ID Copiado al portapapeles</div>
 
-    <div class="golden-deals-box">
-        <strong style="color: var(--gold)">💼 LISTA GOLDEN: OFERTAS EXCLUSIVAS</strong>
-        <div id="rair-deals-list"></div>
-    </div>
+    <section id="sec-proyectos" class="app-section active">
+        <div class="global-sponsor-panel">
+            <h3 class="sponsor-panel-title"><i data-lucide="shield-check"></i>Patrocinio Oficial</h3>
+            <p class="sponsor-panel-desc">Impulsa activamente la red de infraestructura Lista Golden y desbloquea el control total de nuestra tecnología.</p>
+            <div class="sponsor-meta-row">
+                <span class="sponsor-count-label">Patrocinadores de la Red</span>
+                <span class="sponsor-count-value" id="global-sponsors-count">24</span>
+            </div>
+            <div class="sponsor-panel-actions">
+                <button class="btn-cyber btn-read-more" onclick="openSponsorModal()"><i data-lucide="help-circle"></i>Beneficios</button>
+                <button class="btn-cyber btn-sponsor" onclick="ejecutarMensajePrivado('Solicito ingresar al plan de Patrocinio Oficial')"><i data-lucide="zap"></i>Ser Sponsor</button>
+            </div>
+        </div>
 
-    <div class="character-box" style="border-color: var(--orange);">
-        <strong style="color: var(--orange)">🛠️ OPTIMIZACIÓN DE CANALES</strong>
-        <div style="margin-top: 5px;">
-            <div class="character-title"><span style="color: var(--cyan)">🎨 Diseño Pro</span> <span>$600</span></div>
-            <button class="btn-game" id="btn-tune-diseno" onclick="comprarTuning('diseno', 600, event)">
-                <span class="btn-txt">Optimizar Identidad Visual</span>
-                <div class="cooldown-bar" id="bar-tune-diseno"></div>
+        <div class="metrics-grid">
+            <div class="metric-box box-total"><span class="metric-value" id="count-total">0</span><span class="metric-label">Módulos</span></div>
+            <div class="metric-box box-beta"><span class="metric-value" id="count-beta">0</span><span class="metric-label">En Beta</span></div>
+            <div class="metric-box box-dev"><span class="metric-value" id="count-dev">0</span><span class="metric-label">Prod / Dev</span></div>
+        </div>
+
+        <div class="filter-section">
+            <div class="tabs-container">
+                <button class="tab-btn active" onclick="setGlobalTab('all')">Todo</button>
+                <button class="tab-btn" onclick="setGlobalTab('proyecto')">Proyectos</button>
+                <button class="tab-btn" onclick="setGlobalTab('bot_puro')">Bots Propios</button>
+            </div>
+            <div class="subfilters-scroll">
+                <span class="subfilter-pill active" id="pill-todos" onclick="setSubFilter('Todos')">Todos</span>
+                <span class="subfilter-pill" id="pill-ma" onclick="setSubFilter('Mini-App')">Mini-Apps</span>
+                <span class="subfilter-pill" id="pill-bot" onclick="setSubFilter('Bot')">Bots</span>
+                <span class="subfilter-pill" id="pill-web" onclick="setSubFilter('Web')">Web</span>
+            </div>
+        </div>
+
+        <div class="cards-container" id="cards-wrapper"></div>
+    </section>
+
+    <section id="sec-red-sitios" class="app-section">
+        <div class="info-panel-box">
+            <h3 class="info-panel-title"><i data-lucide="network"></i>Nuestra Red Operativa</h3>
+            <p class="info-panel-desc">Sintoniza de forma directa los nodos informativos y canales estratégicos que componen la infraestructura orgánica de la Lista Golden.</p>
+        </div>
+        <div class="cards-container" id="network-channels-wrapper">
+            </div>
+    </section>
+
+    <section id="sec-colaborar" class="app-section">
+        <div class="info-panel-box" style="border-color: var(--neon-purple);">
+            <h3 class="info-panel-title" style="color: var(--neon-purple);"><i data-lucide="users"></i>Alianzas Estratégicas</h3>
+            <p class="info-panel-desc">Buscamos desarrolladores, creadores de contenido y administradores de comunidades que busquen escalar soluciones tecnológicas cruzadas en Telegram. Obtén accesos premium dedicados y monetiza tus integraciones de forma conjunta.</p>
+            <button class="btn-cyber btn-premium-sell" style="width: 100%;" onclick="ejecutarMensajePrivado('Hola, me interesa conocer los términos de colaboración estratégica.')">
+                <i data-lucide="send"></i>Enviar Mensaje de Propuesta
             </button>
         </div>
-        <div style="margin-top: 5px;">
-            <div class="character-title"><span style="color: var(--mag)">📦 Infoproductos</span> <span>$1,000</span></div>
-            <button class="btn-game" id="btn-infoproducto" onclick="lanzarInfoproducto(event)">
-                <span class="btn-txt">Lanzar Ebook Informativo</span>
-                <div class="cooldown-bar" id="bar-infoproducto"></div>
+    </section>
+
+    <section id="sec-promocion" class="app-section">
+        <div class="info-panel-box" style="border-color: var(--neon-green);">
+            <h3 class="info-panel-title" style="color: var(--neon-green);"><i data-lucide="trending-up"></i>Promoción Gratuita Lista Golden</h3>
+            <p class="info-panel-desc">Integra tus canales a nuestros sistemas de distribución orgánica. Automatizamos el crecimiento cruzado mediante clusters segmentados según el volumen real de tu audiencia.</p>
+            
+            <button class="btn-cyber btn-read-more" style="margin-bottom:14px;" onclick="openSponsorModal()"><i data-lucide="plus-circle"></i>Saber más Beneficios</button>
+            
+            <h4 style="font-size:0.7rem; color:var(--text-muted); margin-bottom:6px; font-weight:800; text-transform:uppercase;">Tiers de Ingreso Directo:</h4>
+            <div class="promo-grid-buttons">
+                <button class="btn-cyber btn-promo-tier" onclick="abrirEnlace('https://t.me/TuBotParaListaBot?start=join_100')">+100</button>
+                <button class="btn-cyber btn-promo-tier" onclick="abrirEnlace('https://t.me/TuBotParaListaBot?start=join_500')">+500</button>
+                <button class="btn-cyber btn-promo-tier" onclick="abrirEnlace('https://t.me/TuBotParaListaBot?start=join_1000')">+1000</button>
+            </div>
+
+            <h4 style="font-size:0.7rem; color:var(--text-muted); margin-bottom:6px; font-weight:800; text-transform:uppercase;">Nuestras Botoneras Activas:</h4>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+                <button class="btn-cyber btn-bot-link" onclick="abrirEnlace('https://t.me/TuBotoneraGeneralBot')"><i data-lucide="layout-grid"></i>Botonera General Core</button>
+                <button class="btn-cyber btn-sponsor" onclick="abrirEnlace('https://t.me/TuBotoneraCategoriasBot')"><i data-lucide="layers"></i>Botonera de Categorías Sponsors</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="sec-anunciate" class="app-section">
+        <div class="info-panel-box" style="border-color: var(--neon-magenta);">
+            <h3 class="info-panel-title" style="color: var(--neon-magenta);"><i data-lucide="megaphone"></i>Campañas Publicitarias Core</h3>
+            <p class="info-panel-desc">Posiciona tu proyecto, bot o comunidad frente a miles de usuarios activos dentro de nuestra Mini App y red de canales integrados. Desarrollamos impactos visuales de alto rendimiento sin saturación.</p>
+            <button class="btn-cyber btn-open-ma" style="width: 100%;" onclick="ejecutarMensajePrivado('Quiero solicitar cotización para anunciarme en la red Lista Golden.')">
+                <i data-lucide="message-square-code"></i>Contactar con Ventas Privadas
             </button>
+        </div>
+    </section>
+
+    <section class="reviews-section-wrapper">
+        <h3 class="reviews-section-title">Feedback del Sector</h3>
+        <div class="carousel-track-container">
+            <div class="carousel-track" id="carousel-target-track">
+                </div>
+        </div>
+    </section>
+
+    <div class="cyber-modal" id="modal-sponsor">
+        <div class="modal-content">
+            <button class="btn-modal-close" onclick="closeSponsorModal()"><i data-lucide="x"></i></button>
+            <h3 class="modal-title"><i data-lucide="award"></i>Matriz de Beneficios</h3>
+            <div class="modal-body">
+                <div class="benefit-item">
+                    <i data-lucide="crown"></i>
+                    <div><strong>Acceso VIP Absoluto:</strong> Suscripción Premium automática e ilimitada en TODOS los bots actuales y futuros de la red.</div>
+                </div>
+                <div class="benefit-item">
+                    <i data-lucide="gift"></i>
+                    <div><strong>Sorteos Comunitarios:</strong> Capacidad nativa de realizar y validar sorteos masivos directo en tus propios canales y grupos.</div>
+                </div>
+                <div class="benefit-item">
+                    <i data-lucide="megaphone"></i>
+                    <div><strong>Publicidad Core:</strong> Banner destacado rotativo prioritario en el index central de nuestra Mini App.</div>
+                </div>
+            </div>
+            <button class="btn-cyber btn-sponsor" style="width:100%" onclick="ejecutarMensajePrivado('Solicito la activación de mi Matriz de Beneficios Oficial.')"><i data-lucide="shopping-cart"></i>Solicitar Activación</button>
         </div>
     </div>
 
-    <div class="character-box" style="border-color: var(--cyan); background: #050b14;">
-        <strong style="color: var(--cyan)">🚀 ACCIONES PRINCIPALES DE RED</strong>
-        <button class="btn-game" style="margin-top:5px;" onclick="accion('post', event)">Publicar Contenido</button>
-        <button class="btn-game" onclick="accion('copyright', event)" style="border-color:var(--red)">Publicar (Copyright) ⚠️</button>
-        <button class="btn-game" onclick="accion('ads', event)" style="border-color:var(--mag)">Vender Ads</button>
-    </div>
+    <nav class="cyber-bottom-navbar">
+        <button class="nav-item-btn active-nav" onclick="switchTabApp('sec-proyectos', this)"><i data-lucide="home"></i><span>Hub</span></button>
+        <button class="nav-item-btn" onclick="switchTabApp('sec-red-sitios', this)"><i data-lucide="globe"></i><span>Red Sitios</span></button>
+        <button class="nav-item-btn" onclick="switchTabApp('sec-colaborar', this)"><i data-lucide="handshake"></i><span>Colaborar</span></button>
+        <button class="nav-item-btn" onclick="switchTabApp('sec-promocion', this)"><i data-lucide="rocket"></i><span>Promoción</span></button>
+        <button class="nav-item-btn" onclick="switchTabApp('sec-anunciate', this)"><i data-lucide="megaphone"></i><span>Anuncios</span></button>
+    </nav>
 
-    <button class="btn-game" onclick="hacerPrestigio()" style="border-color:var(--gold); margin-top:10px; font-weight: bold;">🔥 HACER PRESTIGIO (5k Subs)</button>
-    <div id="log">Imperio iniciado.</div>
-</div>
-
-<script>
-    let bancoMisionesPool = [
-        { id: "m1", texto: "Publicar 5 Contenidos masivos", clave: "post", max: 5, rCash: 300, rRep: 5, cosm: null },
-        { id: "m2", texto: "Ejecutar 3 campañas de Ads", clave: "ads", max: 3, rCash: 500, rRep: 2, cosm: null },
-        { id: "m4", texto: "Arriesgarse con 2 publicaciones Copyright", clave: "copyright", max: 2, rCash: 800, rRep: 0, cosm: "Avatar Cyber-Punk" }
-    ];
-
-    let poolCosmeticos = {
-        "Avatar Base": { tipo: "avatar", src: "https://i.imgur.com/w2Y7g9W.png" },
-        "Avatar Cyber-Punk": { tipo: "avatar", src: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150" }
-    };
-
-    let g = { 
-        subs: 0, cash: 1000, stars: 0, rep: 100, prestige: 1, 
-        isBanned: false, tuning: { diseno: false, seo: false },
-        rairDeals: [], tiempo: { anio: 1, mes: 1, dia: 1, ticks: 0 },
-        credito: { deudaActiva: false, capitalOriginal: 0, interesesDiarios: 0, diasRestantes: 0 },
-        misionesActivas: [], cosmeticosDesbloqueados: ["Avatar Base"],
-        cosmeticosEquipados: { avatar: "Avatar Base" },
-        fanaticos: [
-            { nombre: "@CyberDonador99", fanatismo: 85, estrellasDonadas: 0, avatar: "🤖" },
-            { nombre: "@CryptoSoporte_Vx", fanatismo: 92, estrellasDonadas: 0, avatar: "🐋" }
-        ]
-    };
-
-    let cookingQueue = {}; 
-    let chartInstance;
-
-    function renderFanaticosUI() {
-        let container = document.getElementById('fanatics-list-ui');
-        if (!container) return; container.innerHTML = "";
-        g.fanaticos.forEach(f => {
-            container.innerHTML += `<div class="fanatic-row"><span>${f.avatar} <strong>${f.nombre}</strong></span><span style="color:var(--green)">${f.fanatismo}% Fid</span><span style="color:var(--gold)">${f.estrellasDonadas} ⭐</span></div>`;
-        });
-    }
-
-    function canjearEstrellasBanco(event) {
-        if (g.stars < 1000) { log("❌ Exige al menos 1,000 ⭐ Estrellas.", "var(--orange)"); return; }
-        g.stars -= 1000; g.cash += 1500;
-        log("🏛️ BANCO: Cambiaste 1,000 ⭐ por +$1,500 Cash.", "var(--green)");
-        animarMonedas(event); render(); guardarPartida();
-    }
-
-    function simularInteraccionFanaticos() {
-        if (g.isBanned) return;
-        if (Math.random() < 0.5) {
-            let fan = g.fanaticos[Math.floor(Math.random() * g.fanaticos.length)];
-            let est = Math.floor((Math.random() * 50 + 20));
-            g.stars += est; fan.estrellasDonadas += est;
-            log(`💬 ${fan.nombre} donó ${est} ⭐`, "var(--gold)");
-            renderFanaticosUI();
-        }
-    }
-
-    function generarMisionesDiarias() {
-        g.misionesActivas = bancoMisionesPool.map(m => ({...m, progreso: 0, reclamada: false}));
-        renderMisionesUI();
-    }
-
-    function registrarProgresoMision(clave, cantidad = 1) {
-        g.misionesActivas.forEach(m => {
-            if (m.clave === clave && m.progreso < m.max && !m.reclamada) {
-                m.progreso = Math.min(m.max, m.progreso + cantidad);
+    <script>
+        // =========================================================================
+        // 🗃️ CONFIGURACIÓN DE DATA MASTER
+        // =========================================================================
+        const MAESTRO_DATA = [
+            {
+                id: "p_mundobots", cluster: "proyecto", titulo: "Mundo Bots", estado: "FASE BETA", estado_codigo: "beta",
+                descripcion: "Directorio avanzado y categorizado de Bots en Telegram.",
+                descripcion_larga: "Explora, puntúa y añade tus bots favoritos al directorio maestro de la red con soporte interactivo completo.",
+                etiquetas: ["BOT", "MINI-APP"], url_bot: "https://t.me/MundoBots_Bot", url_miniapp: "https://t.me/ejemplo", url_web: "",
+                sponsor: true, url_sponsor: "https://t.me/ejemplo", venderpremium: true, url_premium: "https://t.me/ejemplo",
+                sponsors_count: 42, sponsors_target: 50,
+                creacion: "02/01/26", alpha_date: "15/02/26", beta_date: "20/05/26"
+            },
+            {
+                id: "p_goldenhub", cluster: "proyecto", titulo: "Golden Hub", estado: "FASE BETA", estado_codigo: "beta",
+                descripcion: "Ecosistema unificado de Servicios Freelance verificados.",
+                descripcion_larga: "Conecta con profesionales de confianza y gestiona flujos de trabajo eficientes directamente desde Telegram.",
+                etiquetas: ["BOT", "MINI-APP"], url_bot: "https://t.me/ejemplo", url_miniapp: "https://t.me/ejemplo", url_web: "",
+                sponsor: false, venderpremium: true, url_premium: "https://t.me/ejemplo",
+                sponsors_count: 15, sponsors_target: 100,
+                creacion: "10/01/26", alpha_date: "01/03/26", beta_date: "12/06/26"
+            },
+            {
+                id: "p_goldenads", cluster: "proyecto", titulo: "Golden Ads", estado: "FASE ALPHA", estado_codigo: "alpha",
+                descripcion: "Catálogo estratégico de canales para anunciantes en Telegram.",
+                descripcion_larga: "Encuentra espacios publicitarios de alto rendimiento y rentabiliza comunidades mediante métricas orgánicas validadas.",
+                etiquetas: ["BOT", "MINI-APP"], url_bot: "https://t.me/ejemplo", url_miniapp: "https://t.me/ejemplo", url_web: "",
+                sponsor: true, url_sponsor: "https://t.me/ejemplo", venderpremium: false,
+                sponsors_count: 8, sponsors_target: 40,
+                creacion: "05/03/26", alpha_date: "18/05/26", beta_date: "Pendiente"
+            },
+            {
+                id: "b_cynthia", cluster: "bot_puro", titulo: "Cynthia Golden Bot", estado: "EN PRODUCCIÓN", estado_codigo: "prod",
+                descripcion: "Moderadora algorítmica y protectora de la comunidad.",
+                descripcion_larga: "Gestiona accesos, limpia spam eficientemente y ofrece automatización de soporte a los miembros del ecosistema.",
+                etiquetas: ["BOT"], url_bot: "https://t.me/ejemplo", url_miniapp: "", url_web: "",
+                sponsor: false, venderpremium: false, sponsors_count: 89, sponsors_target: 100,
+                creacion: "20/12/25", alpha_date: "05/01/26", beta_date: "10/02/26"
             }
-        });
-        renderMisionesUI();
-    }
+        ];
 
-    function reclamarMision(idx) {
-        let m = g.misionesActivas[idx]; if (!m || m.progreso < m.max || m.reclamada) return;
-        m.reclamada = true; g.cash += m.rCash; g.rep = Math.min(100, g.rep + m.rRep);
-        if (m.cosm && !g.cosmeticosDesbloqueados.includes(m.cosm)) g.cosmeticosDesbloqueados.push(m.cosm);
-        mostrarEpic(`Misión Completada: +$${m.rCash} Cash`);
-        renderMisionesUI(); renderCosmeticosUI(); render(); guardarPartida();
-    }
+        const RED_SITIOS_DATA = [
+            { titulo: "Canal Core Golden", desc: "Notificaciones centrales de la red de desarrollo.", suscriptores: "12K", url: "https://t.me/ejemplo" },
+            { titulo: "Avisos Alpha Matrix", desc: "Logs de actualizaciones críticas de nuestros bots.", suscriptores: "4.5K", url: "https://t.me/ejemplo" },
+            { titulo: "Comunidad VIP Global", desc: "Foro de debate para patrocinadores verificados.", suscriptores: "1.2K", url: "https://t.me/ejemplo" }
+        ];
 
-    function renderMisionesUI() {
-        let container = document.getElementById('daily-missions-list'); if (!container) return; container.innerHTML = "";
-        g.misionesActivas.forEach((m, idx) => {
-            let btnHtml = m.reclamada ? `<button class="btn-game" disabled>OK</button>` : (m.progreso >= m.max ? `<button class="btn-game" onclick="reclamarMision(${idx})">RECLAMAR</button>` : `<button class="btn-game" disabled>${m.progreso}/${m.max}</button>`);
-            container.innerHTML += `<div class="mission-item"><div class="mission-info"><span>${m.texto}</span></div><div style="width:35%">${btnHtml}</div></div>`;
-        });
-    }
+        const REVIEWS_DATA = [
+            { autor: "Alex Rover", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100", stars: 5, text: "La automatización de la botonera Lista Golden duplicó la tracción orgánica de mi comunidad en semanas.", web: "https://t.me/ejemplo" },
+            { autor: "Elena Rostova", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100", stars: 5, text: "El soporte VIP y Cleopatra AI estructuran mi flujo comercial diario dentro de Telegram de manera sólida.", web: "https://t.me/ejemplo" },
+            { autor: "Marcus Stark", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100", stars: 4, text: "Excelente arquitectura en la Mini App. Limpia, ágil y con datos precisos en tiempo real.", web: "https://t.me/ejemplo" }
+        ];
 
-    function renderCosmeticosUI() {
-        let container = document.getElementById('cosmetic-grid-list'); if (!container) return; container.innerHTML = "";
-        Object.keys(poolCosmeticos).forEach(name => {
-            let disponible = g.cosmeticosDesbloqueados.includes(name);
-            container.innerHTML += `<div class="cosmetic-item ${g.cosmeticosEquipados.avatar === name ? 'equipped' : ''}">${disponible ? name : '🔒'}</div>`;
-        });
-    }
+        let activeTab = "all";
+        let activeSubFilter = "Todos";
+        let cachedUserId = "548930211"; // Fallback estático de desarrollo
 
-    function jugarTaberna(juego, event) {
-        if (g.isBanned) return;
-        let costos = { dados: 100, arco: 300 };
-        if (g.cash < costos[juego]) { log("❌ Dinero insuficiente.", "var(--red)"); return; }
-        g.cash -= costos[juego];
-        registrarProgresoMision("taberna", 1);
-        if (Math.random() > 0.5) {
-            let premio = costos[juego] * 2; g.cash += premio;
-            log(`🎉 ¡Ganaste! +$${premio} Cash.`, "var(--green)"); animarMonedas(event);
-        } else { log(`💸 Perdiste la apuesta.`, "var(--red)"); }
-        render(); guardarPartida();
-    }
+        // =========================================================================
+        // 🔄 RENDERING PIPELINES & SPA NAVIGATION
+        // =========================================================================
+        function switchTabApp(sectionId, elementButton) {
+            document.querySelectorAll('.app-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-item-btn').forEach(btn => btn.classList.remove('active-nav'));
+            
+            document.getElementById(sectionId).classList.add('active');
+            elementButton.classList.add('active-nav');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
-    function solicitarCredito(capital, interes, plazo) {
-        if (g.credito.deudaActiva) { log("⚠️ Ya tienes una deuda.", "var(--orange)"); return; }
-        g.cash += capital; g.credito = { deudaActiva: true, capitalOriginal: capital, interesesDiarios: interes, diasRestantes: plazo };
-        renderCreditoUI(); render(); guardarPartida();
-    }
+        function obtenerColorPlasma(porcentaje) {
+            if (porcentaje < 35) return 'var(--neon-magenta)';
+            if (porcentaje < 75) return 'var(--neon-amber)';
+            return 'var(--neon-green)';
+        }
 
-    function liquidarDeudaCompleta() {
-        if (!g.credito.deudaActiva || g.cash < g.credito.capitalOriginal) return;
-        g.cash -= g.credito.capitalOriginal; g.credito.deudaActiva = false;
-        renderCreditoUI(); render(); guardarPartida();
-    }
+        function construirTarjeta(item) {
+            const pct = Math.min(Math.round((item.sponsors_count / item.sponsors_target) * 100) || 0, 100);
+            const plasmaColor = obtenerColorPlasma(pct);
 
-    function renderCreditoUI() {
-        let statusTxt = document.getElementById('loan-status-ui'); let btnPay = document.getElementById('btn-pay-loan');
-        if (g.credito.deudaActiva) { statusTxt.innerText = `⚠️ DEUDA: $${g.credito.capitalOriginal} | ${g.credito.diasRestantes}d`; btnPay.disabled = false; } 
-        else { statusTxt.innerText = "Sin deudas activas."; btnPay.disabled = true; }
-    }
+            return `
+                <div class="cyber-card status-${item.estado_codigo}" id="card-${item.id}">
+                    <div class="card-header-row"><h2 class="card-title">${item.titulo}</h2></div>
+                    <div class="badge-row">
+                        <span class="tag-status">${item.estado}</span>
+                        ${item.etiquetas.map(t => `<span class="tag-type">${t}</span>`).join('')}
+                    </div>
+                    <p class="card-desc">${item.descripcion}</p>
+                    
+                    <div class="timeline-box">
+                        <div class="timeline-node"><span class="timeline-node-title">Creación</span><span class="timeline-node-date">${item.creacion}</span></div>
+                        <div class="timeline-node"><span class="timeline-node-title">Alpha</span><span class="timeline-node-date">${item.alpha_date}</span></div>
+                        <div class="timeline-node"><span class="timeline-node-title">Beta</span><span class="timeline-node-date">${item.beta_date}</span></div>
+                    </div>
 
-    function startProgressBar(barId, duration, callback) {
-        let bar = document.getElementById(barId);
-        if (!bar) return;
-        let start = null;
-        bar.style.width = "0%";
-        
-        function animate(timestamp) {
-            if (!start) start = timestamp;
-            let progress = timestamp - start;
-            let percent = Math.min((progress / duration) * 100, 100);
-            bar.style.width = percent + "%";
-            if (progress < duration) {
-                requestAnimationFrame(animate);
-            } else {
-                bar.style.width = "0%";
-                callback();
+                    <div class="energy-section">
+                        <div class="energy-meta"><span>ESTABILIDAD DEL NÚCLEO</span><span class="energy-count-node">${item.sponsors_count}/${item.sponsors_target} <span style="color:${plasmaColor}">${pct}%</span></span></div>
+                        <div class="energy-container-bar"><div class="energy-plasma-fill" style="width: ${pct}%; background-color: ${plasmaColor}; box-shadow: 0 0 10px ${plasmaColor};"></div></div>
+                        <div class="energy-tooltip"><i data-lucide="activity" style="width:12px; height:12px; display:inline; vertical-align:middle;"></i> Core requiere ${item.sponsors_target} sponsors para estabilidad total.</div>
+                    </div>
+                    
+                    <div class="more-text">${item.descripcion_larga}</div>
+                    <div class="actions-grid">
+                        <button class="btn-cyber btn-read-more" onclick="toggleReadMore('${item.id}')"><i data-lucide="info"></i>Saber más</button>
+                        <div class="links-row">
+                            ${item.url_bot ? `<button class="btn-cyber btn-open-bot" onclick="abrirEnlace('${item.url_bot}')"><i data-lucide="bot"></i>Bot</button>` : ''}
+                            ${item.url_miniapp ? `<button class="btn-cyber btn-open-ma" onclick="abrirEnlace('${item.url_miniapp}')"><i data-lucide="cpu"></i>Mini App</button>` : ''}
+                        </div>
+                        <div class="monetization-row">
+                            ${item.sponsor ? `<button class="btn-cyber btn-sponsor" onclick="abrirEnlace('${item.url_sponsor}')"><i data-lucide="heart-handshake"></i>Apoyar</button>` : ''}
+                            ${item.venderpremium ? `<button class="btn-cyber btn-premium-sell" onclick="abrirEnlace('${item.url_premium}')"><i data-lucide="crown"></i>Comprar VIP</button>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderizarRedSitios() {
+            const container = document.getElementById("network-channels-wrapper");
+            container.innerHTML = RED_SITIOS_DATA.map(ch => `
+                <div class="cyber-card status-prod" style="--border-neon: rgba(0, 240, 255, 0.2);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <h3 class="card-title" style="margin:0;">${ch.titulo}</h3>
+                        <span style="font-size:0.65rem; color:var(--neon-cyan); background:rgba(0,240,255,0.1); padding:2px 6px; border-radius:4px; font-weight:800;">${ch.suscriptores} Nodos</span>
+                    </div>
+                    <p class="card-desc">${ch.desc}</p>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+                        <button class="btn-cyber btn-read-more" onclick="showToast('Módulo informativo extendido en canal principal.')"><i data-lucide="info"></i>Saber Más</button>
+                        <button class="btn-cyber btn-open-web" onclick="abrirEnlace('${ch.url}')"><i data-lucide="external-link"></i>Abrir Canal</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderizarReviews() {
+            const track = document.getElementById("carousel-target-track");
+            track.innerHTML = REVIEWS_DATA.map(rev => `
+                <div class="review-card-item">
+                    <div>
+                        <div class="review-header-node">
+                            <img class="review-img" src="${rev.img}" alt="User">
+                            <div>
+                                <span class="review-author">${rev.autor}</span>
+                                <div class="review-stars">${'★'.repeat(rev.stars)}${'☆'.repeat(5-rev.stars)}</div>
+                            </div>
+                        </div>
+                        <p class="review-text-quote">"${rev.text}"</p>
+                    </div>
+                    <button class="btn-cyber btn-open-web" style="padding:6px; font-size:0.65rem; margin-top:4px;" onclick="abrirEnlace('${rev.web}')">
+                        <i data-lucide="globe" style="width:12px; height:12px;"></i>Visitar Web
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function filtrarYRenderizar() {
+            const wrapper = document.getElementById("cards-wrapper");
+            const filtrados = MAESTRO_DATA.filter(item => {
+                const cumpleTab = (activeTab === "all" || item.cluster === activeTab);
+                let cumpleSub = true;
+                if(activeSubFilter === "Mini-App") cumpleSub = item.etiquetas.includes("MINI-APP");
+                if(activeSubFilter === "Bot") cumpleSub = item.etiquetas.includes("BOT");
+                if(activeSubFilter === "Web") cumpleSub = item.etiquetas.includes("WEB");
+                return cumpleTab && cumpleSub;
+            });
+            wrapper.innerHTML = filtrados.map(item => construirTarjeta(item)).join('');
+            
+            // Re-calcular métricas estructurales
+            document.getElementById("count-total").innerText = filtrados.length;
+            document.getElementById("count-beta").innerText = MAESTRO_DATA.filter(i => i.estado_codigo === "beta").length;
+            document.getElementById("count-dev").innerText = MAESTRO_DATA.filter(i => i.estado_codigo === "alpha" || i.estado_codigo === "prod").length;
+
+            if(window.lucide) window.lucide.createIcons();
+        }
+
+        // =========================================================================
+        // 🛠️ UTILITIES & TELEGRAM TELEMETRY INTERFACES
+        // =========================================================================
+        function syncTelegramUser() {
+            if (window.Telegram?.WebApp?.initDataUnsafe?.user) {
+                const user = window.Telegram.WebApp.initDataUnsafe.user;
+                cachedUserId = user.id.toString();
+                document.getElementById("tg-user-name").innerText = `Hola, ${user.username ? '@' + user.username : user.first_name}`;
+                document.getElementById("tg-user-id").innerText = `ID: ${user.id}`;
+                if(user.photo_url) {
+                    document.getElementById("tg-user-avatar").src = user.photo_url;
+                }
             }
         }
-        requestAnimationFrame(animate);
-    }
 
-    function comprarTuning(tipo, costo, event) {
-        if (g.cash < costo) { log("❌ Fondos insuficientes.", "var(--red)"); return; }
-        if (cookingQueue[tipo]) return;
-        
-        g.cash -= costo;
-        cookingQueue[tipo] = true;
-        render();
+        function copiarTelegramIdInfo() {
+            navigator.clipboard.writeText(cachedUserId).then(() => {
+                showToast(`ID: ${cachedUserId} Copiado`);
+            }).catch(() => {
+                // Fallback manual si los permisos del WebView están restringidos
+                showToast("Error al copiar automáticamente.");
+            });
+        }
 
-        startProgressBar(`bar-tune-${tipo}`, 3000, () => {
-            g.tuning[tipo] = true;
-            delete cookingQueue[tipo];
-            log(`🛠️ Optimización [${tipo.toUpperCase()}] completada.`, "var(--cyan)"); 
-            render(); guardarPartida();
+        function showToast(msj) {
+            const toast = document.getElementById("app-toast");
+            toast.innerText = msj;
+            toast.classList.add("show");
+            setTimeout(() => toast.classList.remove("show"), 2200);
+        }
+
+        function ejecutarMensajePrivado(motivo) {
+            let userTag = "@Soporte";
+            if (window.Telegram?.WebApp?.initDataUnsafe?.user?.username) {
+                userTag = `@${window.Telegram.WebApp.initDataUnsafe.user.username}`;
+            }
+            const textRaw = encodeURIComponent(`[CORE MATRIX] ${motivo}\nCuenta ID: ${cachedUserId}\nUsuario: ${userTag}`);
+            abrirEnlace(`https://t.me/SoporteListaGoldenBot?start=msg_${cachedUserId}`);
+        }
+
+        // Auto-scroll para el carrusel de reseñas
+        function initCarouselAutoScroll() {
+            const track = document.getElementById("carousel-target-track");
+            let index = 0;
+            setInterval(() => {
+                const max = REVIEWS_DATA.length - 1;
+                index = index >= max ? 0 : index + 1;
+                const offset = index * 294; // Ancho de la tarjeta + gap
+                track.style.transform = `translateX(-${offset}px)`;
+            }, 3500);
+        }
+
+        function setGlobalTab(t) { activeTab = t; document.querySelectorAll(".tab-btn").forEach((b, i) => b.classList.toggle("active", (t==='all'&&i===0)||(t==='proyecto'&&i===1)||(t==='bot_puro'&&i===2))); filtrarYRenderizar(); }
+        function setSubFilter(s) { activeSubFilter = s; document.querySelectorAll(".subfilter-pill").forEach(p => p.classList.toggle("active", p.id===('pill-'+(s==='Todos'?'todos':s==='Mini-App'?'ma':s==='Bot'?'bot':'web')))); filtrarYRenderizar(); }
+        function toggleReadMore(id) { const c = document.getElementById(`card-${id}`); if(c) c.classList.toggle("is-expanded"); }
+        function openSponsorModal() { document.getElementById("modal-sponsor").classList.add("is-open"); }
+        function closeSponsorModal() { document.getElementById("modal-sponsor").classList.remove("is-open"); }
+        function abrirEnlace(url) { if (window.Telegram?.WebApp?.openTelegramLink) { window.Telegram.WebApp.openTelegramLink(url); } else { window.open(url, '_blank'); } }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            if(window.Telegram?.WebApp) {
+                window.Telegram.WebApp.ready();
+                window.Telegram.WebApp.expand();
+            }
+            syncTelegramUser();
+            filtrarYRenderizar();
+            renderizarRedSitios();
+            renderizarReviews();
+            initCarouselAutoScroll();
         });
-    }
-
-    function lanzarInfoproducto(event) {
-        let costo = 1000;
-        if (g.cash < costo || cookingQueue['infoproducto']) return;
-        
-        g.cash -= costo;
-        cookingQueue['infoproducto'] = true;
-        render();
-
-        startProgressBar('bar-infoproducto', 4000, () => {
-            g.cash += 2500;
-            delete cookingQueue['infoproducto'];
-            log(`📦 ¡Lanzamiento Exitoso! Generó $2,500`, "var(--mag)"); 
-            render(); guardarPartida();
-        });
-    }
-
-    function avanzarTiempoDeJuego() {
-        g.tiempo.dia++;
-        if (g.tiempo.dia > 30) { g.tiempo.dia = 1; g.tiempo.mes++; }
-        document.getElementById('game-clock').innerText = `📆 Año ${g.tiempo.anio}, Mes ${g.tiempo.mes}, Día ${g.tiempo.dia}`;
-        if(g.credito.deudaActiva) {
-            g.credito.diasRestantes--;
-            g.cash -= g.credito.interesesDiarios;
-            if(g.credito.diasRestantes <= 0) { g.credito.deudaActiva = false; g.subs = Math.max(0, g.subs - 300); }
-            renderCreditoUI();
-        }
-        actualizarGrafico();
-    }
-
-    function accion(tipo, event) {
-        if (g.isBanned) return;
-        if (tipo === 'post') {
-            g.subs += 25; log(`📝 Post publicado. +25 subs.`, "var(--cyan)");
-            registrarProgresoMision("post", 1);
-        } else if (tipo === 'copyright') {
-            g.subs += 80; g.rep -= 20; log(`⚠️ Copyright detectado.`, "var(--red)");
-            registrarProgresoMision("copyright", 1);
-            if(g.rep < 30) g.isBanned = true;
-        } else if (tipo === 'ads') {
-            g.cash += 150; log(`💸 Publicidad vendida. +$150`, "var(--mag)");
-            registrarProgresoMision("ads", 1); animarMonedas(event);
-        }
-        simularInteraccionFanaticos(); render(); guardarPartida();
-    }
-
-    function hacerPrestigio() {
-        if (g.subs < 5000) return;
-        g.prestige++; g.subs = 0; g.cash = 1000; g.rep = 100;
-        mostrarEpic(`Prestigio alcanzado Multiplicador x${g.prestige}`);
-        render(); guardarPartida();
-    }
-
-    function cerrarEpic() { document.getElementById('epic-modal').style.display = 'none'; }
-    function mostrarEpic(msg) { document.getElementById('epic-message').innerText = msg; document.getElementById('epic-modal').style.display = 'flex'; }
-    function log(msg, color) { const l = document.getElementById('log'); if(l) { l.innerHTML += `<br><span style="color:${color}">${msg}</span>`; l.scrollTop = l.scrollHeight; } }
-    
-    function render() {
-        document.getElementById('subs').innerText = Math.floor(g.subs);
-        document.getElementById('cash').innerText = Math.floor(g.cash);
-        document.getElementById('stars-ui').innerText = Math.floor(g.stars);
-        document.getElementById('rep').innerText = Math.floor(g.rep);
-    }
-
-    function animarMonedas(e) {
-        if (!e || !e.clientX) return;
-        for (let i = 0; i < 5; i++) {
-            let coin = document.createElement('div'); coin.className = "coin-particle"; coin.innerText = "$"; coin.style.color = "var(--green)";
-            coin.style.left = e.clientX + 'px'; coin.style.top = e.clientY + 'px'; document.body.appendChild(coin);
-            setTimeout(() => { coin.style.transform = `translate(${(Math.random()-0.5)*60}px, -40px) scale(0)`; coin.style.opacity = '0'; }, 50);
-            setTimeout(() => coin.remove(), 800);
-        }
-    }
-
-    function actualizarGrafico() {
-        if (!chartInstance) return;
-        chartInstance.data.datasets[0].data.shift();
-        chartInstance.data.datasets[0].data.push(g.subs);
-        chartInstance.update();
-    }
-
-    function guardarPartida() { localStorage.setItem('tg_tycoon_v3', JSON.stringify(g)); }
-    function cargarPartida() {
-        const data = localStorage.getItem('tg_tycoon_v3');
-        if (data) { try { g = Object.assign(g, JSON.parse(data)); } catch (e) {} }
-    }
-
-    setInterval(() => {
-        avanzarTiempoDeJuego();
-        if(g.isBanned && Math.random() < 0.2) { g.isBanned = false; g.rep = 50; log("🔓 Desbaneado.", "var(--green)"); }
-        render();
-    }, 4000);
-
-    window.onload = function() {
-        cargarPartida();
-        chartInstance = new Chart(document.getElementById('chart'), { type: 'line', data: { labels: Array(10).fill(""), datasets: [{ data: Array(10).fill(g.subs), borderColor: '#00f3ff', borderWidth: 1.5, pointRadius: 0, fill: false }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } } });
-        generarMisionesDiarias();
-        renderFanaticosUI(); renderCosmeticosUI(); renderCreditoUI(); render();
-    };
-</script>
+    </script>
 </body>
 </html>
