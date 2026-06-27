@@ -43,6 +43,59 @@
         @keyframes sectionFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
         /* =========================================================================
+           📢 INICIO: ESTILOS DEL NUEVO ANUNCIO FLOTANTE (FOMO MODAL)
+           ========================================================================= */
+        .floating-ad-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(2, 2, 5, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            display: flex; align-items: center; justify-content: center; padding: 20px;
+            z-index: 20000; opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+        }
+        .floating-ad-overlay.is-visible { opacity: 1; pointer-events: auto; }
+        
+        .ad-content-box {
+            background: linear-gradient(145deg, #0a0a14, #05050a);
+            border: 2px solid var(--neon-magenta); border-radius: 16px;
+            width: 100%; max-width: 360px; padding: 22px;
+            box-shadow: 0 0 30px rgba(255, 0, 127, 0.3);
+            position: relative; transform: scale(0.85); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .floating-ad-overlay.is-visible .ad-content-box { transform: scale(1); }
+        
+        .ad-close-btn {
+            position: absolute; top: 12px; right: 12px; background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1); color: #64748b; cursor: pointer;
+            width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        }
+        .ad-badge {
+            display: inline-block; background: rgba(255, 0, 127, 0.1); color: var(--neon-magenta);
+            font-size: 0.6rem; font-weight: 900; padding: 3px 8px; border-radius: 4px;
+            border: 1px solid rgba(255, 0, 127, 0.3); text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px;
+        }
+        .ad-title { font-size: 1.2rem; font-weight: 900; color: #fff; margin-bottom: 8px; text-shadow: 0 0 10px rgba(255,0,127,0.2); }
+        .ad-desc { font-size: 0.82rem; color: #cbd5e1; line-height: 1.45; margin-bottom: 16px; }
+        
+        /* Contadores en fila */
+        .ad-metrics-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+        .ad-meta-box { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 8px; text-align: center; }
+        .ad-meta-label { font-size: 0.58rem; color: #64748b; font-weight: 800; text-transform: uppercase; display: block; margin-bottom: 2px; }
+        .ad-meta-value { font-size: 1.1rem; font-weight: 900; font-family: monospace; }
+        
+        .color-fomo { color: var(--neon-gold); text-shadow: 0 0 8px var(--neon-gold); }
+        .color-timer { color: var(--neon-cyan); text-shadow: 0 0 8px var(--neon-cyan); }
+        
+        .ad-auto-close-bar {
+            width: 100%; height: 3px; background: rgba(255,255,255,0.05); margin-top: 12px; border-radius: 2px; overflow: hidden;
+        }
+        .ad-auto-close-fill {
+            height: 100%; width: 100%; background: var(--neon-magenta);
+            transition: width 15s linear;
+        }
+        /* =========================================================================
+           📢 FIN: ESTILOS DEL NUEVO ANUNCIO FLOTANTE
+           ========================================================================= */
+
+        /* =========================================================================
            👤 NATIVE USERSTICKY HEADER & TOAST
            ========================================================================= */
         .cyber-header {
@@ -121,18 +174,24 @@
         .tab-btn { flex: 1; background: none; border: none; padding: 10px 4px; color: #64748b; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; cursor: pointer; border-radius: 6px; transition: all 0.2s; }
         .tab-btn.active { background: var(--neon-cyan); color: #020205; box-shadow: 0 0 12px rgba(0, 240, 255, 0.35); }
         .subfilters-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
-        .subfilter-pill { background: rgba(8, 8, 15, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); color: var(--text-main); padding: 6px 14px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; white-space: nowrap; }
+        .subfilter-pill { background: rgba(8, 8, 15, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); color: var(--text-main); padding: 6px 14px; border-radius: 20px; font-size: 0.7Gram; font-weight: 700; white-space: nowrap; }
         .subfilter-pill.active { border-color: var(--neon-magenta); color: var(--neon-magenta); box-shadow: 0 0 8px rgba(255, 0, 127, 0.25); }
 
         /* =========================================================================
            🎴 CYBER CARDS SYSTEM
            ========================================================================= */
         .cards-container { display: flex; flex-direction: column; gap: 18px; }
-        .cyber-card { background: var(--card-bg); border: 1px solid var(--border-neon); border-radius: 14px; padding: 18px; position: relative; box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6); }
+        .cyber-card { background: var(--card-bg); border: 1px solid var(--border-neon); border-radius: 14px; padding: 18px; position: relative; box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6); overflow: hidden; }
         .cyber-card.status-alpha { --border-neon: rgba(255, 0, 127, 0.25); }
         .cyber-card.status-beta { --border-neon: rgba(255, 170, 0, 0.25); }
         .cyber-card.status-prod { --border-neon: rgba(57, 255, 20, 0.25); }
-        .card-title { font-size: 1.15rem; font-weight: 800; color: #fff; margin-bottom: 6px; }
+        
+        /* Contenedor Cabecera con Imagen Integrada */
+        .card-top-identity { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
+        .card-custom-img { width: 50px; height: 50px; border-radius: 10px; object-fit: cover; border: 1px solid var(--border-neon); background: #0c0b14; flex-shrink: 0; }
+        .card-title-block { display: flex; flex-direction: column; gap: 2px; }
+        .card-title { font-size: 1.15rem; font-weight: 800; color: #fff; }
+        
         .badge-row { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 12px; }
         .tag-status { font-size: 0.55rem; font-weight: 900; padding: 3px 7px; border-radius: 4px; text-transform: uppercase; }
         .status-alpha .tag-status { background: rgba(255, 0, 127, 0.15); color: var(--neon-magenta); border: 1px solid rgba(255, 0, 127, 0.3); }
@@ -141,13 +200,16 @@
         .tag-type { font-size: 0.55rem; font-weight: 900; padding: 3px 7px; border-radius: 4px; background: rgba(0, 240, 255, 0.08); color: var(--neon-cyan); border: 1px solid rgba(0, 240, 255, 0.2); text-transform: uppercase; }
         .card-desc { font-size: 0.8rem; color: #94a3b8; line-height: 1.45; margin-bottom: 14px; }
 
-        .more-text { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; font-size: 0.78rem; color: #cbd5e1; background: rgba(0,0,0,0.3); border-radius: 8px; padding: 0 10px; }
-        .cyber-card.is-expanded .more-text { max-height: 200px; padding: 10px; margin-bottom: 14px; border-left: 2px solid var(--neon-cyan); overflow-y: auto; }
+        /* Contenedor Desplegable Dinámico Avanzado */
+        .sliding-drawer { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease; display: flex; flex-direction: column; gap: 10px; }
+        .cyber-card.is-expanded .sliding-drawer { max-height: 500px; margin-top: 12px; padding-top: 4px; border-top: 1px dashed rgba(255,255,255,0.08); }
+        
+        .more-text { font-size: 0.78rem; color: #cbd5e1; background: rgba(0,0,0,0.3); border-radius: 8px; padding: 10px; border-left: 2px solid var(--neon-cyan); }
 
         /* =========================================================================
            🔋 BARRA DE ENERGÍA DE SPONSORS (PLASMA ENERGY BAR)
            ========================================================================= */
-        .energy-section { margin-bottom: 14px; position: relative; }
+        .energy-section { margin-bottom: 4px; position: relative; }
         .energy-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; font-size: 0.68rem; font-weight: 700; color: #94a3b8; }
         .energy-count-node { color: #fff; font-weight: 800; }
         
@@ -188,14 +250,14 @@
         .btn-open-ma { background: rgba(255, 0, 127, 0.03); border-color: var(--neon-magenta); color: var(--neon-magenta); }
         .btn-open-web { background: rgba(57, 255, 20, 0.03); border-color: var(--neon-green); color: var(--neon-green); }
 
-        .monetization-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 6px; margin-top: 4px; border-top: 1px dashed rgba(255,255,255,0.06); padding-top: 8px; }
+        .monetization-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 6px; border-top: 1px dashed rgba(255,255,255,0.06); padding-top: 8px; }
         .monetization-row:empty { display: none; padding: 0; border: none; }
         .btn-sponsor { background: rgba(255, 215, 0, 0.04); border-color: var(--neon-gold); color: var(--neon-gold); }
         .btn-premium-sell { background: rgba(157, 78, 221, 0.06); border-color: var(--neon-purple); color: var(--neon-purple); }
 
         /* Estilos específicos para Bloques Informativos de Menú Inferior */
         .info-panel-box { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 18px; margin-bottom: 16px; }
-        .info-panel-title { font-size: 1.1rem; font-weight: 800; color: #fff; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; border-b: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px;}
+        .info-panel-title { font-size: 1.1rem; font-weight: 800; color: #fff; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px;}
         .info-panel-desc { font-size: 0.8rem; color: #cbd5e1; line-height: 1.5; margin-bottom: 14px; }
         
         .promo-grid-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 12px; }
@@ -266,6 +328,33 @@
 </head>
 <body>
 
+    <div class="floating-ad-overlay" id="fomo-ad-overlay">
+        <div class="ad-content-box">
+            <button class="ad-close-btn" onclick="closeFloatingAd()"><i data-lucide="x" style="width:14px; height:14px;"></i></button>
+            <span class="ad-badge">Oportunidad VIP</span>
+            <h3 class="ad-title">Plazas de Sponsor</h3>
+            <p class="ad-desc">Asegura tu espacio publicitario prioritario en la red Core Matrix. Acceso a tráfico cruzado orgánico y métricas validadas.</p>
+            
+            <div class="ad-metrics-row">
+                <div class="ad-meta-box">
+                    <span class="ad-meta-label">Disponibilidad</span>
+                    <span class="ad-meta-value color-fomo">3 / 5 Plazas</span>
+                </div>
+                <div class="ad-meta-box">
+                    <span class="ad-meta-label">Cierre de Oferta</span>
+                    <span class="ad-meta-value color-timer" id="ad-countdown">59:59</span>
+                </div>
+            </div>
+
+            <button class="btn-cyber btn-sponsor" style="width: 100%; border-color: var(--neon-magenta); color: #fff; background: rgba(255,0,127,0.1);" onclick="ejecutarMensajePrivadoAnuncio()">
+                <i data-lucide="message-circle-code"></i>Contactar Chat Privado
+            </button>
+            
+            <div class="ad-auto-close-bar">
+                <div class="ad-auto-close-fill" id="ad-progress-bar"></div>
+            </div>
+        </div>
+    </div>
     <header class="cyber-header">
         <div class="user-profile-block" onclick="copiarTelegramIdInfo()" id="user-header-trigger">
             <img class="user-avatar" id="tg-user-avatar" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150" alt="Avatar">
@@ -324,8 +413,7 @@
             <h3 class="info-panel-title"><i data-lucide="network"></i>Nuestra Red Operativa</h3>
             <p class="info-panel-desc">Sintoniza de forma directa los nodos informativos y canales estratégicos que componen la infraestructura orgánica de la Lista Golden.</p>
         </div>
-        <div class="cards-container" id="network-channels-wrapper">
-            </div>
+        <div class="cards-container" id="network-channels-wrapper"></div>
     </section>
 
     <section id="sec-colaborar" class="app-section">
@@ -373,8 +461,7 @@
     <section class="reviews-section-wrapper">
         <h3 class="reviews-section-title">Feedback del Sector</h3>
         <div class="carousel-track-container">
-            <div class="carousel-track" id="carousel-target-track">
-                </div>
+            <div class="carousel-track" id="carousel-target-track"></div>
         </div>
     </section>
 
@@ -410,11 +497,12 @@
 
     <script>
         // =========================================================================
-        // 🗃️ CONFIGURACIÓN DE DATA MASTER
+        // 🗃️ CONFIGURACIÓN DE DATA MASTER (Actualizada con Imágenes Propias)
         // =========================================================================
         const MAESTRO_DATA = [
             {
                 id: "p_mundobots", cluster: "proyecto", titulo: "Mundo Bots", estado: "FASE BETA", estado_codigo: "beta",
+                imagen: "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=150",
                 descripcion: "Directorio avanzado y categorizado de Bots en Telegram.",
                 descripcion_larga: "Explora, puntúa y añade tus bots favoritos al directorio maestro de la red con soporte interactivo completo.",
                 etiquetas: ["BOT", "MINI-APP"], url_bot: "https://t.me/MundoBots_Bot", url_miniapp: "https://t.me/ejemplo", url_web: "",
@@ -424,6 +512,7 @@
             },
             {
                 id: "p_goldenhub", cluster: "proyecto", titulo: "Golden Hub", estado: "FASE BETA", estado_codigo: "beta",
+                imagen: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=150",
                 descripcion: "Ecosistema unificado de Servicios Freelance verificados.",
                 descripcion_larga: "Conecta con profesionales de confianza y gestiona flujos de trabajo eficientes directamente desde Telegram.",
                 etiquetas: ["BOT", "MINI-APP"], url_bot: "https://t.me/ejemplo", url_miniapp: "https://t.me/ejemplo", url_web: "",
@@ -433,6 +522,7 @@
             },
             {
                 id: "p_goldenads", cluster: "proyecto", titulo: "Golden Ads", estado: "FASE ALPHA", estado_codigo: "alpha",
+                imagen: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=150",
                 descripcion: "Catálogo estratégico de canales para anunciantes en Telegram.",
                 descripcion_larga: "Encuentra espacios publicitarios de alto rendimiento y rentabiliza comunidades mediante métricas orgánicas validadas.",
                 etiquetas: ["BOT", "MINI-APP"], url_bot: "https://t.me/ejemplo", url_miniapp: "https://t.me/ejemplo", url_web: "",
@@ -442,6 +532,7 @@
             },
             {
                 id: "b_cynthia", cluster: "bot_puro", titulo: "Cynthia Golden Bot", estado: "EN PRODUCCIÓN", estado_codigo: "prod",
+                imagen: "https://images.unsplash.com/photo-1531747118685-ca8fa6e08806?w=150",
                 descripcion: "Moderadora algorítmica y protectora de la comunidad.",
                 descripcion_larga: "Gestiona accesos, limpia spam eficientemente y ofrece automatización de soporte a los miembros del ecosistema.",
                 etiquetas: ["BOT"], url_bot: "https://t.me/ejemplo", url_miniapp: "", url_web: "",
@@ -467,6 +558,77 @@
         let cachedUserId = "548930211"; // Fallback estático de desarrollo
 
         // =========================================================================
+        // 📢 INICIO: NUEVO SCRIPTING LOGIC PARA EL ANUNCIO FLOTANTE
+        // =========================================================================
+        let autoCloseTimeout;
+        let countdownInterval;
+
+        function checkAndShowAd() {
+            const hoy = new Date().toISOString().slice(0, 10); // Formato YYYY-MM-DD
+            const ultimoRegistro = localStorage.getItem('last_ad_view_date');
+
+            if (ultimoRegistro !== hoy) {
+                // Configurar cuenta regresiva de 1 hora (3600 segundos)
+                initAdCountdown(3600);
+                
+                // Mostrar el anuncio
+                const overlay = document.getElementById("fomo-ad-overlay");
+                overlay.classList.add("is-visible");
+                
+                // Animación visual de la barra de progreso reduciéndose a los 15s
+                setTimeout(() => {
+                    document.getElementById("ad-progress-bar").style.width = "0%";
+                }, 100);
+
+                // Forzar auto-cierre a los 15 segundos
+                autoCloseTimeout = setTimeout(() => {
+                    closeFloatingAd();
+                }, 15000);
+
+                // Marcar el día de hoy como mostrado
+                localStorage.setItem('last_ad_view_date', hoy);
+            }
+        }
+
+        function initAdCountdown(durationInSeconds) {
+            let timer = durationInSeconds;
+            const targetDisplay = document.getElementById("ad-countdown");
+            
+            countdownInterval = setInterval(() => {
+                let minutes = parseInt(timer / 60, 10);
+                let seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                targetDisplay.textContent = minutes + ":" + seconds;
+
+                if (--timer < 0) {
+                    clearInterval(countdownInterval);
+                    targetDisplay.textContent = "00:00";
+                }
+            }, 1000);
+        }
+
+        function closeFloatingAd() {
+            const overlay = document.getElementById("fomo-ad-overlay");
+            if (overlay) {
+                overlay.classList.remove("is-visible");
+            }
+            // Limpiar los procesos en segundo plano
+            clearTimeout(autoCloseTimeout);
+            clearInterval(countdownInterval);
+        }
+
+        function ejecutarMensajePrivadoAnuncio() {
+            closeFloatingAd();
+            ejecutarMensajePrivado('Me interesa aplicar a una de las 3/5 plazas VIP disponibles para Sponsors.');
+        }
+        // =========================================================================
+        // 📢 FIN: SCRIPTING LOGIC PARA EL ANUNCIO FLOTANTE
+        // =========================================================================
+
+        // =========================================================================
         // 🔄 RENDERING PIPELINES & SPA NAVIGATION
         // =========================================================================
         function switchTabApp(sectionId, elementButton) {
@@ -490,7 +652,13 @@
 
             return `
                 <div class="cyber-card status-${item.estado_codigo}" id="card-${item.id}">
-                    <div class="card-header-row"><h2 class="card-title">${item.titulo}</h2></div>
+                    <div class="card-top-identity">
+                        <img src="${item.imagen}" class="card-custom-img" alt="${item.titulo}">
+                        <div class="card-title-block">
+                            <h2 class="card-title">${item.titulo}</h2>
+                        </div>
+                    </div>
+
                     <div class="badge-row">
                         <span class="tag-status">${item.estado}</span>
                         ${item.etiquetas.map(t => `<span class="tag-type">${t}</span>`).join('')}
@@ -509,16 +677,19 @@
                         <div class="energy-tooltip"><i data-lucide="activity" style="width:12px; height:12px; display:inline; vertical-align:middle;"></i> Core requiere ${item.sponsors_target} sponsors para estabilidad total.</div>
                     </div>
                     
-                    <div class="more-text">${item.descripcion_larga}</div>
                     <div class="actions-grid">
                         <button class="btn-cyber btn-read-more" onclick="toggleReadMore('${item.id}')"><i data-lucide="info"></i>Saber más</button>
-                        <div class="links-row">
-                            ${item.url_bot ? `<button class="btn-cyber btn-open-bot" onclick="abrirEnlace('${item.url_bot}')"><i data-lucide="bot"></i>Bot</button>` : ''}
-                            ${item.url_miniapp ? `<button class="btn-cyber btn-open-ma" onclick="abrirEnlace('${item.url_miniapp}')"><i data-lucide="cpu"></i>Mini App</button>` : ''}
-                        </div>
-                        <div class="monetization-row">
-                            ${item.sponsor ? `<button class="btn-cyber btn-sponsor" onclick="abrirEnlace('${item.url_sponsor}')"><i data-lucide="heart-handshake"></i>Apoyar</button>` : ''}
-                            ${item.venderpremium ? `<button class="btn-cyber btn-premium-sell" onclick="abrirEnlace('${item.url_premium}')"><i data-lucide="crown"></i>Comprar VIP</button>` : ''}
+                        
+                        <div class="sliding-drawer" id="drawer-${item.id}">
+                            <div class="more-text">${item.descripcion_larga}</div>
+                            <div class="links-row">
+                                ${item.url_bot ? `<button class="btn-cyber btn-open-bot" onclick="abrirEnlace('${item.url_bot}')"><i data-lucide="bot"></i>Bot</button>` : ''}
+                                ${item.url_miniapp ? `<button class="btn-cyber btn-open-ma" onclick="abrirEnlace('${item.url_miniapp}')"><i data-lucide="cpu"></i>Mini App</button>` : ''}
+                            </div>
+                            <div class="monetization-row">
+                                ${item.sponsor ? `<button class="btn-cyber btn-sponsor" onclick="abrirEnlace('${item.url_sponsor}')"><i data-lucide="heart-handshake"></i>Apoyar</button>` : ''}
+                                ${item.venderpremium ? `<button class="btn-cyber btn-premium-sell" onclick="abrirEnlace('${item.url_premium}')"><i data-lucide="crown"></i>Comprar VIP</button>` : ''}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -584,7 +755,7 @@
         }
 
         // =========================================================================
-        // 🛠️ UTILITIES & TELEGRAM TELEMETRY INTERFACES
+        // 🛠专 UTILITIES & TELEGRAM TELEMETRY INTERFACES
         // =========================================================================
         function syncTelegramUser() {
             if (window.Telegram?.WebApp?.initDataUnsafe?.user) {
@@ -602,7 +773,6 @@
             navigator.clipboard.writeText(cachedUserId).then(() => {
                 showToast(`ID: ${cachedUserId} Copiado`);
             }).catch(() => {
-                // Fallback manual si los permisos del WebView están restringidos
                 showToast("Error al copiar automáticamente.");
             });
         }
@@ -620,7 +790,7 @@
                 userTag = `@${window.Telegram.WebApp.initDataUnsafe.user.username}`;
             }
             const textRaw = encodeURIComponent(`[CORE MATRIX] ${motivo}\nCuenta ID: ${cachedUserId}\nUsuario: ${userTag}`);
-            abrirEnlace(`https://t.me/SoporteListaGoldenBot?start=msg_${cachedUserId}`);
+            abrirEnlace(`https://t.me/SoporteListaGoldenBot?start=${textRaw}`);
         }
 
         // Auto-scroll para el carrusel de reseñas
@@ -628,6 +798,7 @@
             const track = document.getElementById("carousel-target-track");
             let index = 0;
             setInterval(() => {
+                if(!track) return;
                 const max = REVIEWS_DATA.length - 1;
                 index = index >= max ? 0 : index + 1;
                 const offset = index * 294; // Ancho de la tarjeta + gap
@@ -637,9 +808,16 @@
 
         function setGlobalTab(t) { activeTab = t; document.querySelectorAll(".tab-btn").forEach((b, i) => b.classList.toggle("active", (t==='all'&&i===0)||(t==='proyecto'&&i===1)||(t==='bot_puro'&&i===2))); filtrarYRenderizar(); }
         function setSubFilter(s) { activeSubFilter = s; document.querySelectorAll(".subfilter-pill").forEach(p => p.classList.toggle("active", p.id===('pill-'+(s==='Todos'?'todos':s==='Mini-App'?'ma':s==='Bot'?'bot':'web')))); filtrarYRenderizar(); }
-        function toggleReadMore(id) { const c = document.getElementById(`card-${id}`); if(c) c.classList.toggle("is-expanded"); }
+        
+        function toggleReadMore(id) { 
+            const card = document.getElementById(`card-${id}`); 
+            if(card) {
+                card.classList.toggle("is-expanded");
+            }
+        }
+        
         function openSponsorModal() { document.getElementById("modal-sponsor").classList.add("is-open"); }
-        function closeSponsorModal() { document.getElementById("modal-sponsor").classList.remove("is-open"); }
+        function closeSponsorModal() { document.getElementById("modal-sponsor").classList.remove("is-remove"); document.getElementById("modal-sponsor").classList.remove("is-open"); }
         function abrirEnlace(url) { if (window.Telegram?.WebApp?.openTelegramLink) { window.Telegram.WebApp.openTelegramLink(url); } else { window.open(url, '_blank'); } }
 
         document.addEventListener("DOMContentLoaded", () => {
@@ -652,6 +830,9 @@
             renderizarRedSitios();
             renderizarReviews();
             initCarouselAutoScroll();
+            
+            // Lanzar validador automático del anuncio diario
+            checkAndShowAd();
         });
     </script>
 </body>
