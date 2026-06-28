@@ -55,7 +55,7 @@
         }
         .top-guide-alert.show { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
         .guide-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-        .guide-avatar { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--neon-magenta); object-fit: cover; }
+        .guide-avatar { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--neon-magenta); object-fit: cover; background: #0c0b14; }
         .guide-meta { display: flex; flex-direction: column; }
         .guide-title { font-size: 0.75rem; font-weight: 800; color: #fff; }
         .guide-username { font-size: 0.62rem; color: var(--neon-cyan); font-family: monospace; }
@@ -427,7 +427,7 @@
         </div>
         <div class="guide-body" id="guide-tg-message">Mensaje de sincronización core.</div>
         <button class="btn-cyber btn-open-bot" style="padding:6px; font-size:0.65rem;" id="guide-action-btn">
-            <i data-lucide="eye" style="width:12px; height:12px;"></i> Inspeccionar Proyecto
+            <i data-lucide="eye" style="width:12px; height:12px;"></i> Inspect Node Project
         </button>
         <div class="guide-progress-container">
             <div class="guide-progress-bar" id="guide-progress-fill"></div>
@@ -1298,7 +1298,8 @@
             if (window.Telegram?.WebApp?.initDataUnsafe?.user?.username) {
                 userTag = `@${window.Telegram.WebApp.initDataUnsafe.user.username}`;
             }
-            const textRaw = encodeURIComponent([CORE MATRIX] ${motivo}\nCuenta ID: ${cachedUserId}\nUsuario: ${userTag});
+            // CORREGIDO: Se han añadido las comillas invertidas (backticks) obligatorias para evitar el error de sintaxis crítico.
+            const textRaw = encodeURIComponent(`[CORE MATRIX] ${motivo}\nCuenta ID: ${cachedUserId}\nUsuario: ${userTag}`);
             abrirEnlace(`https://t.me/Airdayz?start=${textRaw}`);
         }
 
@@ -1340,6 +1341,9 @@
             initCarouselAutoScroll();
             checkAndShowAd();
             configurarSoporteSwipeAlerta();
+
+            // Sincronización final y forzada de los componentes Lucide estáticos iniciales
+            if(window.lucide) window.lucide.createIcons();
 
             // Loop de mensajes de guía arriba centro: duración exacta 10s en pantalla, intervalo cada 60s
             lanzarSiguienteMensajeGuia();
