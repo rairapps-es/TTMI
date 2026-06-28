@@ -121,6 +121,8 @@
             border-bottom: 2px solid var(--neon-cyan); box-shadow: 0 2px 20px rgba(0, 240, 255, 0.25);
             display: flex; justify-content: space-between; align-items: center; padding: 0 16px; z-index: 999;
         }
+        .header-logo { font-weight: 900; font-size: 1.1rem; letter-spacing: 1px; color: #fff; }
+        .header-logo span { color: var(--neon-cyan); }
         .user-profile-block { display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .user-avatar { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--neon-cyan); object-fit: cover; background: #0c0b14; order: 2; }
         .user-meta-data { display: flex; flex-direction: column; align-items: flex-end; order: 1; }
@@ -219,26 +221,46 @@
 
         .card-desc { font-size: 0.8rem; color: #94a3b8; line-height: 1.45; margin-bottom: 14px; }
 
-        /* Tarjetas de Premios Elegantes */
+        /* =========================================================================
+           🏬 TIENDA DE RECOMPENSAS COMPACTA Y MODERNA
+           ========================================================================= */
         .reward-card {
-            background: linear-gradient(135deg, rgba(20, 20, 35, 0.95), rgba(10, 10, 20, 0.98));
-            border: 1px solid rgba(255, 215, 0, 0.2); border-radius: 16px; padding: 20px;
-            position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            display: flex; flex-direction: column; gap: 12px; transition: all 0.3s;
+            background: linear-gradient(135deg, rgba(12, 12, 28, 0.98), rgba(6, 6, 14, 0.99));
+            border: 1px solid rgba(0, 240, 255, 0.15); border-radius: 12px; padding: 14px;
+            position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); transition: border-color 0.3s;
         }
-        .reward-card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(45deg, transparent, rgba(255,215,0,0.03), transparent);
-            transform: translateX(-100%); transition: transform 0.6s;
+        .reward-card:hover { border-color: rgba(0, 240, 255, 0.4); }
+        .reward-header-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+        .reward-card-title { font-size: 0.95rem; font-weight: 800; color: #fff; line-height: 1.3; flex: 1; }
+        
+        .reward-stock-badge {
+            background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px; padding: 3px 6px; font-size: 0.65rem; color: #94a3b8; font-weight: 700;
+            white-space: nowrap; display: flex; align-items: center; gap: 4px;
         }
-        .reward-card:hover::before { transform: translateX(100%); }
-        .reward-day-badge {
-            position: absolute; top: 12px; right: 12px; background: rgba(255, 215, 0, 0.1);
-            color: var(--neon-gold); font-size: 0.6rem; font-weight: 900; padding: 4px 10px;
-            border-radius: 20px; border: 1px solid rgba(255, 215, 0, 0.3); text-transform: uppercase;
+        .reward-stock-badge span { color: var(--neon-cyan); font-weight: 900; }
+        
+        .reward-pricing-grid { display: flex; gap: 12px; align-items: center; margin: 2px 0 6px 0; }
+        .price-tag-item { display: flex; align-items: center; gap: 4px; font-size: 0.75rem; font-weight: 700; }
+        .price-tag-item.stars { color: var(--neon-gold); }
+        .price-tag-item.points { color: var(--neon-cyan); }
+        
+        .btn-claim-reward-node {
+            width: 100%; padding: 8px; font-size: 0.72rem; font-weight: 900; text-transform: uppercase;
+            border-radius: 6px; border: 1px solid transparent; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;
         }
-        .reward-title { font-size: 1.2rem; font-weight: 900; color: #fff; margin-top: 8px; }
-        .reward-points-requirement { font-size: 0.72rem; color: var(--neon-cyan); font-weight: 700; display: flex; align-items: center; gap: 4px; }
+        .btn-claim-reward-node:disabled {
+            background: rgba(255,255,255,0.02) !important; border-color: rgba(255,255,255,0.05) !important;
+            color: var(--text-muted) !important; cursor: not-allowed; box-shadow: none !important;
+        }
+        .btn-claim-reward-node.unlocked {
+            background: linear-gradient(90deg, rgba(0, 240, 255, 0.1), rgba(157, 78, 221, 0.1));
+            border-color: var(--neon-cyan); color: #fff;
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.15);
+        }
+        .btn-claim-reward-node.unlocked:active { transform: scale(0.98); }
 
         /* =========================================================================
            🕹️ CONTROLES & BOTONES GLOBALES
@@ -298,56 +320,6 @@
         .modal-title { font-size: 1.15rem; font-weight: 900; text-transform: uppercase; color: #fff; text-shadow: 0 0 8px var(--neon-gold); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
         .modal-body { font-size: 0.8rem; color: #cbd5e1; line-height: 1.5; margin-bottom: 18px; }
         .btn-modal-close { position: absolute; top: 12px; right: 12px; background: none; border: none; color: #64748b; cursor: pointer; }
-
-        /* =========================================================================
-           👑 DOMINGO: DIALS & ANIMACIONES DEL COFRE MÁGICO LEVITANTE
-           ========================================================================= */
-        .chest-container-box {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 20px; margin: 20px 0; position: relative; width: 100%; min-height: 220px;
-        }
-        .chest-element-graphic {
-            font-size: 4.5rem; cursor: pointer; user-select: none;
-            animation: chestLevitationEffect 3s ease-in-out infinite;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: inline-block; position: relative; z-index: 5;
-        }
-        @keyframes chestLevitationEffect {
-            0% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-12px) rotate(2deg); }
-            100% { transform: translateY(0px) rotate(0deg); }
-        }
-        .chest-element-graphic.opening-process {
-            animation: chestOpenBurstAnimation 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-        @keyframes chestOpenBurstAnimation {
-            0% { transform: scale(1) translateY(-12px); }
-            30% { transform: scale(1.3) rotate(-5deg); }
-            100% { transform: scale(1) translateY(-50px); opacity: 0; }
-        }
-        .chest-aura-glow {
-            position: absolute; width: 140px; height: 140px; border-radius: 50%;
-            background: radial-gradient(circle, rgba(157, 78, 221, 0.4) 0%, transparent 70%);
-            filter: blur(10px); opacity: 0; z-index: 1; pointer-events: none;
-            transition: opacity 0.5s;
-        }
-        .chest-container-box.has-aura .chest-aura-glow {
-            opacity: 1; animation: neonAuraSpin 5s linear infinite;
-        }
-        @keyframes neonAuraSpin {
-            0% { transform: scale(1) rotate(0deg); background: radial-gradient(circle, rgba(0, 240, 255, 0.5) 0%, transparent 70%); }
-            50% { transform: scale(1.2) rotate(180deg); background: radial-gradient(circle, rgba(255, 0, 127, 0.5) 0%, transparent 70%); }
-            100% { transform: scale(1) rotate(360deg); background: radial-gradient(circle, rgba(0, 240, 255, 0.5) 0%, transparent 70%); }
-        }
-        .revealed-chest-text-prize {
-            font-size: 1.4rem; font-weight: 900; color: var(--neon-gold); text-align: center;
-            text-shadow: 0 0 15px var(--neon-gold); opacity: 0; transform: scale(0.7);
-            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            margin-top: 20px; z-index: 6; display: none;
-        }
-        .revealed-chest-text-prize.show-prize {
-            opacity: 1; transform: scale(1); display: block;
-        }
     </style>
 </head>
 <body>
@@ -377,7 +349,7 @@
             <h3 class="ad-title">Plazas de Sponsor Matrix</h3>
             <p class="ad-desc">Asegura tu espacio publicitario prioritario deslizando este anuncio a la izquierda para descartar temporalmente.</p>
             <button class="btn-cyber btn-sponsor" style="width: 100%; border-color: var(--neon-magenta); color: #fff; background: rgba(255,0,127,0.1);" onclick="ejecutarMensajePrivadoAnuncio()">
-                <i data-lucide="message-circle-code"></i>Contactar Chat Privado
+                <i data-lucide="message-circle"></i>Contactar Chat Privado
             </button>
             <div class="ad-auto-close-bar">
                 <div class="ad-auto-close-fill" id="ad-progress-bar"></div>
@@ -388,7 +360,7 @@
     <header class="cyber-header">
         <div class="header-logo">Core <span>Matrix</span></div>
         
-        <div class="score-display-pill" onclick="openPointsDashboardModal()">
+        <div class="score-display-pill" onclick="switchTabApp('sec-recompensas', document.querySelector('.nav-item-btn:nth-child(4)'))">
             <i data-lucide="zap"></i>
             <span id="global-user-score-display">0 Puntos</span>
         </div>
@@ -397,7 +369,6 @@
     <div class="toast-notify" id="app-toast">Acción Procesada</div>
 
     <section id="sec-proyectos" class="app-section active">
-        
         <div class="sponsors-carousel-container">
             <div class="sponsors-carousel-track" id="sponsors-marquee-track"></div>
         </div>
@@ -447,8 +418,8 @@
 
     <section id="sec-recompensas" class="app-section">
         <div class="info-panel-box" style="border-color: var(--neon-gold);">
-            <h3 class="info-panel-title" style="color: var(--neon-gold);"><i data-lucide="gift"></i>Matriz de Recompensas Diarias</h3>
-            <p class="info-panel-desc">Acumula 100 puntos pulsando botones de la plataforma para desbloquear el premio asignado de hoy. Los puntos se resetean a las 00:00 de tu hora local.</p>
+            <h3 class="info-panel-title" style="color: var(--neon-gold);"><i data-lucide="shopping-bag"></i>Tienda de Premios Matrix</h3>
+            <p class="info-panel-desc">Intercambia tu saldo de puntos acumulados junto con estrellas de Telegram. <br>⚠️ <strong>Regla de oro:</strong> Solo puedes reclamar <strong>1 premio al día</strong> en toda la tienda.</p>
         </div>
         <div class="cards-container" id="rewards-cards-wrapper"></div>
     </section>
@@ -464,7 +435,7 @@
 
         <div class="info-panel-box" style="border-color: var(--neon-magenta); margin-top: 16px;">
             <h3 class="info-panel-title" style="color: var(--neon-magenta);"><i data-lucide="sparkles"></i>Creadores de Contenido &amp; Influencers</h3>
-            <p class="info-panel-desc">¿Tienes una audiencia digital o canal de difusión? Únete a nuestro programa exclusivo de amplificación. Te ofrecemos asignación directa de ingresos por clics cruzados, accesos premium prioritarios para tus seguidores y campañas personalizadas.</p>
+            <p class="info-panel-desc">¿Tienes una audiencia digital o canal de difusión? Únete a nuestro programa exclusivo de amplificación.</p>
             <button class="btn-cyber btn-open-ma" style="width: 100%;" onclick="ejecutarMensajePrivado('Hola! Soy creador de contenido/influencer y quiero colaborar con la Red Lista Golden.')">
                 <i data-lucide="star"></i>Aplicar como Creador VIP
             </button>
@@ -480,47 +451,11 @@
         </div>
     </section>
 
-    <div class="cyber-modal" id="modal-points-dashboard">
-        <div class="modal-content" style="border-color: var(--neon-cyan); box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);">
-            <button class="btn-modal-close" onclick="closePointsDashboardModal()"><i data-lucide="x"></i></button>
-            <h3 class="modal-title" style="color: var(--neon-cyan); text-shadow: 0 0 8px var(--neon-cyan);"><i data-lucide="database"></i>Panel de Energía Core</h3>
-            
-            <div class="modal-body" style="display: flex; flex-direction: column; gap: 14px;">
-                <div>
-                    <span style="font-size: 0.7rem; color: #94a3b8; font-weight: 800; text-transform: uppercase;">Premio Asignado de Hoy:</span>
-                    <h4 id="dashboard-today-reward-title" style="color: #fff; font-size: 1.1rem; font-weight: 900; margin-top: 2px;">Cargando...</h4>
-                </div>
-
-                <div>
-                    <div style="display: flex; justify-content: space-between; font-size: 0.7rem; font-weight: 800; color: #94a3b8; margin-bottom: 4px;">
-                        <span>BARRA DE ENERGÍA DE PUNTOS ACUMULADOS</span>
-                        <span id="dashboard-energy-text" style="color: var(--neon-cyan);">0 / 100 PTS</span>
-                    </div>
-                    <div style="width: 100%; height: 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(0,240,255,0.2); border-radius: 6px; overflow: hidden;">
-                        <div id="dashboard-energy-bar-fill" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple)); transition: width 0.4s ease;"></div>
-                    </div>
-                </div>
-
-                <div id="sunday-chest-wrapper" style="display: none;">
-                    <div class="chest-container-box" id="chest-box-container">
-                        <div class="chest-aura-glow"></div>
-                        <div class="chest-element-graphic" id="interactive-chest-emoji" onclick="triggerSundayChestOpening()">🧰</div>
-                        <div class="revealed-chest-text-prize" id="revealed-chest-msg"></div>
-                    </div>
-                </div>
-
-                <button class="btn-cyber" id="btn-dynamic-claim-reward" style="margin-top: 10px;" onclick="processClaimRewardSubmission()">
-                    Bloqueado (Faltan Puntos)
-                </button>
-            </div>
-        </div>
-    </div>
-
     <nav class="cyber-bottom-navbar">
         <button class="nav-item-btn active-nav" onclick="switchTabApp('sec-proyectos', this)"><i data-lucide="home"></i><span>Hub</span></button>
         <button class="nav-item-btn" onclick="switchTabApp('sec-monitor', this)"><i data-lucide="activity"></i><span>Monitor</span></button>
         <button class="nav-item-btn" onclick="switchTabApp('sec-red-sitios', this)"><i data-lucide="globe"></i><span>Red Sitios</span></button>
-        <button class="nav-item-btn" onclick="switchTabApp('sec-recompensas', this)"><i data-lucide="gift"></i><span>Premios</span></button>
+        <button class="nav-item-btn" onclick="switchTabApp('sec-recompensas', this)"><i data-lucide="shopping-bag"></i><span>Tienda</span></button>
         <button class="nav-item-btn" onclick="switchTabApp('sec-colaborar', this)"><i data-lucide="handshake"></i><span>Colaborar</span></button>
         <button class="nav-item-btn" onclick="switchTabApp('sec-promocion', this)"><i data-lucide="rocket"></i><span>Promoción</span></button>
     </nav>
@@ -534,12 +469,7 @@
             { nombre: "Matías Romero", pais: "🇦🇷 Argentina", img: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=100" },
             { nombre: "Sofía Hernández", pais: "🇲🇽 México", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100" },
             { nombre: "Diego Castillo", pais: "🇨🇱 Chile", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100" },
-            { nombre: "Valentina Gómez", pais: "🇨🇴 Colombia", img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100" },
-            { nombre: "Andrés Reyes", pais: "🇵🇪 Perú", img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100" },
-            { nombre: "Camila Vega", pais: "🇺🇾 Uruguay", img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100" },
-            { nombre: "Lucas Torres", pais: "🇪🇨 Ecuador", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" },
-            { nombre: "Mariana Paz", pais: "🇧🇴 Bolivia", img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100" },
-            { nombre: "Gabriel Méndez", pais: "🇻🇪 Venezuela", img: "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?w=100" }
+            { nombre: "Valentina Gómez", pais: "🇨🇴 Colombia", img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100" }
         ];
 
         const MAESTRO_DATA = [
@@ -550,22 +480,23 @@
         ];
 
         const RED_SITIOS_DATA = [
-            { titulo: "Canal Core Golden", tipo: "CANAL", privacidad: "Público", categoria: "Herramientas", desc: "Notificaciones centrales de la red de desarrollo.", suscriptores: "12K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150" },
-            { titulo: "Avisos Alpha Matrix", tipo: "CANAL", privacidad: "Privado", categoria: "Cripto", desc: "Logs de actualizaciones críticas de nuestros bots.", suscriptores: "4.5K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=150" },
-            { titulo: "Comunidad VIP Global", tipo: "GRUPO", privacidad: "Privado", categoria: "Comunidad", desc: "Foro de debate para patrocinadores verificados.", suscriptores: "1.2K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=150" }
+            { titulo: "Canal Core Golden", tipo: "CANAL", privacidad: "Público", categoria: "Herramientas", desc: "Notificaciones centrales de la red de desarrollo.", suscriptores: "12K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150" }
         ];
 
-        const PREMIOS_DIARIOS = {
-            1: { dia: "Lunes", premio: "CANCIÓN PERSONALIZADA POR IA" },
-            2: { dia: "Martes", premio: "TRANSFORMACIÓN DE FOTO" },
-            3: { dia: "Miércoles", premio: "GPLUS 1 MES GRATIS" },
-            4: { dia: "Jueves", premio: "REGALO DE 15⭐ ESTRELLAS DE TELEGRAM" },
-            5: { dia: "Viernes", premio: "MENCION EN EL CANAL @LISTAGOLDEN" },
-            6: { dia: "Sábado", premio: "POST PATROCINADO" },
-            0: { dia: "Domingo", premio: "COFRE SORPRESA ALEATORIO" }
-        };
+        // =========================================================================
+        // 🛍️ LISTADO DE PREMIOS CONFIGURADOS CON STOCK MENSUAL
+        // =========================================================================
+        const CATALOGO_PREMIOS = [
+            { id: "r_img", titulo: "Cambia la imagen del canal @ListaGolden", estrellas: 50, puntos: 100, stock: 4 },
+            { id: "r_name", titulo: "Cambia el nombre del canal @ListaGolden", estrellas: 75, puntos: 150, stock: 2 },
+            { id: "r_link", titulo: "Agrega un enlace en la descripción del canal @ListaGolden", estrellas: 100, puntos: 200, stock: 5 },
+            { id: "r_pin", titulo: "Post fijado en el canal @ListaGolden", estrellas: 120, puntos: 250, stock: 3 },
+            { id: "r_joke", titulo: "Publico un chiste malo en el canal @ListaGolden", estrellas: 10, puntos: 30, stock: 30 },
+            { id: "r_mention", titulo: "Mención en el canal @ListaGolden", estrellas: 40, puntos: 80, stock: 15 },
+            { id: "r_sponsor", titulo: "Post patrocinado en el canal @ListaGolden", estrellas: 150, puntos: 300, stock: 2 }
+        ];
 
-        let userScore = parseInt(localStorage.getItem('user_score')) || 0;
+        let userScore = parseInt(localStorage.getItem('user_score')) || 450; // Inicializado con puntos de ejemplo para probar la UI
         let adDisplayTimeout, adLoopInterval;
         let touchStartAdX = 0;
 
@@ -576,12 +507,8 @@
             const hoy = new Date().toDateString();
             const ultimoReset = localStorage.getItem('last_reset_date');
             if (ultimoReset !== hoy) {
-                userScore = 0;
-                localStorage.setItem('user_score', 0);
-                localStorage.removeItem('claimed_today');
-                localStorage.removeItem('sunday_chosen_prize');
+                localStorage.removeItem('claimed_store_today'); 
                 localStorage.setItem('last_reset_date', hoy);
-                updateScoreUI();
             }
         }
 
@@ -592,9 +519,10 @@
 
         function handleCardActionClick() {
             checkDailyReset();
-            userScore += 1;
+            userScore += 10; // Sumador de puntos aumentado para facilitar testeo de tienda
             updateScoreUI();
-            showToast("+1 Punto acumulado en tu saldo.");
+            renderRewardsCatalogue(); 
+            showToast("+10 Puntos acumulados en tu saldo.");
         }
 
         // =========================================================================
@@ -602,6 +530,7 @@
         // =========================================================================
         function buildSponsorsCarousel() {
             const track = document.getElementById("sponsors-marquee-track");
+            if(!track) return;
             const doubleList = [...SPONSORS_DATA, ...SPONSORS_DATA];
             track.innerHTML = doubleList.map(sp => `
                 <div class="sponsor-carousel-item">
@@ -618,16 +547,17 @@
         }
 
         // =========================================================================
-        // 📢 PATROCINIO OFICIAL: MOTOR ANUNCIOS INFINITO CADA 5 MINUTOS CON SWIPE
+        // 📢 MOTOR ANUNCIOS
         // =========================================================================
         function initInfiniteAdEngine() {
             triggerDisplayAd();
-            adLoopInterval = setInterval(triggerDisplayAd, 300000); // 5 Minutos (300.000 ms)
+            adLoopInterval = setInterval(triggerDisplayAd, 300000);
         }
 
         function triggerDisplayAd() {
             const adOverlay = document.getElementById("fomo-ad-overlay");
             const fillBar = document.getElementById("ad-progress-bar");
+            if(!adOverlay || !fillBar) return;
             
             fillBar.style.transition = 'none';
             fillBar.style.width = '100%';
@@ -636,13 +566,11 @@
             setTimeout(() => {
                 adOverlay.classList.add("is-visible");
                 adOverlay.style.transform = 'translateX(-50%) translateY(0)';
-                fillBar.style.transition = 'width 60s linear'; // Visible durante 1 minuto
+                fillBar.style.transition = 'width 60s linear';
                 fillBar.style.width = '0%';
             }, 100);
 
-            adDisplayTimeout = setTimeout(() => {
-                closeAdOverlayVisuals();
-            }, 60000); // Remoción automática tras 1 minuto
+            adDisplayTimeout = setTimeout(() => { closeAdOverlayVisuals(); }, 60000);
         }
 
         function closeAdOverlayVisuals() {
@@ -660,10 +588,11 @@
 
         function setupAdSwipeGestures() {
             const box = document.getElementById("ad-swipeable-box");
+            if(!box) return;
             box.addEventListener('touchstart', (e) => { touchStartAdX = e.changedTouches[0].screenX; }, { passive: true });
             box.addEventListener('touchend', (e) => {
                 let diffX = touchStartAdX - e.changedTouches[0].screenX;
-                if (diffX > 80) { // Deslizado con éxito a la izquierda
+                if (diffX > 80) {
                     closeAdOverlayVisuals();
                     showToast("Anuncio descartado.");
                 }
@@ -675,9 +604,6 @@
             ejecutarMensajePrivado('Me interesa el anuncio del patrocinio oficial de la Red.');
         }
 
-        // =========================================================================
-        // 🎴 RENDERING: MONITORIZACIÓN, RED SITIOS Y RECOMPENSAS
-        // =========================================================================
         function handleCompactFilters() {
             const cluster = document.getElementById("compact-cluster-dropdown").value;
             const tag = document.getElementById("compact-tags-dropdown").value;
@@ -686,6 +612,7 @@
 
         function renderHubCards(clusterFilter = "all", tagFilter = "Todos") {
             const wrapper = document.getElementById("cards-wrapper");
+            if(!wrapper) return;
             const filtrados = MAESTRO_DATA.filter(item => {
                 const matchCl = (clusterFilter === "all" || item.cluster === clusterFilter);
                 const matchTg = (tagFilter === "Todos" || item.etiquetas.includes(tagFilter));
@@ -700,7 +627,7 @@
                     </div>
                     <p class="card-desc">${item.descripcion}</p>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
-                        <button class="btn-cyber btn-read-more" onclick="handleCardActionClick()"><i data-lucide="plus"></i>Sumar 1 Punto</button>
+                        <button class="btn-cyber btn-read-more" onclick="handleCardActionClick()"><i data-lucide="plus"></i>Sumar +10 Pts</button>
                         ${item.url_bot ? `<button class="btn-cyber btn-open-bot" onclick="abrirEnlace('${item.url_bot}')"><i data-lucide="bot"></i>Abrir</button>` : ''}
                     </div>
                 </div>
@@ -715,6 +642,7 @@
             document.getElementById("monitor-count-fin").innerText = MAESTRO_DATA.filter(i => i.estado_codigo === "finalizado").length;
 
             const wrapper = document.getElementById("monitor-grid-wrapper");
+            if(!wrapper) return;
             wrapper.innerHTML = MAESTRO_DATA.map(item => `
                 <div class="cyber-card status-${item.estado_codigo}">
                     <div class="card-header-topline">
@@ -728,6 +656,7 @@
 
         function renderRedSitiosSection() {
             const container = document.getElementById("network-channels-wrapper");
+            if(!container) return;
             container.innerHTML = RED_SITIOS_DATA.map(ch => `
                 <div class="cyber-card status-operativo">
                     <div style="display:flex; justify-content:between; align-items:center; width:100%; margin-bottom:8px;">
@@ -739,173 +668,137 @@
                     </div>
                     <p class="card-desc">${ch.desc}</p>
                     <button class="btn-cyber btn-open-web" onclick="handleCardActionClick(); abrirEnlace('${ch.url}');">
-                        <i data-lucide="external-link"></i>Visitar Nodo (+1 Pt)
+                        <i data-lucide="external-link"></i>Visitar Nodo (+10 Pts)
                     </button>
                 </div>
             `).join('');
             if(window.lucide) window.lucide.createIcons();
         }
 
+        // =========================================================================
+        // 🏬 RENDERIZADOR COMPACTO DE LA TIENDA DE RECOMPENSAS DIARIAS
+        // =========================================================================
         function renderRewardsCatalogue() {
+            checkDailyReset();
             const wrapper = document.getElementById("rewards-cards-wrapper");
-            wrapper.innerHTML = Object.keys(PREMIOS_DIARIOS).map(key => {
-                const target = PREMIOS_DIARIOS[key];
+            if(!wrapper) return;
+
+            const haReclamadoHoy = localStorage.getItem('claimed_store_today') === 'true';
+
+            wrapper.innerHTML = CATALOGO_PREMIOS.map(item => {
+                const stockClave = `stock_mes_${item.id}`;
+                let currentStock = localStorage.getItem(stockClave);
+                if (currentStock === null) {
+                    localStorage.setItem(stockClave, item.stock);
+                    currentStock = item.stock;
+                } else {
+                    currentStock = parseInt(currentStock);
+                }
+
+                const tienePuntos = userScore >= item.puntos;
+                const sinStock = currentStock <= 0;
+                
+                let btnText = "Bloqueado (Faltan Puntos)";
+                let btnClass = "btn-claim-reward-node";
+                let isDisabled = true;
+
+                if (sinStock) {
+                    btnText = "Agotado este mes";
+                } else if (haReclamadoHoy) {
+                    btnText = "Límite Diario Alcanzado";
+                } else if (tienePuntos) {
+                    btnText = "Reclamar Premio";
+                    btnClass = "btn-claim-reward-node unlocked";
+                    isDisabled = false;
+                }
+
                 return `
                     <div class="reward-card">
-                        <span class="reward-day-badge">${target.dia}</span>
-                        <h3 class="reward-title">${target.premio}</h3>
-                        <div class="reward-points-requirement">
-                            <i data-lucide="check-circle" style="width:12px; height:12px;"></i> Requisito: 100 Puntos Básicos
+                        <div class="reward-header-row">
+                            <h4 class="reward-card-title">${item.titulo}</h4>
+                            <div class="reward-stock-badge">
+                                <i data-lucide="layers" style="width:10px; height:10px;"></i> Mes: <span>${currentStock} ud</span>
+                            </div>
                         </div>
-                        <button class="btn-cyber btn-sponsor" style="margin-top:6px;" onclick="openPointsDashboardModal()">
-                            <i data-lucide="sliders"></i>Gestionar Estado
+                        <div class="reward-pricing-grid">
+                            <div class="price-tag-item stars">
+                                <i data-lucide="star" style="width:12px; height:12px; fill:var(--neon-gold);"></i> ${item.estrellas} ⭐
+                            </div>
+                            <div class="price-tag-item points">
+                                <i data-lucide="zap" style="width:12px; height:12px; fill:var(--neon-cyan);"></i> ${item.puntos} Pts
+                            </div>
+                        </div>
+                        <button class="${btnClass}" ${isDisabled ? 'disabled' : ''} onclick="ejecutarCompraPremio('${item.id}', ${item.puntos})">
+                            <i data-lucide="${haReclamadoHoy ? 'lock' : 'gift'}"></i> ${btnText}
                         </button>
                     </div>
                 `;
             }).join('');
+            
             if(window.lucide) window.lucide.createIcons();
         }
 
         // =========================================================================
-        // 🔮 LOGIC: COFRE DEL DOMINGO Y RECLAMACIONES DINÁMICAS
+        // 🔐 PROCESADOR EXCLUSIVO DE RECLAMACIÓN Y REDIRECCIÓN TELEGRAM
         // =========================================================================
-        function getRewardDataForToday() {
-            const currentDayIndex = new Date().getDay(); 
-            let targetReward = PREMIOS_DIARIOS[currentDayIndex];
-
-            if (currentDayIndex === 0) { // Domingo
-                let chosen = localStorage.getItem('sunday_chosen_prize');
-                if (!chosen) {
-                    const validPool = ["CANCIÓN PERSONALIZADA POR IA", "TRANSFORMACIÓN DE FOTO", "GPLUS 1 MES GRATIS", "REGALO DE 15⭐ ESTRELLAS DE TELEGRAM", "MENCION EN EL CANAL @LISTAGOLDEN", "POST PATROCINADO"];
-                    chosen = validPool[Math.floor(Math.random() * validPool.length)];
-                    localStorage.setItem('sunday_chosen_prize', chosen);
-                }
-                return { dia: "Domingo", premio: chosen, esCofre: true };
-            }
-            return { ...targetReward, esCofre: false };
-        }
-
-        function openPointsDashboardModal() {
+        function ejecutarCompraPremio(premioId, puntosCosto) {
             checkDailyReset();
-            const info = getRewardDataForToday();
             
-            document.getElementById("dashboard-today-reward-title").innerText = info.esCofre ? "COFRE SORPRESA ALEATORIO (Toca el cofre abajo)" : info.premio;
-            document.getElementById("dashboard-energy-text").innerText = `${userScore} / 100 PTS`;
-            
-            const fillPct = Math.min(userScore, 100);
-            document.getElementById("dashboard-energy-bar-fill").style.width = `${fillPct}%`;
-
-            const sundayWrapper = document.getElementById("sunday-chest-wrapper");
-            const btnClaim = document.getElementById("btn-dynamic-claim-reward");
-
-            if (info.esCofre) {
-                sundayWrapper.style.display = "block";
-                const chestOpened = localStorage.getItem('chest_opened_today') === 'true';
-                if (chestOpened) {
-                    document.getElementById("interactive-chest-emoji").style.display = "none";
-                    const msg = document.getElementById("revealed-chest-msg");
-                    msg.classList.add("show-prize");
-                    msg.innerText = `Contenido Desvelado: ${info.premio}`;
-                } else {
-                    document.getElementById("interactive-chest-emoji").style.display = "inline-block";
-                    document.getElementById("interactive-chest-emoji").classList.remove("opening-process");
-                    document.getElementById("revealed-chest-msg").classList.remove("show-prize");
-                    document.getElementById("chest-box-container").classList.add("has-aura");
-                }
-            } else {
-                sundayWrapper.style.display = "none";
-            }
-
-            // Actualización dinámica de estados del botón de reclamar
-            const yaReclamado = localStorage.getItem('claimed_today') === 'true';
-            if (yaReclamado) {
-                btnClaim.className = "btn-cyber";
-                btnClaim.disabled = true;
-                btnClaim.style.borderColor = "var(--text-muted)";
-                btnClaim.innerText = "YA RECLAMADO (Límite Diario Alcanzado)";
-            } else if (userScore >= 100) {
-                if (info.esCofre && localStorage.getItem('chest_opened_today') !== 'true') {
-                    btnClaim.className = "btn-cyber";
-                    btnClaim.disabled = true;
-                    btnClaim.innerText = "ABRE EL COFRE PRIMERO";
-                } else {
-                    btnClaim.className = "btn-cyber btn-sponsor";
-                    btnClaim.disabled = false;
-                    btnClaim.innerText = "¡DESBLOQUEADO! RECLAMAR PREMIO";
-                }
-            } else {
-                btnClaim.className = "btn-cyber";
-                btnClaim.disabled = true;
-                btnClaim.innerText = `BLOQUEADO (Faltan ${100 - userScore} Puntos)`;
-            }
-
-            document.getElementById("modal-points-dashboard").classList.add("is-open");
-        }
-
-        function triggerSundayChestOpening() {
-            if (userScore < 100) {
-                showToast("Necesitas 100 puntos en tu barra de energía para abrir el cofre.");
+            if (localStorage.getItem('claimed_store_today') === 'true') {
+                showToast("Regla de Oro: Solo puedes reclamar 1 premio diario.");
                 return;
             }
-            if (localStorage.getItem('chest_opened_today') === 'true') return;
 
-            const chest = document.getElementById("interactive-chest-emoji");
-            const container = document.getElementById("chest-box-container");
-            const msg = document.getElementById("revealed-chest-msg");
-            const info = getRewardDataForToday();
+            const premio = CATALOGO_PREMIOS.find(p => p.id === premioId);
+            if (!premio) return;
 
-            chest.classList.add("opening-process");
-            
-            // Efectos de fuegos artificiales / confeti durante 5 segundos
-            let duration = 5000;
-            let end = Date.now() + duration;
-
-            (function frame() {
-                confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#00f0ff', '#ff007f', '#ffd700'] });
-                confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#00f0ff', '#ff007f', '#ffd700'] });
-                if (Date.now() < end) { requestAnimationFrame(frame); }
-            }());
-
-            setTimeout(() => {
-                container.classList.remove("has-aura");
-                chest.style.display = "none";
-                msg.innerText = `¡INTERIOR DESVELADO!\n✨ ${info.premio} ✨`;
-                msg.classList.add("show-prize");
-                localStorage.setItem('chest_opened_today', 'true');
-                openPointsDashboardModal(); // Refrescar estado del botón
-            }, 5000);
-        }
-
-        function processClaimRewardSubmission() {
-            checkDailyReset();
-            if (userScore < 100) return;
-            if (localStorage.getItem('claimed_today') === 'true') return;
-
-            const info = getRewardDataForToday();
-            
-            // Descontar puntos de manera inmediata y marcar como reclamado
-            userScore -= 100;
-            updateScoreUI();
-            localStorage.setItem('claimed_today', 'true');
-
-            let userTag = "@Airdayz";
-            if (window.Telegram?.WebApp?.initDataUnsafe?.user?.username) {
-                userTag = `@${window.Telegram.WebApp.initDataUnsafe.user.username}`;
+            const stockClave = `stock_mes_${premioId}`;
+            let stockActual = parseInt(localStorage.getItem(stockClave)) || 0;
+            if (stockActual <= 0) {
+                showToast("Premio agotado para este ciclo mensual.");
+                return;
             }
 
-            const rawText = `🎁 RECLAMACIÓN DE PREMIO RECOMPENSA\n` +
-                            `────────────────────\n` +
-                            `🏆 Premio Otorgado: ${info.premio}\n` +
-                            `📅 Día del Ciclo: ${info.dia}\n` +
-                            `👤 Usuario Alias: ${userTag}\n` +
-                            `🆔 Telemetría ID: ${window.Telegram?.WebApp?.initDataUnsafe?.user?.id || 'Usuario Web'}`;
+            if (userScore < puntosCosto) {
+                showToast("Saldo de puntos insuficiente.");
+                return;
+            }
 
-            closePointsDashboardModal();
-            abrirEnlace(`https://t.me/Airdayz?start=${encodeURIComponent(rawText)}`);
-        }
+            // Descontar recursos de inmediato y guardar banderas de protección diaria
+            userScore -= puntosCosto;
+            stockActual -= 1;
+            localStorage.setItem(stockClave, stockActual);
+            localStorage.setItem('claimed_store_today', 'true');
+            updateScoreUI();
 
-        function closePointsDashboardModal() {
-            document.getElementById("modal-points-dashboard").classList.remove("is-open");
+            // Disparar Confeti de celebración
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#00f0ff', '#ff007f', '#ffd700'] });
+
+            // Extraer metadatos nativos del WebApp de Telegram
+            let tgUserId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id || "WEB_USER_ID";
+            let tgFirstName = window.Telegram?.WebApp?.initDataUnsafe?.user?.first_name || "Web";
+            let tgLastName = window.Telegram?.WebApp?.initDataUnsafe?.user?.last_name || "User";
+            let tgUsername = window.Telegram?.WebApp?.initDataUnsafe?.user?.username ? `@${window.Telegram.WebApp.initDataUnsafe.user.username}` : "Sin Alias";
+
+            let infoUsuarioFormateada = `${tgFirstName} ${tgLastName} (${tgUsername})`;
+
+            // Construcción estructurada del mensaje de entrega
+            const mensajeEstructurado = 
+                `🛒 NUEVA RECLAMACIÓN DE PREMIO MATRIX\n` +
+                `──────────────────────────\n` +
+                `🏆 PREMIO: ${premio.titulo}\n` +
+                `💰 COSTE: ${premio.estrellas} Estrellas + ${premio.puntos} Puntos\n` +
+                `──────────────────────────\n` +
+                `👤 USUARIO: ${infoUsuarioFormateada}\n` +
+                `🆔 ID TELEGRAM: ${tgUserId}\n` +
+                `⚡ ESTADO: Saldo Descontado con Éxito.`;
+
+            showToast("Procesando reclamación... Abriendo Chat Privado.");
+            
+            setTimeout(() => {
+                renderRewardsCatalogue(); // Refresca las tarjetas
+                abrirEnlace(`https://t.me/Airdayz?start=${encodeURIComponent(mensajeEstructurado)}`);
+            }, 1500);
         }
 
         // =========================================================================
@@ -924,6 +817,7 @@
             const currentItem = MENSAJES_GUIA[actualGuideIndex];
             const fillBar = document.getElementById("guide-progress-fill");
             const alertElement = document.getElementById("top-guide-container");
+            if(!alertElement || !fillBar) return;
             
             document.getElementById("guide-tg-message").innerText = currentItem.texto;
             document.getElementById("guide-action-btn").onclick = () => {
@@ -964,6 +858,7 @@
 
         function showToast(msj) {
             const toast = document.getElementById("app-toast");
+            if(!toast) return;
             toast.innerText = msj;
             toast.classList.add("show");
             setTimeout(() => toast.classList.remove("show"), 2200);
@@ -987,6 +882,7 @@
                 window.Telegram.WebApp.expand();
             }
             checkDailyReset();
+            updateScoreUI();
             buildSponsorsCarousel();
             renderHubCards();
             renderMonitorSection();
