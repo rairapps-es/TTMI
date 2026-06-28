@@ -651,7 +651,7 @@
 
     <section id="sec-proyectos" class="app-section active">
         <div class="metrics-grid">
-            <div class="metric-box box-total"><span class="metric-value" id="count-total">0</span><span class="metric-label">Núcleos</span></div>
+            <div class="metric-box box-total"><span class="metric-value" id="count-total">0</span><span class="metric-label">Proyectos</span></div>
             <div class="metric-box box-beta"><span class="metric-value" id="count-beta">0</span><span class="metric-label">Beta</span></div>
             <div class="metric-box box-dev"><span class="metric-value" id="count-dev">0</span><span class="metric-label">Producción</span></div>
         </div>
@@ -687,7 +687,7 @@
     <section id="sec-red-sitios" class="app-section">
         <div class="info-panel-box">
             <h3 class="info-panel-title"><i data-lucide="network"></i>Nuestra Red Operativa</h3>
-            <p class="info-panel-desc">Sintoniza de forma directa los canales y grupos estratégicos que componen la infraestructura orgánica de Lista Golden.</p>
+            <p class="info-panel-desc">Sintoniza de forma directa los canales y grupos estratégicos que componen la infraestructura de Golden List.</p>
         </div>
 
         <div class="filter-section" style="margin-bottom: 16px;">
@@ -722,23 +722,23 @@
             <h3 class="info-panel-title" style="color: var(--neon-gold);"><i data-lucide="crown"></i>Creadores & Influencers</h3>
             <p class="info-panel-desc">Si tienes una audiencia activa o generas contenido, únete a nuestra red. Ofrecemos <strong>beneficios premium absolutos exclusivos</strong> y la infraestructura completa para realizar <strong>sorteos masivos automatizados</strong> para fidelizar a tu comunidad a cambio de difusión estratégica mutua.</p>
             <button class="btn-cyber btn-sponsor" style="width: 100%; border-color: var(--neon-gold); background: rgba(255, 215, 0, 0.05);" onclick="ejecutarMensajePrivado('Hola! Soy creador/influencer y me interesa colaborar a cambio de beneficios premium y sorteos para mi comunidad.')">
-                <i data-lucide="message-square"></i>Contactar por Telegram Privado
+                <i data-lucide="message-square"></i>Contactar por Privado
             </button>
         </div>
     </section>
 
     <section id="sec-promocion" class="app-section">
         <div class="info-panel-box" style="border-color: var(--neon-green);">
-            <h3 class="info-panel-title" style="color: var(--neon-green);"><i data-lucide="rocket"></i>Promoción Gratuita Lista Golden</h3>
+            <h3 class="info-panel-title" style="color: var(--neon-green);"><i data-lucide="rocket"></i>Promoción Gratuita de Lista Golden</h3>
             <p class="info-panel-desc">Integra tus canales a nuestros sistemas de distribución orgánica. Automatizamos el crecimiento cruzado mediante clusters segmentados según el volumen real de tu audiencia.</p>
             
             <button class="btn-cyber btn-read-more" style="margin-bottom:14px;" onclick="openSponsorModal()"><i data-lucide="plus-circle"></i>Beneficios para Patrocinadores</button>
             
-            <h4 style="font-size:0.7rem; color:var(--text-muted); margin-bottom:6px; font-weight:800; text-transform:uppercase;">Categoría de Ingreso Directo:</h4>
+            <h4 style="font-size:0.7rem; color:var(--text-muted); margin-bottom:6px; font-weight:800; text-transform:uppercase;">Categorías en Lista Golden:</h4>
             <div class="promo-grid-buttons">
-                <button class="btn-cyber btn-promo-tier" onclick="abrirEnlace('https://t.me/Airdayz')">+100</button>
-                <button class="btn-cyber btn-promo-tier" onclick="abrirEnlace('https://t.me/Airdayz')">+500</button>
-                <button class="btn-cyber btn-promo-tier" onclick="abrirEnlace('https://t.me/Airdayz')">+1000</button>
+                <button class="btn-cyber btn-promo-tier" onclick="abrirEnlace('https://t.me/Airdayz')">+100 👥 Subs</button>
+                <button class="btn-cyber btn-promo-tier" onclick="abrirEnlace('https://t.me/Airdayz')">+500 👥 Subs</button>
+                <button class="btn-cyber btn-promo-tier" onclick="abrirEnlace('https://t.me/Airdayz')">+1000 👥 Subs</button>
             </div>
 
             <h4 style="font-size:0.7rem; color:var(--text-muted); margin-bottom:6px; font-weight:800; text-transform:uppercase;">Nuestras Botoneras Activas:</h4>
@@ -856,12 +856,12 @@
     </div>
 
     <nav class="cyber-bottom-navbar">
-        <button class="nav-item-btn active-nav" onclick="switchTabApp('sec-proyectos', this)"><i data-lucide="home"></i><span>Hub</span></button>
+        <button class="nav-item-btn active-nav" onclick="switchTabApp('sec-proyectos', this)"><i data-lucide="home"></i><span>Proyectos</span></button>
         <button class="nav-item-btn" onclick="switchTabApp('sec-red-sitios', this)"><i data-lucide="globe"></i><span>Red</span></button>
         <button class="nav-item-btn" onclick="switchTabApp('sec-tienda', this)"><i data-lucide="gift"></i><span>Tienda</span></button>
         <button class="nav-item-btn" onclick="switchTabApp('sec-colaborar', this)"><i data-lucide="handshake"></i><span>Colaborar</span></button>
-        <button class="nav-item-btn" onclick="switchTabApp('sec-promocion', this)"><i data-lucide="rocket"></i><span>Promo</span></button>
-        <button class="nav-item-btn" onclick="switchTabApp('sec-anunciate', this)"><i data-lucide="megaphone"></i><span>Ads</span></button>
+        <button class="nav-item-btn" onclick="switchTabApp('sec-promocion', this)"><i data-lucide="rocket"></i><span>Promoción</span></button>
+        <button class="nav-item-btn" onclick="switchTabApp('sec-anunciate', this)"><i data-lucide="megaphone"></i><span>Golden Ads</span></button>
     </nav>
 
     <script>
@@ -1404,7 +1404,7 @@
 
         function ejecutarMensajePrivadoAnuncio() {
             closeFloatingAd();
-            ejecutarMensajePrivado('Me interesa aplicar a una de las 3/5 plazas VIP disponibles para Sponsors.');
+            ejecutarMensajePrivado('Me interesa aplicar a una de las 3/5 plazas VIP disponibles para ser Sponsors de Lista Golden.');
         }
 
         // =========================================================================
@@ -1445,7 +1445,7 @@
                             <h2 class="card-title">${item.titulo}</h2>
                             <div class="card-view-counter">
                                 <span class="view-counter-number" id="counter-val-${item.id}">${vistasLocales}</span>
-                                <span class="view-counter-label">VISTAS HOY</span>
+                                <span class="view-counter-label">VISTAS</span>
                             </div>
                         </div>
                     </div>
@@ -1453,14 +1453,14 @@
                     <div class="badge-row">
                         <span class="tag-status">${item.estado}</span>
                         ${item.etiquetas.map(t => `<span class="tag-type">${t}</span>`).join('')}
-                        <span class="card-multiplier-pill">Ganancia x${multiplierActual}</span>
+                        <span class="card-multiplier-pill">Multiplicardor x${multiplierActual}</span>
                     </div>
                     <p class="card-desc">${item.descripcion}</p>
                     
                     <div class="energy-section">
                         <div class="energy-meta"><span>Patrocinadores</span><span class="energy-count-node">${item.sponsors_count}/${item.sponsors_target} <span style="color:${plasmaColor}">${pct}%</span></span></div>
                         <div class="energy-container-bar"><div class="energy-plasma-fill" style="width: ${pct}%; background-color: ${plasmaColor}; box-shadow: 0 0 10px ${plasmaColor};"></div></div>
-                        <div class="energy-tooltip"><i data-lucide="activity" style="width:12px; height:12px; display:inline; vertical-align:middle;"></i> Lista Golden necesita al menos ${item.sponsors_target} sponsors para estabilidad total.</div>
+                        <div class="energy-tooltip"><i data-lucide="activity" style="width:12px; height:12px; display:inline; vertical-align:middle;"></i> Lista Golden necesita al menos ${item.sponsors_target} sponsors para la estabilidad total de este proyecto.</div>
                     </div>
                     
                     <div class="actions-grid">
@@ -1469,8 +1469,8 @@
                         <div class="sliding-drawer" id="drawer-${item.id}">
                             <div class="timeline-box">
                                 <div class="timeline-node"><span class="timeline-node-title">Creación</span><span class="timeline-node-date">${item.creacion}</span></div>
-                                <div class="timeline-node"><span class="timeline-node-title">Alpha</span><span class="timeline-node-date">${item.alpha_date}</span></div>
-                                <div class="timeline-node"><span class="timeline-node-title">Beta</span><span class="timeline-node-date">${item.beta_date}</span></div>
+                                <div class="timeline-node"><span class="timeline-node-title">Beta</span><span class="timeline-node-date">${item.alpha_date}</span></div>
+                                <div class="timeline-node"><span class="timeline-node-title">En Producción</span><span class="timeline-node-date">${item.beta_date}</span></div>
                             </div>
                             
                             <div class="more-text">${item.descripcion_larga}</div>
@@ -1479,7 +1479,7 @@
                                 ${item.url_miniapp ? `<button class="btn-cyber btn-open-ma" onclick="ejecutarAccionBotonUrl('${item.url_miniapp}')"><i data-lucide="cpu"></i>Ver Mini App</button>` : ''}
                             </div>
                             <div class="monetization-row">
-                                ${item.sponsor ? `<button class="btn-cyber btn-sponsor" onclick="ejecutarAccionBotonUrl('${item.url_sponsor}')"><i data-lucide="heart-handshake"></i>Apoyar</button>` : ''}
+                                ${item.sponsor ? `<button class="btn-cyber btn-sponsor" onclick="ejecutarAccionBotonUrl('${item.url_sponsor}')"><i data-lucide="heart-handshake"></i>Apoyar Proyecto</button>` : ''}
                                 ${item.venderpremium ? `<button class="btn-cyber btn-premium-sell" onclick="ejecutarAccionBotonUrl('${item.url_premium}')"><i data-lucide="crown"></i>Comprar VIP</button>` : ''}
                             </div>
                         </div>
@@ -1536,11 +1536,11 @@
 
         function procesarReclamoPremio(idRecompensa, titulo, costePuntos, costeEstrellas, bloqueadoPorFecha) {
             if (bloqueadoPorFecha) {
-                showToast("Regla de Oro: Solo se permite 1 premio diario por usuario.");
+                showToast("Importante: Solo se permite 1 premio diario por usuario.");
                 return;
             }
             if (userSimulatedPoints < costePuntos) {
-                showToast("No dispones de los puntos requeridos acumulados.");
+                showToast("No dispones de los puntos requeridos acumulados en tu saldo.");
                 return;
             }
 
@@ -1588,7 +1588,7 @@
             container.innerHTML = filtrados.map(ch => {
                 const esCanal = ch.tipo === "CANAL";
                 const badgeClass = esCanal ? "canal" : "grupo";
-                const botonTexto = esCanal ? "Abrir Canal" : "Abrir Grupo";
+                const botonTexto = esCanal ? "Suscribirme" : "Unirme";
                 const iconoBoton = esCanal ? "megaphone" : "users";
 
                 return `
@@ -1605,7 +1605,7 @@
                         
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; margin-top: 4px;">
                             <span style="font-size:0.6rem; color:var(--neon-gold); background:rgba(255,215,0,0.05); padding:2px 6px; border-radius:4px; font-weight:800; text-transform:uppercase;">${ch.categoria}</span>
-                            <span style="font-size:0.65rem; color:var(--neon-cyan); background:rgba(0,240,255,0.1); padding:2px 6px; border-radius:4px; font-weight:800;">${ch.suscriptores} Suscriptores</span>
+                            <span style="font-size:0.65rem; color:var(--neon-cyan); background:rgba(0,240,255,0.1); padding:2px 6px; border-radius:4px; font-weight:800;">${ch.suscriptores} 👥 Subs</span>
                         </div>
                         
                         <p class="card-desc">${ch.desc}</p>
@@ -1737,7 +1737,7 @@
                 }
                 syncTelegramDataConGuiaYHeader(user);
             } else {
-                const ficticioAdmin = { first_name: "Airdayz Central", username: "Airdayz", photo_url: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150" };
+                const ficticioAdmin = { first_name: "Rair Golden", username: "Airdayz", photo_url: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150" };
                 syncTelegramDataConGuiaYHeader(ficticioAdmin);
             }
         }
@@ -1774,7 +1774,7 @@
                                      `───────────────────\n` +
                                      `📦 Pedido: Plan Matriz Colectiva (1 Año)\n` +
                                      `🆔 ID Pedido: ${hashPedido}\n` +
-                                     `💵 Importe: 100 USD / Año\n` +
+                                     `💵 Importe: 100 EUR / Año\n` +
                                      `👤 Nombre: ${userRealName}\n` +
                                      `🏷️ Telegram: ${userTag}\n` +
                                      `🆔 Telegram ID: ${cachedUserId}`;
