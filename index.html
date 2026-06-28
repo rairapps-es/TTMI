@@ -650,15 +650,6 @@
     <div class="toast-notify" id="app-toast">ID Copiado al portapapeles</div>
 
     <section id="sec-proyectos" class="app-section active">
-        <div class="global-sponsor-panel">
-            <h3 class="sponsor-panel-title"><i data-lucide="shield-check"></i>Patrocinio Oficial</h3>
-            <p class="sponsor-panel-desc">Impulsa activamente la red de infraestructura Liga Golden y desbloquea el control total de nuestra tecnología.</p>
-            <div class="sponsor-panel-actions">
-                <button class="btn-cyber btn-read-more" onclick="openSponsorModal()"><i data-lucide="help-circle"></i>Saber Más</button>
-                <button class="btn-cyber btn-sponsor" onclick="procesarPedidoSponsor()"><i data-lucide="zap"></i>Ser Sponsor</button>
-            </div>
-        </div>
-
         <div class="metrics-grid">
             <div class="metric-box box-total"><span class="metric-value" id="count-total">0</span><span class="metric-label">Núcleos</span></div>
             <div class="metric-box box-beta"><span class="metric-value" id="count-beta">0</span><span class="metric-label">Beta</span></div>
@@ -708,6 +699,10 @@
                 <span class="subfilter-pill" id="pill-net-cripto" onclick="setNetworkFilter('Cripto')">Cripto</span>
                 <span class="subfilter-pill" id="pill-net-apuestas" onclick="setNetworkFilter('Apuestas')">Apuestas</span>
                 <span class="subfilter-pill" id="pill-net-comunidad" onclick="setNetworkFilter('Comunidad')">Comunidad</span>
+                <span class="subfilter-pill" id="pill-net-comunidad" onclick="setNetworkFilter('Humor')">Humor</span>
+                <span class="subfilter-pill" id="pill-net-comunidad" onclick="setNetworkFilter('Deportes')">Deportes</span>
+                <span class="subfilter-pill" id="pill-net-comunidad" onclick="setNetworkFilter('Motor')">Motor</span>
+         
             </div>
         </div>
 
@@ -778,10 +773,17 @@
         
         <div class="info-panel-box" style="border-color: var(--neon-gold); padding: 14px; margin-bottom:16px;">
             <p class="info-panel-desc" style="font-size: 0.75rem; margin: 0; line-height: 1.4;">
-                <strong>Regla de Oro:</strong> Cada usuario cuenta con un límite máximo estricto de <strong>1 reclamo diario</strong> en todo el catálogo de la tienda. El saldo de puntos acumulado se mantiene, pero el contador de bonificación de clics de Energía se reinicia automáticamente cada 00:00 local. Cada 10 de Energía acumulada suma 5 Puntos extras automáticamente.
+                <strong>Importante:</strong> Cada usuario cuenta con un límite máximo estricto de <strong>1 reclamo diario</strong> en todo el catálogo de la tienda. El saldo de puntos acumulado se mantiene, pero el contador de bonificación de clics de Energía se reinicia automáticamente cada 00:00 local. Cada 10 de Energía acumulada suma 5 Puntos extras automáticamente.
             </p>
         </div>
-
+<div class="global-sponsor-panel">
+            <h3 class="sponsor-panel-title"><i data-lucide="shield-check"></i>Patrocinio Oficial</h3>
+            <p class="sponsor-panel-desc">Impulsa activamente la red de infraestructura Liga Golden y desbloquea el control total de nuestra tecnología.</p>
+            <div class="sponsor-panel-actions">
+                <button class="btn-cyber btn-read-more" onclick="openSponsorModal()"><i data-lucide="help-circle"></i>Saber Más</button>
+                <button class="btn-cyber btn-sponsor" onclick="procesarPedidoSponsor()"><i data-lucide="zap"></i>Ser Sponsor</button>
+            </div>
+        </div>
         <div class="reward-grid-compact" id="shop-rewards-wrapper"></div>
     </section>
 
@@ -926,33 +928,33 @@
         ];
 
         const HISTORIAL_COMPRAS_FOMO = [
-            { pais: "🇪🇸", nombre: "MARTA DE ESPAÑA", extras: 2, targetId: "p_mundobots" },
-            { pais: "🇦🇷", nombre: "GONZALO DE ARGENTINA", extras: 5, targetId: "p_cleopatra" },
-            { pais: "🇲🇽", nombre: "JAVIER DE MÉXICO", extras: 1, targetId: "p_goldenhub" },
-            { pais: "🇨🇱", nombre: "CLAUDIA DE CHILE", extras: 3, targetId: "p_mundobots" },
-            { pais: "🇪🇸", nombre: "CARLOS DE ESPAÑA", extras: 2, targetId: "p_mundobots" },
-            { pais: "🇦🇷", nombre: "MAXI DE ARGENTINA", extras: 5, targetId: "p_cleopatra" },
-            { pais: "🇺🇾", nombre: "FEDERICO DE URUGUAY", extras: 1, targetId: "p_goldenhub" },
-            { pais: "🇨🇺", nombre: "ERNESTO DE CUBA", extras: 3, targetId: "p_mundobots" }
+            { pais: "🇪🇸", nombre: "Marta de España", extras: 2, targetId: "p_mundobots" },
+            { pais: "🇦🇷", nombre: "Gonzalo de Argentina", extras: 5, targetId: "p_cleopatra" },
+            { pais: "🇲🇽", nombre: "Javier de México", extras: 1, targetId: "p_goldenhub" },
+            { pais: "🇨🇱", nombre: "Claudia de Chile", extras: 3, targetId: "p_mundobots" },
+            { pais: "🇪🇸", nombre: "Carlos de España", extras: 2, targetId: "p_mundobots" },
+            { pais: "🇦🇷", nombre: "Maxi fe Argentina", extras: 5, targetId: "p_cleopatra" },
+            { pais: "🇺🇾", nombre: "Fede de Uruguay", extras: 1, targetId: "p_goldenhub" },
+            { pais: "🇨🇺", nombre: "Ernesto de Cuba", extras: 3, targetId: "p_mundobots" }
         ];
 
         const RED_SITIOS_DATA = [
-            { titulo: "Lista Golden", tipo: "CANAL", categoria: "Herramientas", desc: "Notificaciones centrales de la red de desarrollo.", suscriptores: "12K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150" },
+            { titulo: "Lista Golden", tipo: "CANAL", categoria: "Herramientas", desc: "Notificaciones centrales de la red de desarrollo.", suscriptores: "1.9K", url: "https://t.me/listagolden", imagen: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150" },
             { titulo: "IA® TLG", tipo: "CANAL", categoria: "Cripto", desc: "Logs de actualizaciones críticas de nuestros bots.", suscriptores: "4.5K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=150" },
             { titulo: "Crecegram", tipo: "GRUPO", categoria: "Comunidad", desc: "Foro de debate para patrocinadores verificados.", suscriptores: "1.2K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=150" },
             { titulo: "Mundo Bots", tipo: "GRUPO", categoria: "Entretenimiento", desc: "Grupo de entretenimiento general de la comunidad.", suscriptores: "8.9K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=150" },
             { titulo: "Coloring Books PDF", tipo: "CANAL", categoria: "Finanzas", desc: "Análisis y proyecciones de mercados macroeconómicos.", suscriptores: "21K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=150" },
             { titulo: "Imágenes IA", tipo: "CANAL", categoria: "Finanzas", desc: "Análisis y proyecciones de mercados macroeconómicos.", suscriptores: "21K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=150" },
-            { titulo: "Caza Memes", tipo: "CANAL", categoria: "Finanzas", desc: "Análisis y proyecciones de mercados macroeconómicos.", suscriptores: "21K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=150" },
+            { titulo: "Caza Memes", tipo: "CANAL", categoria: "Humor", desc: "Memes, vídeos y chistes graciosos.", suscriptores: "1.1K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=150" },
             { titulo: "Directorio DConfianza", tipo: "CANAL", categoria: "Finanzas", desc: "Análisis y proyecciones de mercados macroeconómicos.", suscriptores: "21K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=150" },
             { titulo: "Anime Images AI", tipo: "CANAL", categoria: "Finanzas", desc: "Análisis y proyecciones de mercados macroeconómicos.", suscriptores: "21K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=150" },
-            { titulo: "Fútbol Internacional", tipo: "CANAL", categoria: "Finanzas", desc: "Análisis y proyecciones de mercados macroeconómicos.", suscriptores: "21K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=150" },
+            { titulo: "Fútbol Internacional", tipo: "CANAL", categoria: "Deportes", desc: "El canal para los amantes del fútbol mundial.", suscriptores: "21K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=150" },
             { titulo: "Pasión Culé", tipo: "CANAL", categoria: "Finanzas", desc: "Análisis y proyecciones de mercados macroeconómicos.", suscriptores: "21K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=150" },
             { titulo: "Postres Sin Horno", tipo: "CANAL", categoria: "Finanzas", desc: "Análisis y proyecciones de mercados macroeconómicos.", suscriptores: "21K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=150" },
             { titulo: "Salseo ES", tipo: "CANAL", categoria: "Finanzas", desc: "Análisis y proyecciones de mercados macroeconómicos.", suscriptores: "21K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=150" },
             { titulo: "Planeta Salvaje", tipo: "CANAL", categoria: "Finanzas", desc: "Análisis y proyecciones de mercados macroeconómicos.", suscriptores: "21K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=150" },
             { titulo: "Solo Tablas", tipo: "CANAL", categoria: "Finanzas", desc: "Análisis y proyecciones de mercados macroeconómicos.", suscriptores: "21K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=150" },
-            { titulo: "Motor 360°", tipo: "CANAL", categoria: "Finanzas", desc: "Análisis y proyecciones de mercados macroeconómicos.", suscriptores: "21K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=150" },
+            { titulo: "Motor 360°", tipo: "CANAL", categoria: "Motor", desc: "Noticias del mundo del motor, formula 1, MotoGP y más.", suscriptores: "21K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=150" },
             { titulo: "Alerta Climática", tipo: "CANAL", categoria: "Finanzas", desc: "Análisis y proyecciones de mercados macroeconómicos.", suscriptores: "21K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=150" },
             { titulo: "LALiga ES", tipo: "CANAL", categoria: "Finanzas", desc: "Análisis y proyecciones de mercados macroeconómicos.", suscriptores: "21K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=150" },
             { titulo: "MEME®", tipo: "CANAL", categoria: "Finanzas", desc: "Análisis y proyecciones de mercados macroeconómicos.", suscriptores: "21K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=150" },
