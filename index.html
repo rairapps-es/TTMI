@@ -1619,7 +1619,7 @@
                                 <div class="card-title-row">
                                     <h3 class="card-title" style="margin:0; font-size:1.1rem; position:static; text-shadow:none;">${ch.titulo}</h3>
                                     <span class="badge-tg-type ${badgeClass}">${ch.tipo}</span>
-                                    <span style="font-size:0.6rem; color:var(--neon-gold); background:rgba(255,215,0,0.05); padding:2px 6px; border-radius:4px; font-weight:800; text-transform:uppercase;">${ch.categoria}</span>
+                                    <span style="font-size:0.6rem; color:var(--neon-gold); background:rgba(255,215,0,0.05); padding:2px 6px; border-radius:4px; font-weight:800; text-transform:none;"> Categoría: ${ch.categoria}</span>
                             <span style="font-size:0.65rem; color:var(--neon-cyan); background:rgba(0,240,255,0.1); padding:2px 6px; border-radius:4px; font-weight:800;">${ch.suscriptores} 👥 Subs</span>
                        
                                 </div>
@@ -1631,7 +1631,7 @@
                         
                         <p class="card-desc">${ch.desc}</p>
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
-                            <button class="btn-cyber btn-open-web" onclick="ejecutarAccionBotonUrl('${ch.url2}')"><i data-lucide="info"></i>Saber Más</button>
+                            <button class="btn-cyber btn-read-more" onclick="ejecutarAccionBotonUrl('${ch.url2}')"><i data-lucide="info"></i>Saber Más</button>
                             <button class="btn-cyber btn-open-web" onclick="ejecutarAccionBotonUrl('${ch.url}')"><i data-lucide="${iconoBoton}"></i>${botonTexto}</button>
                         </div>
                     </div>
@@ -1809,7 +1809,7 @@
             if (window.Telegram?.WebApp?.initDataUnsafe?.user?.username) {
                 userTag = `@${window.Telegram.WebApp.initDataUnsafe.user.username}`;
             }
-            const textRaw = encodeURIComponent(`[CORE MATRIX] ${motivo}\nCuenta ID: ${cachedUserId}\nUsuario: ${userTag}`);
+            const textRaw = encodeURIComponent(`[LISTA GOLDEN] ${motivo}\nCuenta ID: ${cachedUserId}\nUsuario: ${userTag}`);
             abrirEnlace(`https://t.me/Airdayz?start=${textRaw}`);
         }
 
