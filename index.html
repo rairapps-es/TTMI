@@ -76,6 +76,8 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: flex; flex-direction: column; gap: 6px;
             transform: translateX(-50px); opacity: 0; pointer-events: auto;
             animation: fomoSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+            user-select: none; touch-action: none;
         }
         @keyframes fomoSlideIn { to { transform: translateX(0); opacity: 1; } }
         .fomo-text { font-size: 0.75rem; color: #f1f5f9; line-height: 1.3; }
@@ -115,7 +117,7 @@
         .ad-desc { font-size: 0.82rem; color: #cbd5e1; line-height: 1.45; margin-bottom: 16px; }
         
         .ad-metrics-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
-        .ad-meta-box { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 8px; text-align: center; }
+        .ad-metrics-row .ad-meta-box { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 8px; text-align: center; }
         .ad-meta-label { font-size: 0.58rem; color: #64748b; font-weight: 800; text-transform: uppercase; display: block; margin-bottom: 2px; }
         .ad-meta-value { font-size: 1.1rem; font-weight: 900; font-family: monospace; }
         
@@ -138,6 +140,7 @@
         .user-avatar { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--neon-cyan); object-fit: cover; background: #0c0b14; order: 2; }
         .user-meta-data { display: flex; flex-direction: column; align-items: flex-end; order: 1; }
         .user-name { font-size: 0.8rem; font-weight: 800; color: #fff; }
+        .user-id-row { display: flex; align-items: center; gap: 3px; }
         .user-tg-id { font-size: 0.65rem; color: var(--neon-cyan); font-family: monospace; letter-spacing: 0.5px; }
         
         .header-logo { font-size: 1.1rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; color: #fff; }
@@ -149,6 +152,13 @@
             font-size: 0.75rem; font-weight: 800; opacity: 0; pointer-events: none; transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 99999;
         }
         .toast-notify.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* Header Rank HUD Modificado */
+        .rank-hud-badge {
+            font-size: 0.55rem; background: linear-gradient(90deg, var(--neon-magenta), var(--neon-purple));
+            color: #fff; font-weight: 900; padding: 1px 5px; border-radius: 4px; margin-top: 2px;
+            text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid rgba(255,255,255,0.2);
+        }
 
         /* =========================================================================
            👑 COMPONENTE: PATROCINADORES OFICIALES
@@ -458,6 +468,13 @@
         .btn-promo-tier { background: rgba(0, 240, 255, 0.02); border-color: var(--neon-cyan); color: #fff; font-size: 0.65rem; }
         .btn-bot-link { background: rgba(157, 78, 221, 0.02); border-color: var(--neon-purple); color: var(--neon-purple); }
 
+        /* Multiplicador HUD Tag */
+        .card-multiplier-pill {
+            background: linear-gradient(135deg, var(--neon-green), #00c853);
+            color: #000; font-size: 0.58rem; font-weight: 900; padding: 2px 5px; border-radius: 4px;
+            display: inline-flex; align-items: center; box-shadow: 0 0 8px var(--neon-green);
+        }
+
         /* =========================================================================
            🎠 CAROUSEL DE RESEÑAS
            ========================================================================= */
@@ -515,7 +532,7 @@
         .modal-title { font-size: 1.15rem; font-weight: 900; text-transform: uppercase; color: #fff; text-shadow: 0 0 8px var(--neon-gold); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
         .modal-body { font-size: 0.8rem; color: #cbd5e1; line-height: 1.5; margin-bottom: 18px; max-height: 280px; overflow-y: auto; }
         .benefit-item { display: flex; gap: 8px; margin-bottom: 10px; background: rgba(255,255,255,0.02); padding: 8px; border-radius: 6px; border-left: 2px solid var(--neon-gold); }
-        .benefit-item i { color: var(--neon-gold); shrink: 0; }
+        .benefit-item i { color: var(--neon-gold); flex-shrink: 0; }
         .btn-modal-close { position: absolute; top: 12px; right: 12px; background: none; border: none; color: #64748b; cursor: pointer; }
 
         .price-tag-box {
@@ -524,6 +541,45 @@
         }
         .price-label { font-size: 0.65rem; color: #94a3b8; text-transform: uppercase; font-weight: 700; display: block; }
         .price-value { font-size: 1.4rem; font-weight: 900; color: var(--neon-gold); text-shadow: 0 0 10px rgba(255,215,0,0.4); }
+
+        /* =========================================================================
+           🚨 MODERN EPIC RANK ALERT & CONFETTI SYSTEM
+           ========================================================================= */
+        .epic-rank-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(2, 2, 6, 0.95); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+            z-index: 500000; display: flex; align-items: center; justify-content: center; padding: 24px;
+            opacity: 0; pointer-events: none; transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .epic-rank-overlay.active { opacity: 1; pointer-events: auto; }
+        .epic-rank-card {
+            background: radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.15), rgba(8,8,16,0.99));
+            border: 2px solid var(--neon-cyan); border-radius: 20px; width: 100%; max-width: 350px;
+            padding: 30px 20px; text-align: center; box-shadow: 0 0 40px rgba(0,240,255,0.4);
+            transform: scale(0.7) rotate(-3deg); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative; overflow: hidden;
+        }
+        .epic-rank-overlay.active .epic-rank-card { transform: scale(1) rotate(0deg); }
+        .epic-congratulations { font-size: 1.5rem; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 15px var(--neon-magenta); animation: neonGlowPulse 1.5s infinite alternate; margin-bottom: 6px; }
+        @keyframes neonGlowPulse { from { text-shadow: 0 0 10px var(--neon-magenta); } to { text-shadow: 0 0 25px var(--neon-magenta), 0 0 10px var(--neon-cyan); } }
+        .epic-subtext { font-size: 0.85rem; color: #cbd5e1; margin-bottom: 20px; font-weight: 500; }
+        .epic-robot-frame { width: 110px; height: 110px; margin: 0 auto 16px auto; border-radius: 50%; background: #000; border: 3px dashed var(--neon-gold); padding: 4px; box-shadow: 0 0 20px rgba(255,215,0,0.3); position: relative; }
+        .epic-robot-img { width: 100%; height: 100%; border-radius: 50%; background: #111; object-fit: contain; }
+        .epic-rank-title-badge { font-size: 1.1rem; font-weight: 900; color: var(--neon-gold); text-transform: uppercase; text-shadow: 0 0 8px var(--neon-gold); display: block; margin-bottom: 4px; }
+        .epic-rank-numeric { font-size: 0.72rem; color: var(--neon-cyan); font-family: monospace; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 24px; display: block; }
+        
+        /* Partículas Confeti CSS Nativas */
+        .confetti-particle { position: absolute; width: 8px; height: 8px; border-radius: 2px; opacity: 0.9; top: -10px; animation: dropConfetti 4s linear infinite; pointer-events: none; }
+        @keyframes dropConfetti {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(105vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* Red Sitios Categorías Scroll Fix */
+        .subfilters-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; }
+        .subfilters-scroll::-webkit-scrollbar { display: none; }
+        .subfilter-pill { font-size: 0.68rem; font-weight: 800; color: #64748b; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 6px 12px; border-radius: 20px; white-space: nowrap; cursor: pointer; text-transform: uppercase; }
+        .subfilter-pill.active { color: var(--neon-cyan); background: rgba(0,240,255,0.06); border-color: var(--neon-cyan); box-shadow: 0 0 10px rgba(0,240,255,0.15); }
     </style>
 </head>
 <body>
@@ -586,6 +642,7 @@
                     <span class="user-tg-id" id="tg-user-id">ID: ---------</span>
                     <i data-lucide="copy" style="width:10px; height:10px; color: var(--neon-cyan);"></i>
                 </span>
+                <span class="rank-hud-badge" id="hud-rank-label">Nivel 1: Recluta</span>
             </div>
         </div>
     </header>
@@ -721,7 +778,7 @@
         
         <div class="info-panel-box" style="border-color: var(--neon-gold); padding: 14px; margin-bottom:16px;">
             <p class="info-panel-desc" style="font-size: 0.75rem; margin: 0; line-height: 1.4;">
-                <strong>Regla de Oro:</strong> Cada nodo de usuario cuenta con un límite máximo estricto de <strong>1 reclamo diario</strong> en todo el catálogo de la tienda. El saldo de puntos acumulado se mantiene, pero el contador de bonificación de clics de Energía se reinicia automáticamente cada 00:00 local.
+                <strong>Regla de Oro:</strong> Cada nodo de usuario cuenta con un límite máximo estricto de <strong>1 reclamo diario</strong> en todo el catálogo de la tienda. El saldo de puntos acumulado se mantiene, pero el contador de bonificación de clics de Energía se reinicia automáticamente cada 00:00 local. Cada 10 de Energía acumulada suma 5 Puntos extras automáticamente.
             </p>
         </div>
 
@@ -742,7 +799,7 @@
             <div class="modal-body">
                 <div class="benefit-item">
                     <i data-lucide="crown"></i>
-                    <div><strong>Acceso VIP Absoluto:</strong> Suscripción Premium automática e ilimitada en TODOS los proyectos y bots actuales y futuros de la red.</div>
+                    <div>GVIP Absoluto:** Suscripción Premium automática e ilimitada en TODOS los proyectos y bots actuales y futuros de la red.</div>
                 </div>
                 <div class="benefit-item">
                     <i data-lucide="gift"></i>
@@ -768,6 +825,31 @@
             </div>
 
             <button class="btn-cyber btn-sponsor" style="width:100%" onclick="procesarPedidoSponsor()"><i data-lucide="shopping-cart"></i>Adquirir Plan Sponsor</button>
+        </div>
+    </div>
+
+    <div class="epic-rank-overlay" id="epic-rank-popup">
+        <div class="epic-rank-card" id="epic-card-node">
+            <h2 class="epic-congratulations">¡ENHORABUENA!</h2>
+            <p class="epic-subtext">Has alcanzado un nuevo rango en el clúster</p>
+            <div class="epic-robot-frame">
+                <img src="https://robohash.org/matrix-default.png?set=set1" class="epic-robot-img" id="epic-avatar-display" alt="Robot Avatar">
+            </div>
+            <h3 class="epic-rank-title-badge" id="epic-rank-name-display">Cargando Rango</h3>
+            <span class="epic-rank-numeric" id="epic-rank-level-display">Nivel X</span>
+            <button class="btn-cyber" style="border-color: var(--neon-gold); color: var(--neon-gold); font-weight: 900; background: rgba(255,215,0,0.08);" onclick="mostrarBeneficioRangoFlotante()">
+                <i data-lucide="gift"></i> Conoce tus beneficios
+            </button>
+        </div>
+    </div>
+
+    <div class="cyber-modal" id="modal-beneficios-flotante">
+        <div class="modal-content" style="border-color: var(--neon-cyan); box-shadow: 0 0 25px rgba(0, 240, 255, 0.35);">
+            <button class="btn-modal-close" onclick="cerrarBeneficioRangoFlotante()"><i data-lucide="x"></i></button>
+            <h3 class="modal-title" style="text-shadow: 0 0 8px var(--neon-cyan);"><i data-lucide="cpu"></i> Privilegios de Rango</h3>
+            <div class="modal-body" id="modal-beneficios-body">
+                </div>
+            <button class="btn-cyber btn-open-bot" style="width:100%" onclick="cerrarBeneficioRangoFlotante()"><i data-lucide="check"></i>Entendido</button>
         </div>
     </div>
 
@@ -865,6 +947,21 @@
             { autor: "Marcus Stark", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100", stars: 4, text: "Excelente arquitectura en la Mini App. Limpia, ágil y con datos precisos en tiempo real.", web: "https://t.me/ejemplo" }
         ];
 
+        // Matriz Algorítmica Oficial de los 11 Rangos Locos
+        const CONFIG_RANGOS = [
+            { nivel: 1, min: 0, nombre: "Chatbot Recluta", desc: "Unidad robótica inicial de pruebas." },
+            { nivel: 2, min: 100, nombre: "Cypher Scraper", desc: "Especialista en recolección de trazas binarias." },
+            { nivel: 3, min: 300, nombre: "Proxy Sentinel", desc: "Guardián de firewalls analógicos." },
+            { nivel: 4, min: 700, nombre: "Byte Overlord", desc: "Dominante de subrutinas asíncronas." },
+            { nivel: 5, min: 1000, nombre: "Quantum Broker", desc: "Operador de microtransacciones fractales." },
+            { nivel: 6, min: 3000, nombre: "Matrix Archon", desc: "Magistrado del flujo orgánico de nodos." },
+            { nivel: 7, min: 7000, nombre: "Cyber Leviathan", desc: "Entidad colosal devoradora de bases de datos." },
+            { nivel: 8, min: 15000, nombre: "Neural Sovereign", desc: "Mente enjambre autoadaptativa global." },
+            { nivel: 9, min: 22000, nombre: "Singularity Titan", desc: "Deidad de silicio inmune al lag de red." },
+            { nivel: 10, min: 45000, nombre: "Chronos Mainframe", desc: "Manipulador del tiempo de ejecución del script." },
+            { nivel: 11, min: 100000, nombre: "Core Absolute Deus", desc: "Omnipresente de la infraestructura Matrix." }
+        ];
+
         let activeTab = "all";
         let activeSubFilter = "Todos";
         let activeNetworkFilter = "Todos";
@@ -875,6 +972,8 @@
         // 💾 LOGÍSTICA DE PUNTOS DE SALDO Y ENERGÍA REINICIABLE
         let userSimulatedPoints = parseInt(localStorage.getItem('user_simulated_points')) || 1250; 
         let userEnergyPoints = parseInt(localStorage.getItem('user_energy_points')) || 0;
+        let internalEnergyCounter = parseInt(localStorage.getItem('internal_energy_counter')) || 0;
+        let cachedUserRankIndex = parseInt(localStorage.getItem('user_current_rank_index')) || 0;
 
         let actualGuideIndex = 0;
         let countdownInterval;
@@ -893,30 +992,86 @@
             
             if (ultimoReset !== hoyLocal) {
                 userEnergyPoints = 0;
+                internalEnergyCounter = 0;
                 localStorage.setItem('user_energy_points', userEnergyPoints);
+                localStorage.setItem('internal_energy_counter', internalEnergyCounter);
                 localStorage.setItem('last_energy_reset_date', hoyLocal);
                 actualizarVisualizacionSaldos();
+            }
+        }
+
+        function obtenerRangoPorPuntos(puntos) {
+            let rangoAsignado = 0;
+            for(let i = 0; i < CONFIG_RANGOS.length; i++) {
+                if(puntos >= CONFIG_RANGOS[i].min) {
+                    rangoAsignado = i;
+                } else {
+                    break;
+                }
+            }
+            return rangoAsignado;
+        }
+
+        function evaluarCrecimientoRango() {
+            const indexCorrecto = obtenerRangoPorPuntos(userSimulatedPoints);
+            const savedIndex = parseInt(localStorage.getItem('user_current_rank_index')) || 0;
+            
+            if(indexCorrecto > savedIndex) {
+                localStorage.setItem('user_current_rank_index', indexCorrecto);
+                cachedUserRankIndex = indexCorrecto;
+                lanzarCelebracionEpicRank(indexCorrecto);
+            } else {
+                cachedUserRankIndex = indexCorrecto;
+                localStorage.setItem('user_current_rank_index', indexCorrecto);
+            }
+            actualizarHUDLabels();
+        }
+
+        function actualizarHUDLabels() {
+            const rData = CONFIG_RANGOS[cachedUserRankIndex];
+            const hudLabel = document.getElementById("hud-rank-label");
+            if(hudLabel) {
+                hudLabel.innerText = `Nivel ${rData.nivel}: ${rData.nombre}`;
             }
         }
 
         function actualizarVisualizacionSaldos() {
             localStorage.setItem('user_simulated_points', userSimulatedPoints);
             localStorage.setItem('user_energy_points', userEnergyPoints);
+            localStorage.setItem('internal_energy_counter', internalEnergyCounter);
             
             const nodePoints = document.getElementById("shop-user-points");
             if (nodePoints) nodePoints.innerText = `${userSimulatedPoints.toLocaleString()} Puntos`;
             
             const nodeEnergy = document.getElementById("shop-user-energy");
             if (nodeEnergy) nodeEnergy.innerText = `${userEnergyPoints} ENERGÍA`;
+            
+            evaluarCrecimientoRango();
         }
 
-        // Ejecución al presionar botones URL en las tarjetas
+        // Recompensa Multiplicada por el Rango del Usuario
         function registrarInteraccionUrlPuntos() {
-            comprobarYResetearEnergiaDiaria(); // Valida desfases antes de operar
-            userSimulatedPoints += 1;
+            comprobarYResetearEnergiaDiaria();
+            
+            // Factor multiplicador basado en rango: nivel 1 -> x1, nivel 2 -> x2, etc.
+            const nivelActualMultiplier = CONFIG_RANGOS[cachedUserRankIndex].nivel;
+            const incrementoPuntosBase = 1 * nivelActualMultiplier;
+
+            userSimulatedPoints += incrementoPuntosBase;
             userEnergyPoints += 1;
+            internalEnergyCounter += 1;
+
+            let mensajeExtra = "";
+            if (internalEnergyCounter >= 10) {
+                const bloquesGanados = Math.floor(internalEnergyCounter / 10);
+                const puntosPorEnergia = bloquesGanados * 5;
+                userSimulatedPoints += puntosPorEnergia;
+                internalEnergyCounter = internalEnergyCounter % 10;
+                mensajeExtra = ` (+${puntosPorEnergia} por Energía)`;
+            }
+
             actualizarVisualizacionSaldos();
-            showToast("¡+1 Punto de Saldo y +1 de Energía Inyectados!");
+            showToast(`¡+${incrementoPuntosBase} Puntos (x${nivelActualMultiplier}) y +1 Energía Inyectados!${mensajeExtra}`);
         }
 
         // =========================================================================
@@ -927,7 +1082,6 @@
             const trigger = document.getElementById(triggerId);
             const isVisible = menu.classList.contains("show");
             
-            // Cerrar todos primero
             document.querySelectorAll(".selector-floating-menu").forEach(m => m.classList.remove("show"));
             document.querySelectorAll(".selector-trigger-btn").forEach(t => t.classList.remove("active-focus"));
             
@@ -965,7 +1119,6 @@
             filtrarYRenderizar();
         }
 
-        // Cerrar menús al hacer clic fuera
         document.addEventListener("click", (e) => {
             if (!e.target.closest(".selector-floating-wrapper")) {
                 document.querySelectorAll(".selector-floating-menu").forEach(m => m.classList.remove("show"));
@@ -1108,7 +1261,7 @@
         }
 
         // =========================================================================
-        // 🚨 ENGINE: ACCESO DE COMPRAS FLOATING VIP (IZQUIERDA FOMO SYSTEM)
+        // 🚨 ENGINE: VIP FOMO SYSTEM CON TOUCH DISMISS (SWIPE IZQUIERDA)
         // =========================================================================
         function dispararAlertaCompraFomoIzquierda() {
             const aptos = MAESTRO_DATA.filter(b => b.venderpremium === true);
@@ -1129,16 +1282,42 @@
                 </button>
             `;
 
+            // Setup de Swipe para la alerta FOMO individual
+            let localStartX = 0;
+            card.addEventListener('touchstart', (e) => {
+                localStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            card.addEventListener('touchmove', (e) => {
+                let currentX = e.changedTouches[0].screenX;
+                let delta = currentX - localStartX;
+                if(delta < 0) {
+                    card.style.transform = `translateX(${delta}px)`;
+                }
+            }, { passive: true });
+
+            card.addEventListener('touchend', (e) => {
+                let endX = e.changedTouches[0].screenX;
+                if (endX < localStartX - 70) {
+                    card.style.transform = "translateX(-150%)";
+                    card.style.opacity = "0";
+                    setTimeout(() => card.remove(), 250);
+                } else {
+                    card.style.transform = "translateX(0)";
+                }
+            }, { passive: true });
+
             stackContainer.appendChild(card);
             if(window.lucide) window.lucide.createIcons();
 
             setTimeout(() => {
-                card.style.animation = "none";
-                card.style.transition = "all 0.4s ease";
-                card.style.opacity = "0";
-                card.style.transform = "translateX(-30px)";
-                setTimeout(() => card.remove(), 400);
-            }, 6000);
+                if(card.parentNode) {
+                    card.style.transition = "all 0.4s ease";
+                    card.style.opacity = "0";
+                    card.style.transform = "translateX(-30px)";
+                    setTimeout(() => card.remove(), 400);
+                }
+            }, 7000);
         }
 
         function irAlProyectoTarjeta(id) {
@@ -1219,7 +1398,6 @@
             return 'var(--neon-green)';
         }
 
-        // Wrapper centralizado de redirección URL intermitente
         function ejecutarAccionBotonUrl(url) {
             registrarInteraccionUrlPuntos();
             abrirEnlace(url);
@@ -1229,6 +1407,7 @@
             const pct = Math.min(Math.round((item.sponsors_count / item.sponsors_target) * 100) || 0, 100);
             const plasmaColor = obtenerColorPlasma(pct);
             const vistasLocales = localStorage.getItem(`views_${item.id}`) || 45;
+            const multiplierActual = CONFIG_RANGOS[cachedUserRankIndex].nivel;
 
             return `
                 <div class="cyber-card status-${item.estado_codigo}" id="card-${item.id}">
@@ -1247,6 +1426,7 @@
                     <div class="badge-row">
                         <span class="tag-status">${item.estado}</span>
                         ${item.etiquetas.map(t => `<span class="tag-type">${t}</span>`).join('')}
+                        <span class="card-multiplier-pill">Ganancia x${multiplierActual}</span>
                     </div>
                     <p class="card-desc">${item.descripcion}</p>
                     
@@ -1404,7 +1584,7 @@
                         <p class="card-desc">${ch.desc}</p>
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
                             <button class="btn-cyber btn-read-more" onclick="showToast('Módulo informativo extendido en canal principal.')"><i data-lucide="info"></i>Saber Más</button>
-                            <button class="btn-cyber btn-open-web" onclick="abrirEnlace('${ch.url}')"><i data-lucide="${iconoBoton}"></i>${botonTexto}</button>
+                            <button class="btn-cyber btn-open-web" onclick="ejecutarAccionBotonUrl('${ch.url}')"><i data-lucide="${iconoBoton}"></i>${botonTexto}</button>
                         </div>
                     </div>
                 `;
@@ -1451,6 +1631,66 @@
             document.getElementById("count-dev").innerText = MAESTRO_DATA.filter(i => i.estado_codigo === "alpha" || i.estado_codigo === "prod").length;
 
             if(window.lucide) window.lucide.createIcons();
+        }
+
+        // =========================================================================
+        // 🛠 LÓGICA DE CELEBRACIÓN ÉPICA INTERNA CON CONFETTI DINÁMICO
+        // =========================================================================
+        function lanzarCelebracionEpicRank(rIndex) {
+            const rData = CONFIG_RANGOS[rIndex];
+            const overlay = document.getElementById("epic-rank-popup");
+            
+            document.getElementById("epic-avatar-display").src = `https://robohash.org/${encodeURIComponent(rData.nombre)}?set=set1&bgset=bg2`;
+            document.getElementById("epic-rank-name-display").innerText = rData.nombre;
+            document.getElementById("epic-rank-level-display").innerText = `RANGO CODIFICADO NIVEL ${rData.nivel}`;
+            
+            overlay.classList.add("active");
+            generarEfectoExplosionConfetti();
+        }
+
+        function generarEfectoExplosionConfetti() {
+            const colores = ['#00f0ff', '#ff007f', '#39ff14', '#ffaa00', '#ffd700', '#9d4edd'];
+            const overlay = document.getElementById("epic-rank-popup");
+            
+            for(let i=0; i<80; i++) {
+                const p = document.createElement("div");
+                p.className = "confetti-particle";
+                p.style.backgroundColor = colores[Math.floor(Math.random()*colores.length)];
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.animationDelay = (Math.random() * 2) + 's';
+                p.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                p.style.width = Math.floor(Math.random() * 6 + 6) + 'px';
+                p.style.height = Math.floor(Math.random() * 6 + 6) + 'px';
+                overlay.appendChild(p);
+                
+                setTimeout(() => p.remove(), 4000);
+            }
+        }
+
+        function mostrarBeneficioRangoFlotante() {
+            const rData = CONFIG_RANGOS[cachedUserRankIndex];
+            const bodyModal = document.getElementById("modal-beneficios-body");
+            
+            bodyModal.innerHTML = `
+                <div class="benefit-item">
+                    <i data-lucide="zap"></i>
+                    <div><strong>Multiplicador de Red Activado:</strong> Tus clics en el Hub de proyectos y canales están multiplicados por <strong>x${rData.nivel}</strong> de manera estable.</div>
+                </div>
+                <div class="benefit-item" style="border-color: var(--neon-purple);">
+                    <i data-lucide="cpu"></i>
+                    <div><strong>Identidad Robot Asignada:</strong> ${rData.nombre}. Nivel de autorización de seguridad del Mainframe Matrix.</div>
+                </div>
+                <p style="font-size:0.75rem; color:#94a3b8; line-height:1.4; padding:6px;">${rData.desc} Sigue recolectando energía y ejecutando enlaces para subir al siguiente nivel.</p>
+            `;
+            
+            document.getElementById("epic-rank-popup").classList.remove("active");
+            document.getElementById("modal-beneficios-flotante").classList.add("is-open");
+            if(window.lucide) window.lucide.createIcons();
+        }
+
+        function cerrarBeneficioRangoFlotante() {
+            document.getElementById("modal-beneficios-flotante").classList.remove("is-open");
+            filtrarYRenderizar(); 
         }
 
         // =========================================================================
@@ -1554,7 +1794,6 @@
             inicializarContadorVistas();
             syncTelegramUser();
             
-            // Comprobar y setear balance energético inicial
             comprobarYResetearEnergiaDiaria();
             actualizarVisualizacionSaldos();
             
