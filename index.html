@@ -6,7 +6,6 @@
     <title>Lista Golden Hub | Core Matrix</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         /* =========================================================================
            🌌 CORE & NEO-CYBERPUNK VARIABLES
@@ -44,14 +43,14 @@
         @keyframes sectionFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
         /* =========================================================================
-           📢 ALERTA CENTRAL SUPERIOR (GUÍA PERSONAJE TELEGRAM) -> MAX 80% ANCHO
+           📢 ALERTA CENTRAL SUPERIOR (GUÍA PERSONAJE TELEGRAM)
            ========================================================================= */
         .top-guide-alert {
             position: fixed; top: 74px; left: 50%; transform: translateX(-50%) translateY(-30px);
-            width: 80% !important; max-width: 380px; background: rgba(10, 10, 22, 0.98);
+            width: calc(100% - 32px); max-width: 380px; background: rgba(10, 10, 22, 0.98);
             border: 1px solid var(--neon-cyan); box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
             border-radius: 12px; padding: 12px; z-index: 10000; opacity: 0; pointer-events: none;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             user-select: none; touch-action: translateX;
         }
         .top-guide-alert.show { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
@@ -65,10 +64,10 @@
         .guide-progress-bar { height: 100%; width: 100%; background: var(--neon-cyan); transition: width 10s linear; }
 
         /* =========================================================================
-           🚨 ALERTAS FLOTANTES ABAJO IZQUIERDA -> MAX 80% ANCHO
+           🚨 ALERTAS FLOTANTES ABAJO IZQUIERDA (VIP FOMO TOASTS)
            ========================================================================= */
         .left-fomo-container {
-            position: fixed; bottom: 84px; left: 16px; width: 80% !important; max-width: 310px;
+            position: fixed; bottom: 84px; left: 16px; width: calc(100% - 32px); max-width: 310px;
             display: flex; flex-direction: column; gap: 8px; z-index: 99999; pointer-events: none;
         }
         .fomo-alert-card {
@@ -83,37 +82,51 @@
         .fomo-text strong { color: var(--neon-gold); }
 
         /* =========================================================================
-           📢 ANUNCIO FLOTANTE PATROCINIO (DESLIZABLE E INFINITO)
+           📢 ANUNCIO FLOTANTE (FOMO MODAL ORIGINAL)
            ========================================================================= */
         .floating-ad-overlay {
-            position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%) translateY(100px);
-            width: calc(100% - 32px); max-width: 400px;
-            display: flex; align-items: center; justify-content: center;
-            z-index: 20000; opacity: 0; pointer-events: none; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            user-select: none; touch-action: translateX;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(2, 2, 5, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            display: flex; align-items: center; justify-content: center; padding: 20px;
+            z-index: 20000; opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
         }
-        .floating-ad-overlay.is-visible { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
+        .floating-ad-overlay.is-visible { opacity: 1; pointer-events: auto; }
         
         .ad-content-box {
             background: linear-gradient(145deg, #0a0a14, #05050a);
             border: 2px solid var(--neon-magenta); border-radius: 16px;
-            width: 100%; padding: 16px;
+            width: 100%; max-width: 360px; padding: 22px;
             box-shadow: 0 0 30px rgba(255, 0, 127, 0.3);
-            position: relative;
+            position: relative; transform: scale(0.85); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        .floating-ad-overlay.is-visible .ad-content-box { transform: scale(1); }
         
+        .ad-close-btn {
+            position: absolute; top: 12px; right: 12px; background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1); color: #64748b; cursor: pointer;
+            width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        }
         .ad-badge {
             display: inline-block; background: rgba(255, 0, 127, 0.1); color: var(--neon-magenta);
             font-size: 0.6rem; font-weight: 900; padding: 3px 8px; border-radius: 4px;
-            border: 1px solid rgba(255, 0, 127, 0.3); text-transform: uppercase; margin-bottom: 6px; letter-spacing: 1px;
+            border: 1px solid rgba(255, 0, 127, 0.3); text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px;
         }
-        .ad-title { font-size: 1.1rem; font-weight: 900; color: #fff; margin-bottom: 4px; }
-        .ad-desc { font-size: 0.78rem; color: #cbd5e1; line-height: 1.4; margin-bottom: 12px; }
-        .ad-auto-close-bar { width: 100%; height: 3px; background: rgba(255,255,255,0.05); margin-top: 8px; border-radius: 2px; overflow: hidden; }
-        .ad-auto-close-fill { height: 100%; width: 100%; background: var(--neon-magenta); transition: width 60s linear; }
+        .ad-title { font-size: 1.2rem; font-weight: 900; color: #fff; margin-bottom: 8px; text-shadow: 0 0 10px rgba(255,0,127,0.2); }
+        .ad-desc { font-size: 0.82rem; color: #cbd5e1; line-height: 1.45; margin-bottom: 16px; }
+        
+        .ad-metrics-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+        .ad-meta-box { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 8px; text-align: center; }
+        .ad-meta-label { font-size: 0.58rem; color: #64748b; font-weight: 800; text-transform: uppercase; display: block; margin-bottom: 2px; }
+        .ad-meta-value { font-size: 1.1rem; font-weight: 900; font-family: monospace; }
+        
+        .color-fomo { color: var(--neon-gold); text-shadow: 0 0 8px var(--neon-gold); }
+        .color-timer { color: var(--neon-cyan); text-shadow: 0 0 8px var(--neon-cyan); }
+        
+        .ad-auto-close-bar { width: 100%; height: 3px; background: rgba(255,255,255,0.05); margin-top: 12px; border-radius: 2px; overflow: hidden; }
+        .ad-auto-close-fill { height: 100%; width: 100%; background: var(--neon-magenta); }
 
         /* =========================================================================
-           👤 NATIVE USERSTICKY HEADER & SCORE SQUAD
+           👤 NATIVE USERSTICKY HEADER & TOAST
            ========================================================================= */
         .cyber-header {
             position: fixed; top: 0; left: 0; width: 100%; height: 64px;
@@ -121,20 +134,14 @@
             border-bottom: 2px solid var(--neon-cyan); box-shadow: 0 2px 20px rgba(0, 240, 255, 0.25);
             display: flex; justify-content: space-between; align-items: center; padding: 0 16px; z-index: 999;
         }
-        .header-logo { font-weight: 900; font-size: 1.1rem; letter-spacing: 1px; color: #fff; }
-        .header-logo span { color: var(--neon-cyan); }
         .user-profile-block { display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .user-avatar { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--neon-cyan); object-fit: cover; background: #0c0b14; order: 2; }
         .user-meta-data { display: flex; flex-direction: column; align-items: flex-end; order: 1; }
         .user-name { font-size: 0.8rem; font-weight: 800; color: #fff; }
+        .user-tg-id { font-size: 0.65rem; color: var(--neon-cyan); font-family: monospace; letter-spacing: 0.5px; }
         
-        .score-display-pill {
-            background: rgba(255, 215, 0, 0.1); border: 1px solid var(--neon-gold);
-            padding: 6px 12px; border-radius: 20px; display: flex; align-items: center; gap: 6px;
-            font-size: 0.8rem; font-weight: 900; color: var(--neon-gold); cursor: pointer;
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.2); transition: all 0.2s;
-        }
-        .score-display-pill:active { transform: scale(0.95); }
+        .header-logo { font-size: 1.1rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; color: #fff; }
+        .header-logo span { color: var(--neon-magenta); }
 
         .toast-notify {
             position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(30px);
@@ -144,142 +151,219 @@
         .toast-notify.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
         /* =========================================================================
-           👑 COMPONENTE: CARRUSEL AUTOMÁTICO DE SPONSORS (SIN BOTONES)
+           👑 COMPONENTE: PATROCINADORES OFICIALES
            ========================================================================= */
-        .sponsors-carousel-container {
-            width: 100%; overflow: hidden; background: rgba(10, 5, 20, 0.4);
-            border-top: 1px solid rgba(0, 240, 255, 0.1); border-bottom: 1px solid rgba(0, 240, 255, 0.1);
-            padding: 8px 0; margin-bottom: 16px; display: flex; align-items: center;
+        .global-sponsor-panel {
+            background: linear-gradient(135deg, rgba(20, 15, 40, 0.9), rgba(10, 8, 20, 0.95));
+            border: 2px dashed var(--neon-gold); border-radius: 14px; padding: 16px; margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.15); position: relative; overflow: hidden;
         }
-        .sponsors-carousel-track {
-            display: flex; gap: 20px; width: max-content;
-            animation: carouselLinearScroll 25s linear infinite;
+        .global-sponsor-panel::before {
+            content: 'VIP'; position: absolute; top: -10px; right: -10px; background: var(--neon-gold);
+            color: #000; font-size: 0.6rem; font-weight: 900; padding: 15px 15px 5px 15px; transform: rotate(45deg);
         }
-        @keyframes carouselLinearScroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(calc(-50%)); }
-        }
-        .sponsor-carousel-item {
-            display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.03);
-            padding: 4px 12px; border-radius: 30px; border: 1px solid rgba(255, 215, 0, 0.2);
-        }
-        .sponsor-avatar-mini { width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--neon-cyan); }
-        .sponsor-info-mini { display: flex; flex-direction: column; }
-        .sponsor-name-row { display: flex; align-items: center; gap: 4px; font-size: 0.72rem; font-weight: 800; color: #fff; }
-        .sponsor-badge-tag { font-size: 0.5rem; background: var(--neon-gold); color: #000; padding: 1px 4px; border-radius: 3px; font-weight: 900; }
-        .sponsor-country-tag { font-size: 0.6rem; color: #94a3b8; }
+        .sponsor-panel-title { font-size: 1.05rem; font-weight: 800; color: #fff; text-shadow: 0 0 8px var(--neon-gold); display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+        .sponsor-panel-desc { font-size: 0.75rem; color: #cbd5e1; line-height: 1.4; margin-bottom: 16px; }
+        .sponsor-panel-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
-        /* Compactación moderna de Selectores y Deslizantes */
-        .compact-filters-wrapper {
-            background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 12px; padding: 10px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 10px;
+        /* =========================================================================
+           📅 METADATOS DE CICLO DE VIDA (Ocultos inicialmente en el Hub)
+           ========================================================================= */
+        .timeline-box {
+            display: none; grid-template-columns: repeat(3, 1fr); gap: 6px;
+            background: rgba(0,0,0,0.25); border-radius: 8px; padding: 8px; margin-bottom: 12px;
+            border: 1px solid rgba(255,255,255,0.04);
         }
-        .compact-row { display: flex; gap: 8px; align-items: center; width: 100%; }
-        .cyber-select-dropdown {
-            flex: 1; background: #0c0c14; color: #fff; border: 1px solid var(--neon-cyan);
-            border-radius: 8px; padding: 8px 12px; font-size: 0.75rem; font-weight: 700;
-            outline: none; cursor: pointer; transition: all 0.2s;
-        }
-        .cyber-select-dropdown:focus { box-shadow: 0 0 10px rgba(0,240,255,0.3); }
+        .cyber-card.is-expanded .timeline-box { display: grid; }
+        .timeline-node { text-align: center; display: flex; flex-direction: column; gap: 2px; }
+        .timeline-node-title { font-size: 0.55rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
+        .timeline-node-date { font-size: 0.65rem; font-weight: 700; color: #fff; }
+        .status-alpha .timeline-node:nth-child(1) .timeline-node-title { color: var(--neon-magenta); }
+        .status-beta .timeline-node:nth-child(2) .timeline-node-title { color: var(--neon-amber); }
+        .status-prod .timeline-node:nth-child(3) .timeline-node-title { color: var(--neon-green); }
 
         /* =========================================================================
            📊 MONITOR METRICS PANEL & FILTERS
            ========================================================================= */
-        .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 16px; }
-        .metric-box { background: var(--card-bg); border: 1px solid var(--border-neon); border-radius: 10px; padding: 8px 4px; text-align: center; position: relative; }
+        .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .metric-box { background: var(--card-bg); border: 1px solid var(--border-neon); border-radius: 10px; padding: 12px 6px; text-align: center; position: relative; }
         .metric-box::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; }
         .box-total::before { background: var(--neon-cyan); }
-        .box-maint::before { background: var(--neon-amber); }
-        .box-oos::before { background: var(--neon-magenta); }
-        .box-fin::before { background: var(--neon-purple); }
-        .metric-value { font-size: 1.1rem; font-weight: 900; color: #fff; display: block; }
-        .metric-label { font-size: 0.52rem; color: #94a3b8; text-transform: uppercase; font-weight: 800; margin-top: 4px; }
+        .box-beta::before { background: var(--neon-amber); }
+        .box-dev::before { background: var(--neon-green); }
+        .metric-value { font-size: 1.4rem; font-weight: 900; color: #fff; display: block; }
+        .box-total .metric-value { text-shadow: 0 0 8px var(--neon-cyan); }
+        .box-beta .metric-value { text-shadow: 0 0 8px var(--neon-amber); }
+        .box-dev .metric-value { text-shadow: 0 0 8px var(--neon-green); }
+        .metric-label { font-size: 0.62rem; color: #94a3b8; text-transform: uppercase; font-weight: 800; margin-top: 4px; }
+
+        .filter-section { margin-bottom: 22px; display: flex; flex-direction: column; gap: 12px; }
+        .tabs-container { display: flex; background: rgba(255, 255, 255, 0.03); border-radius: 8px; padding: 4px; border: 1px solid rgba(255, 255, 255, 0.06); }
+        .tab-btn { flex: 1; background: none; border: none; padding: 10px 4px; color: #64748b; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; cursor: pointer; border-radius: 6px; transition: all 0.2s; }
+        .tab-btn.active { background: var(--neon-cyan); color: #020205; box-shadow: 0 0 12px rgba(0, 240, 255, 0.35); }
+        .subfilters-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+        .subfilter-pill { background: rgba(8, 8, 15, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); color: var(--text-main); padding: 6px 14px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; white-space: nowrap; cursor: pointer; transition: all 0.2s; }
+        .subfilter-pill.active { border-color: var(--neon-magenta); color: var(--neon-magenta); box-shadow: 0 0 8px rgba(255, 0, 127, 0.25); }
 
         /* =========================================================================
-           🎴 CYBER CARDS SYSTEM & REWARDS MODERN CARDS
+           🎴 CYBER CARDS SYSTEM (DISEÑO ANCHO COMPLETO EXCLUSIVO)
            ========================================================================= */
-        .cards-container { display: flex; flex-direction: column; gap: 14px; }
+        .cards-container { display: flex; flex-direction: column; gap: 18px; }
         .cyber-card { background: var(--card-bg); border: 1px solid var(--border-neon); border-radius: 14px; padding: 16px; position: relative; box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6); overflow: hidden; }
-        .cyber-card.status-operativo { --border-neon: rgba(57, 255, 20, 0.25); }
-        .cyber-card.status-mantenimiento { --border-neon: rgba(255, 170, 0, 0.25); }
-        .cyber-card.status-fuera_de_servicio { --border-neon: rgba(255, 0, 127, 0.25); }
-        .cyber-card.status-finalizado { --border-neon: rgba(157, 78, 221, 0.25); }
+        .cyber-card.status-alpha { --border-neon: rgba(255, 0, 127, 0.25); }
+        .cyber-card.status-beta { --border-neon: rgba(255, 170, 0, 0.25); }
+        .cyber-card.status-prod { --border-neon: rgba(57, 255, 20, 0.25); }
         
-        .card-header-topline { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; width: 100%; }
-        .card-title { font-size: 1.25rem; font-weight: 900; color: #fff; }
-        
-        .tag-status { font-size: 0.55rem; font-weight: 900; padding: 3px 7px; border-radius: 4px; text-transform: uppercase; }
-        .status-operativo .tag-status { background: rgba(57, 255, 20, 0.15); color: var(--neon-green); border: 1px solid rgba(57, 255, 20, 0.3); }
-        .status-mantenimiento .tag-status { background: rgba(255, 170, 0, 0.15); color: var(--neon-amber); border: 1px solid rgba(255, 170, 0, 0.3); }
-        .status-fuera_de_servicio .tag-status { background: rgba(255, 0, 127, 0.15); color: var(--neon-magenta); border: 1px solid rgba(255, 0, 127, 0.3); }
-        .status-finalizado .tag-status { background: rgba(157, 78, 221, 0.15); color: var(--neon-purple); border: 1px solid rgba(157, 78, 221, 0.3); }
+        /* Modificación Estructural Solicitada */
+        .card-header-topline { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; width: 100%; }
+        .card-title { font-size: 1.25rem; font-weight: 900; color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.1); }
+        .card-view-counter { background: rgba(0, 240, 255, 0.08); border: 1px solid rgba(0, 240, 255, 0.3); padding: 4px 8px; border-radius: 6px; display: flex; flex-direction: column; align-items: flex-end; }
+        .view-counter-number { font-size: 0.9rem; font-weight: 900; color: var(--neon-cyan); font-family: monospace; text-shadow: 0 0 6px var(--neon-cyan); }
+        .view-counter-label { font-size: 0.52rem; font-weight: 800; color: #94a3b8; letter-spacing: 0.5px; }
 
-        .badge-tg-type { font-size: 0.58rem; font-weight: 900; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; }
+        .card-full-banner { width: calc(100% + 32px); height: 160px; object-fit: cover; margin-left: -16px; margin-right: -16px; margin-bottom: 14px; border-top: 1px solid var(--border-neon); border-bottom: 1px solid var(--border-neon); }
+        
+        .badge-tg-type { font-size: 0.58rem; font-weight: 900; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
         .badge-tg-type.canal { background: rgba(0, 240, 255, 0.15); color: var(--neon-cyan); border: 1px solid var(--neon-cyan); }
         .badge-tg-type.grupo { background: rgba(157, 78, 221, 0.15); color: var(--neon-purple); border: 1px solid var(--neon-purple); }
-        .badge-privacy { font-size: 0.58rem; font-weight: 900; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; background: rgba(255,255,255,0.06); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.15); }
 
+        .badge-row { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 12px; }
+        .tag-status { font-size: 0.55rem; font-weight: 900; padding: 3px 7px; border-radius: 4px; text-transform: uppercase; }
+        .status-alpha .tag-status { background: rgba(255, 0, 127, 0.15); color: var(--neon-magenta); border: 1px solid rgba(255, 0, 127, 0.3); }
+        .status-beta .tag-status { background: rgba(255, 170, 0, 0.15); color: var(--neon-amber); border: 1px solid rgba(255, 170, 0, 0.3); }
+        .status-prod .tag-status { background: rgba(57, 255, 20, 0.15); color: var(--neon-green); border: 1px solid rgba(57, 255, 20, 0.3); }
+        .tag-type { font-size: 0.55rem; font-weight: 900; padding: 3px 7px; border-radius: 4px; background: rgba(0, 240, 255, 0.08); color: var(--neon-cyan); border: 1px solid rgba(0, 240, 255, 0.2); text-transform: uppercase; }
         .card-desc { font-size: 0.8rem; color: #94a3b8; line-height: 1.45; margin-bottom: 14px; }
 
+        .sliding-drawer { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease; display: flex; flex-direction: column; gap: 10px; }
+        .cyber-card.is-expanded .sliding-drawer { max-height: 500px; margin-top: 12px; padding-top: 4px; border-top: 1px dashed rgba(255,255,255,0.08); }
+        
+        .more-text { font-size: 0.78rem; color: #cbd5e1; background: rgba(0,0,0,0.3); border-radius: 8px; padding: 10px; border-left: 2px solid var(--neon-cyan); margin-bottom: 8px; }
+
         /* =========================================================================
-           🏬 TIENDA DE RECOMPENSAS COMPACTA Y MODERNA
+           🔋 BARRA DE ENERGÍA DE SPONSORS
            ========================================================================= */
-        .reward-card {
-            background: linear-gradient(135deg, rgba(12, 12, 28, 0.98), rgba(6, 6, 14, 0.99));
-            border: 1px solid rgba(0, 240, 255, 0.15); border-radius: 12px; padding: 14px;
-            position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); transition: border-color 0.3s;
-        }
-        .reward-card:hover { border-color: rgba(0, 240, 255, 0.4); }
-        .reward-header-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
-        .reward-card-title { font-size: 0.95rem; font-weight: 800; color: #fff; line-height: 1.3; flex: 1; }
+        .energy-section { margin-bottom: 4px; position: relative; }
+        .energy-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; font-size: 0.68rem; font-weight: 700; color: #94a3b8; }
+        .energy-count-node { color: #fff; font-weight: 800; }
         
-        .reward-stock-badge {
-            background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 6px; padding: 3px 6px; font-size: 0.65rem; color: #94a3b8; font-weight: 700;
-            white-space: nowrap; display: flex; align-items: center; gap: 4px;
+        .energy-container-bar {
+            width: 100%; height: 12px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 4px; padding: 1px; position: relative; cursor: pointer; overflow: hidden;
         }
-        .reward-stock-badge span { color: var(--neon-cyan); font-weight: 900; }
-        
-        .reward-pricing-grid { display: flex; gap: 12px; align-items: center; margin: 2px 0 6px 0; }
-        .price-tag-item { display: flex; align-items: center; gap: 4px; font-size: 0.75rem; font-weight: 700; }
-        .price-tag-item.stars { color: var(--neon-gold); }
-        .price-tag-item.points { color: var(--neon-cyan); }
-        
-        .btn-claim-reward-node {
-            width: 100%; padding: 8px; font-size: 0.72rem; font-weight: 900; text-transform: uppercase;
-            border-radius: 6px; border: 1px solid transparent; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;
+        .energy-plasma-fill {
+            height: 100%; width: 0%; border-radius: 2px; transition: width 0.6s ease-out;
+            background-size: 30px 30px;
+            background-image: linear-gradient(135deg, rgba(255,255,255,0.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.15) 75%, transparent 75%, transparent);
+            animation: movePlasma 1s linear infinite;
         }
-        .btn-claim-reward-node:disabled {
+        @keyframes movePlasma { 0% { background-position: 0 0; } 100% { background-position: 30px 0; } }
+
+        .energy-tooltip {
+            position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%) translateY(5px);
+            background: #1e1b4b; border: 1px solid var(--neon-cyan); color: #fff; padding: 6px 10px;
+            font-size: 0.65rem; border-radius: 6px; pointer-events: none; opacity: 0; transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5); width: 85%; text-align: center; z-index: 10;
+        }
+        .energy-container-bar:active + .energy-tooltip { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* =========================================================================
+           🛒 TIENDA DE RECOMPENSAS COMPACTA & MODERN STYLING
+           ========================================================================= */
+        .shop-balance-bar {
+            background: rgba(157, 78, 221, 0.1); border: 1px solid var(--neon-purple);
+            border-radius: 10px; padding: 10px 14px; display: flex; justify-content: space-between;
+            align-items: center; margin-bottom: 20px; box-shadow: 0 0 15px rgba(157, 78, 221, 0.15);
+        }
+        .balance-info { display: flex; flex-direction: column; }
+        .balance-label { font-size: 0.6rem; color: #a5b4fc; text-transform: uppercase; font-weight: 800; }
+        .balance-value { font-size: 1.15rem; font-weight: 900; color: #fff; font-family: monospace; text-shadow: 0 0 8px var(--neon-purple); }
+        .reward-grid-compact { display: grid; grid-template-columns: 1fr; gap: 14px; }
+        .reward-mini-card {
+            background: rgba(10, 10, 18, 0.9); border: 1px solid rgba(255, 215, 0, 0.12);
+            border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 8px;
+            position: relative; transition: border-color 0.3s;
+        }
+        .reward-mini-card:hover { border-color: var(--neon-gold); }
+        .reward-meta-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+        .reward-title-main { font-size: 0.9rem; font-weight: 800; color: #fff; line-height: 1.3; }
+        .reward-stock-pill {
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+            padding: 2px 6px; border-radius: 4px; font-size: 0.58rem; color: #94a3b8; font-weight: 700; white-space: nowrap;
+        }
+        .reward-pricing-row { display: flex; gap: 8px; align-items: center; margin-top: 2px; }
+        .price-badge-stars {
+            background: rgba(0, 240, 255, 0.08); border: 1px solid rgba(0, 240, 255, 0.25);
+            color: var(--neon-cyan); font-size: 0.68rem; font-weight: 800; padding: 3px 6px; border-radius: 6px;
+            display: flex; align-items: center; gap: 3px; font-family: monospace;
+        }
+        .price-badge-points {
+            background: rgba(157, 78, 221, 0.08); border: 1px solid rgba(157, 78, 221, 0.25);
+            color: #d8b4fe; font-size: 0.68rem; font-weight: 800; padding: 3px 6px; border-radius: 6px;
+            display: flex; align-items: center; gap: 3px; font-family: monospace;
+        }
+        .btn-claim-reward {
+            width: 100%; padding: 8px; font-size: 0.72rem; font-weight: 800; text-transform: uppercase;
+            border-radius: 6px; cursor: pointer; border: 1px solid transparent; display: flex;
+            align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;
+        }
+        .btn-claim-reward.locked {
             background: rgba(255,255,255,0.02) !important; border-color: rgba(255,255,255,0.05) !important;
             color: var(--text-muted) !important; cursor: not-allowed; box-shadow: none !important;
         }
-        .btn-claim-reward-node.unlocked {
-            background: linear-gradient(90deg, rgba(0, 240, 255, 0.1), rgba(157, 78, 221, 0.1));
-            border-color: var(--neon-cyan); color: #fff;
-            box-shadow: 0 0 12px rgba(0, 240, 255, 0.15);
+        .btn-claim-reward.unlocked {
+            background: rgba(57, 255, 20, 0.08); border-color: var(--neon-green); color: #fff;
+            box-shadow: 0 0 10px rgba(57, 255, 20, 0.15);
         }
-        .btn-claim-reward-node.unlocked:active { transform: scale(0.98); }
+        .btn-claim-reward.unlocked:active { background: var(--neon-green); color: #000; }
 
         /* =========================================================================
            🕹️ CONTROLES & BOTONES GLOBALES
            ========================================================================= */
+        .actions-grid { display: flex; flex-direction: column; gap: 8px; }
         .btn-cyber {
             width: 100%; background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.1);
-            padding: 10px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase;
-            border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;
+            padding: 9px; font-size: 0.72rem; font-weight: 800; text-transform: uppercase;
+            border-radius: 7px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;
         }
         .btn-read-more { border-color: rgba(255, 255, 255, 0.15); color: #e2e8f0; }
+        .cyber-card.is-expanded .btn-read-more { background: rgba(255,255,255,0.05); color: var(--neon-cyan); border-color: var(--neon-cyan); }
+        
+        .links-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 6px; }
         .btn-open-bot { background: rgba(0, 240, 255, 0.03); border-color: var(--neon-cyan); color: var(--neon-cyan); }
         .btn-open-ma { background: rgba(255, 0, 127, 0.03); border-color: var(--neon-magenta); color: var(--neon-magenta); }
         .btn-open-web { background: rgba(57, 255, 20, 0.03); border-color: var(--neon-green); color: var(--neon-green); }
+
+        .monetization-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 6px; border-top: 1px dashed rgba(255,255,255,0.06); padding-top: 8px; }
+        .monetization-row:empty { display: none; padding: 0; border: none; }
         .btn-sponsor { background: rgba(255, 215, 0, 0.04); border-color: var(--neon-gold); color: var(--neon-gold); }
         .btn-premium-sell { background: rgba(157, 78, 221, 0.06); border-color: var(--neon-purple); color: var(--neon-purple); }
 
         .info-panel-box { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 18px; margin-bottom: 16px; }
         .info-panel-title { font-size: 1.1rem; font-weight: 800; color: #fff; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px;}
         .info-panel-desc { font-size: 0.8rem; color: #cbd5e1; line-height: 1.5; margin-bottom: 14px; }
+        
+        .promo-grid-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 12px; }
+        .btn-promo-tier { background: rgba(0, 240, 255, 0.02); border-color: var(--neon-cyan); color: #fff; font-size: 0.65rem; }
+        .btn-bot-link { background: rgba(157, 78, 221, 0.02); border-color: var(--neon-purple); color: var(--neon-purple); }
+
+        /* =========================================================================
+           🎠 CAROUSEL DE RESEÑAS
+           ========================================================================= */
+        .reviews-section-wrapper { margin-top: 30px; margin-bottom: 20px; overflow: hidden; position: relative; width: 100%; }
+        .reviews-section-title { font-size: 0.9rem; font-weight: 800; text-transform: uppercase; color: var(--neon-cyan); letter-spacing: 1px; margin-bottom: 12px; text-align: center; }
+        .carousel-track-container { width: 100%; overflow: hidden; }
+        .carousel-track { display: flex; gap: 14px; transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .review-card-item {
+            background: rgba(15, 15, 25, 0.9); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px; padding: 14px; min-width: 280px; max-width: 280px; flex-shrink: 0;
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .review-header-node { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .review-img { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 1px solid var(--neon-gold); }
+        .review-author { font-size: 0.75rem; font-weight: 800; color: #fff; }
+        .review-stars { color: var(--neon-gold); font-size: 0.65rem; display: flex; gap: 1px; }
+        .review-text-quote { font-size: 0.72rem; color: #94a3b8; line-height: 1.4; font-style: italic; margin-bottom: 12px; }
 
         /* =========================================================================
            📱 FIXED BOTTOM NAVIGATION BAR
@@ -289,7 +373,7 @@
             background: rgba(4, 4, 10, 0.97); backdrop-filter: blur(16px);
             border-top: 2px solid rgba(0, 240, 255, 0.2);
             display: flex; justify-content: space-around; align-items: center;
-            padding: 0 4px; z-index: 9999;
+            padding: 0 8px; z-index: 9999;
             box-shadow: 0 -4px 20px rgba(0,0,0,0.8);
         }
         .nav-item-btn {
@@ -298,7 +382,7 @@
             gap: 4px; cursor: pointer; transition: all 0.2s; width: 16%; height: 100%;
         }
         .nav-item-btn i { width: 18px; height: 18px; transition: transform 0.2s; }
-        .nav-item-btn span { font-size: 0.52rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px; white-space: nowrap; }
+        .nav-item-btn span { font-size: 0.52rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2px; white-space: nowrap; }
         
         .nav-item-btn.active-nav { color: var(--neon-cyan); text-shadow: 0 0 6px rgba(0, 240, 255, 0.4); }
         .nav-item-btn.active-nav i { transform: translateY(-2px); color: var(--neon-cyan); }
@@ -318,8 +402,17 @@
         }
         .cyber-modal.is-open .modal-content { transform: scale(1); }
         .modal-title { font-size: 1.15rem; font-weight: 900; text-transform: uppercase; color: #fff; text-shadow: 0 0 8px var(--neon-gold); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
-        .modal-body { font-size: 0.8rem; color: #cbd5e1; line-height: 1.5; margin-bottom: 18px; }
+        .modal-body { font-size: 0.8rem; color: #cbd5e1; line-height: 1.5; margin-bottom: 18px; max-height: 280px; overflow-y: auto; }
+        .benefit-item { display: flex; gap: 8px; margin-bottom: 10px; background: rgba(255,255,255,0.02); padding: 8px; border-radius: 6px; border-left: 2px solid var(--neon-gold); }
+        .benefit-item i { color: var(--neon-gold); shrink: 0; }
         .btn-modal-close { position: absolute; top: 12px; right: 12px; background: none; border: none; color: #64748b; cursor: pointer; }
+
+        .price-tag-box {
+            background: rgba(255, 215, 0, 0.05); border: 1px solid rgba(255, 215, 0, 0.3);
+            padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 16px;
+        }
+        .price-label { font-size: 0.65rem; color: #94a3b8; text-transform: uppercase; font-weight: 700; display: block; }
+        .price-value { font-size: 1.4rem; font-weight: 900; color: var(--neon-gold); text-shadow: 0 0 10px rgba(255,215,0,0.4); }
     </style>
 </head>
 <body>
@@ -344,13 +437,27 @@
     <div class="left-fomo-container" id="fomo-left-stack"></div>
 
     <div class="floating-ad-overlay" id="fomo-ad-overlay">
-        <div class="ad-content-box" id="ad-swipeable-box">
-            <span class="ad-badge">Patrocinio Oficial Anuncio</span>
-            <h3 class="ad-title">Plazas de Sponsor Matrix</h3>
-            <p class="ad-desc">Asegura tu espacio publicitario prioritario deslizando este anuncio a la izquierda para descartar temporalmente.</p>
+        <div class="ad-content-box">
+            <button class="ad-close-btn" onclick="closeFloatingAd()"><i data-lucide="x" style="width:14px; height:14px;"></i></button>
+            <span class="ad-badge">Oportunidad VIP</span>
+            <h3 class="ad-title">Plazas de Sponsor</h3>
+            <p class="ad-desc">Asegura tu espacio publicitario prioritario en la red Core Matrix. Acceso a tráfico cruzado orgánico y métricas validadas.</p>
+            
+            <div class="ad-metrics-row">
+                <div class="ad-meta-box">
+                    <span class="ad-meta-label">Disponibilidad</span>
+                    <span class="ad-meta-value color-fomo">3 / 5 Plazas</span>
+                </div>
+                <div class="ad-meta-box">
+                    <span class="ad-meta-label">Cierre de Oferta</span>
+                    <span class="ad-meta-value color-timer" id="ad-countdown">59:59</span>
+                </div>
+            </div>
+
             <button class="btn-cyber btn-sponsor" style="width: 100%; border-color: var(--neon-magenta); color: #fff; background: rgba(255,0,127,0.1);" onclick="ejecutarMensajePrivadoAnuncio()">
-                <i data-lucide="message-circle"></i>Contactar Chat Privado
+                <i data-lucide="message-circle-code"></i>Contactar Chat Privado
             </button>
+            
             <div class="ad-auto-close-bar">
                 <div class="ad-auto-close-fill" id="ad-progress-bar"></div>
             </div>
@@ -360,539 +467,887 @@
     <header class="cyber-header">
         <div class="header-logo">Core <span>Matrix</span></div>
         
-        <div class="score-display-pill" onclick="switchTabApp('sec-recompensas', document.querySelector('.nav-item-btn:nth-child(4)'))">
-            <i data-lucide="zap"></i>
-            <span id="global-user-score-display">0 Puntos</span>
+        <div class="user-profile-block" onclick="copiarTelegramIdInfo()" id="user-header-trigger">
+            <img class="user-avatar" id="tg-user-avatar" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150" alt="Avatar">
+            <div class="user-meta-data">
+                <span class="user-name" id="tg-user-name">Hola, @Cargando</span>
+                <span class="user-id-row" style="display:flex; align-items:center; gap:3px;">
+                    <span class="user-tg-id" id="tg-user-id">ID: ---------</span>
+                    <i data-lucide="copy" style="width:10px; height:10px; color: var(--neon-cyan);"></i>
+                </span>
+            </div>
         </div>
     </header>
 
-    <div class="toast-notify" id="app-toast">Acción Procesada</div>
+    <div class="toast-notify" id="app-toast">ID Copiado al portapapeles</div>
 
     <section id="sec-proyectos" class="app-section active">
-        <div class="sponsors-carousel-container">
-            <div class="sponsors-carousel-track" id="sponsors-marquee-track"></div>
+        <div class="global-sponsor-panel">
+            <h3 class="sponsor-panel-title"><i data-lucide="shield-check"></i>Patrocinio Oficial</h3>
+            <p class="sponsor-panel-desc">Impulsa activamente la red de infraestructura Liga Golden y desbloquea el control total de nuestra tecnología.</p>
+            <div class="sponsor-panel-actions">
+                <button class="btn-cyber btn-read-more" onclick="openSponsorModal()"><i data-lucide="help-circle"></i>Saber Más</button>
+                <button class="btn-cyber btn-sponsor" onclick="procesarPedidoSponsor()"><i data-lucide="zap"></i>Ser Sponsor</button>
+            </div>
         </div>
 
-        <div class="compact-filters-wrapper">
-            <div class="compact-row">
-                <select class="cyber-select-dropdown" id="compact-cluster-dropdown" onchange="handleCompactFilters()">
-                    <option value="all">Todo el Catálogo</option>
-                    <option value="proyecto">Proyectos Activos</option>
-                    <option value="bot_puro">Bots Propios</option>
-                </select>
-                <select class="cyber-select-dropdown" id="compact-tags-dropdown" onchange="handleCompactFilters()">
-                    <option value="Todos">Todas las Etiquetas</option>
-                    <option value="Mini-App">Mini-Apps</option>
-                    <option value="Bot">Bots</option>
-                    <option value="Web">Websites</option>
-                </select>
+        <div class="metrics-grid">
+            <div class="metric-box box-total"><span class="metric-value" id="count-total">0</span><span class="metric-label">Núcleos</span></div>
+            <div class="metric-box box-beta"><span class="metric-value" id="count-beta">0</span><span class="metric-label">En Beta</span></div>
+            <div class="metric-box box-dev"><span class="metric-value" id="count-dev">0</span><span class="metric-label">En Producción</span></div>
+        </div>
+
+        <div class="filter-section">
+            <div class="tabs-container">
+                <button class="tab-btn active" onclick="setGlobalTab('all')">Todo</button>
+                <button class="tab-btn" onclick="setGlobalTab('proyecto')">Proyectos</button>
+                <button class="tab-btn" onclick="setGlobalTab('bot_puro')">Bots Propios</button>
+            </div>
+            <div class="subfilters-scroll">
+                <span class="subfilter-pill active" id="pill-todos" onclick="setSubFilter('Todos')">Todos</span>
+                <span class="subfilter-pill" id="pill-ma" onclick="setSubFilter('Mini-App')">Mini-Apps</span>
+                <span class="subfilter-pill" id="pill-bot" onclick="setSubFilter('Bot')">Bots</span>
+                <span class="subfilter-pill" id="pill-web" onclick="setSubFilter('Web')">Web</span>
             </div>
         </div>
 
         <div class="cards-container" id="cards-wrapper"></div>
     </section>
 
-    <section id="sec-monitor" class="app-section">
-        <div class="info-panel-box">
-            <h3 class="info-panel-title"><i data-lucide="activity"></i>Monitorización Lista Golden</h3>
-            <p class="info-panel-desc">Estado operacional en tiempo real de todos los clústeres de servidores, microservicios y bots autónomos integrados en el core.</p>
-        </div>
-
-        <div class="metrics-grid">
-            <div class="metric-box box-total"><span class="metric-value" id="monitor-count-total">0</span><span class="metric-label">Total</span></div>
-            <div class="metric-box box-maint"><span class="metric-value" id="monitor-count-maint">0</span><span class="metric-label">Mantenimiento</span></div>
-            <div class="metric-box box-oos"><span class="metric-value" id="monitor-count-oos">0</span><span class="metric-label">Sin Servicio</span></div>
-            <div class="metric-box box-fin"><span class="metric-value" id="monitor-count-fin">0</span><span class="metric-label">Finalizado</span></div>
-        </div>
-
-        <div class="cards-container" id="monitor-grid-wrapper"></div>
-    </section>
-
     <section id="sec-red-sitios" class="app-section">
         <div class="info-panel-box">
             <h3 class="info-panel-title"><i data-lucide="network"></i>Nuestra Red Operativa</h3>
-            <p class="info-panel-desc">Sintoniza de forma directa los canales y grupos con su clasificación de privacidad.</p>
+            <p class="info-panel-desc">Sintoniza de forma directa los canales estratégicos que componen la infraestructura orgánica de Lista Golden.</p>
         </div>
-        <div class="cards-container" id="network-channels-wrapper"></div>
-    </section>
 
-    <section id="sec-recompensas" class="app-section">
-        <div class="info-panel-box" style="border-color: var(--neon-gold);">
-            <h3 class="info-panel-title" style="color: var(--neon-gold);"><i data-lucide="shopping-bag"></i>Tienda de Premios Matrix</h3>
-            <p class="info-panel-desc">Intercambia tu saldo de puntos acumulados junto con estrellas de Telegram. <br>⚠️ <strong>Regla de oro:</strong> Solo puedes reclamar <strong>1 premio al día</strong> en toda la tienda.</p>
+        <div class="filter-section" style="margin-bottom: 16px;">
+            <div class="subfilters-scroll" id="network-categories-scroll">
+                <span class="subfilter-pill active" id="pill-net-todos" onclick="setNetworkFilter('Todos')">Todos</span>
+                <span class="subfilter-pill" id="pill-net-entretenimiento" onclick="setNetworkFilter('Entretenimiento')">Entretenimiento</span>
+                <span class="subfilter-pill" id="pill-net-herramientas" onclick="setNetworkFilter('Herramientas')">Herramientas</span>
+                <span class="subfilter-pill" id="pill-net-finanzas" onclick="setNetworkFilter('Finanzas')">Finanzas</span>
+                <span class="subfilter-pill" id="pill-net-cripto" onclick="setNetworkFilter('Cripto')">Cripto</span>
+                <span class="subfilter-pill" id="pill-net-apuestas" onclick="setNetworkFilter('Apuestas')">Apuestas</span>
+                <span class="subfilter-pill" id="pill-net-comunidad" onclick="setNetworkFilter('Comunidad')">Comunidad</span>
+            </div>
         </div>
-        <div class="cards-container" id="rewards-cards-wrapper"></div>
+
+        <div class="cards-container" id="network-channels-wrapper"></div>
     </section>
 
     <section id="sec-colaborar" class="app-section">
         <div class="info-panel-box" style="border-color: var(--neon-purple);">
             <h3 class="info-panel-title" style="color: var(--neon-purple);"><i data-lucide="users"></i>Alianzas Estratégicas</h3>
-            <p class="info-panel-desc">Buscamos desarrolladores y administradores de comunidades para escalar integraciones conjuntas.</p>
+            <p class="info-panel-desc">Buscamos desarrolladores, creadores de contenido y administradores de comunidades que busquen escalar soluciones tecnológicas cruzadas en Telegram. Obtén accesos premium dedicados y monetiza tus integraciones de forma conjunta.</p>
             <button class="btn-cyber btn-premium-sell" style="width: 100%;" onclick="ejecutarMensajePrivado('Hola, me interesa conocer los términos de colaboración estratégica.')">
-                <i data-lucide="send"></i>Enviar Propuesta General
-            </button>
-        </div>
-
-        <div class="info-panel-box" style="border-color: var(--neon-magenta); margin-top: 16px;">
-            <h3 class="info-panel-title" style="color: var(--neon-magenta);"><i data-lucide="sparkles"></i>Creadores de Contenido &amp; Influencers</h3>
-            <p class="info-panel-desc">¿Tienes una audiencia digital o canal de difusión? Únete a nuestro programa exclusivo de amplificación.</p>
-            <button class="btn-cyber btn-open-ma" style="width: 100%;" onclick="ejecutarMensajePrivado('Hola! Soy creador de contenido/influencer y quiero colaborar con la Red Lista Golden.')">
-                <i data-lucide="star"></i>Aplicar como Creador VIP
+                <i data-lucide="send"></i>Enviar Mensaje de Propuesta
             </button>
         </div>
     </section>
 
     <section id="sec-promocion" class="app-section">
         <div class="info-panel-box" style="border-color: var(--neon-green);">
-            <h3 class="info-panel-title" style="color: var(--neon-green);"><i data-lucide="rocket"></i>Promoción Lista Golden</h3>
+            <h3 class="info-panel-title" style="color: var(--neon-green);"><i data-lucide="rocket"></i>Promoción Gratuita Lista Golden</h3>
+            <p class="info-panel-desc">Integra tus canales a nuestros sistemas de distribución orgánica. Automatizamos el crecimiento cruzado mediante clusters segmentados según el volumen real de tu audiencia.</p>
+            
+            <button class="btn-cyber btn-read-more" style="margin-bottom:14px;" onclick="openSponsorModal()"><i data-lucide="plus-circle"></i>Saber más Beneficios</button>
+            
+            <h4 style="font-size:0.7rem; color:var(--text-muted); margin-bottom:6px; font-weight:800; text-transform:uppercase;">Categoría de Ingreso Directo:</h4>
+            <div class="promo-grid-buttons">
+                <button class="btn-cyber btn-promo-tier" onclick="abrirEnlace('https://t.me/Airdayz')">+100</button>
+                <button class="btn-cyber btn-promo-tier" onclick="abrirEnlace('https://t.me/Airdayz')">+500</button>
+                <button class="btn-cyber btn-promo-tier" onclick="abrirEnlace('https://t.me/Airdayz')">+1000</button>
+            </div>
+
+            <h4 style="font-size:0.7rem; color:var(--text-muted); margin-bottom:6px; font-weight:800; text-transform:uppercase;">Nuestras Botoneras Activas:</h4>
             <div style="display:flex; flex-direction:column; gap:6px;">
                 <button class="btn-cyber btn-bot-link" onclick="abrirEnlace('https://t.me/TuBotoneraGeneralBot')"><i data-lucide="layout-grid"></i>Botonera General </button>
+                <button class="btn-cyber btn-sponsor" onclick="abrirEnlace('https://t.me/TuBotoneraCategoriasBot')"><i data-lucide="layers"></i>Botonera por Categorías</button>
             </div>
         </div>
     </section>
 
+    <section id="sec-anunciate" class="app-section">
+        <div class="info-panel-box" style="border-color: var(--neon-magenta);">
+            <h3 class="info-panel-title" style="color: var(--neon-magenta);"><i data-lucide="megaphone"></i>Campañas Publicitarias</h3>
+            <p class="info-panel-desc">Posiciona tu proyecto, bot o comunidad frente a miles de usuarios activos dentro de nuestra Mini App y red de canales integrados. Desarrollamos impactos visuales de alto rendimiento sin saturación.</p>
+            <button class="btn-cyber btn-open-ma" style="width: 100%;" onclick="ejecutarMensajePrivado('Quiero solicitar cotización para anunciarme en la red Lista Golden.')">
+                <i data-lucide="message-square-code"></i>Contactar con Ventas Privadas
+            </button>
+        </div>
+    </section>
+
+    <section id="sec-tienda" class="app-section">
+        <div class="shop-balance-bar">
+            <div class="balance-info">
+                <span class="balance-label">Tu Saldo Acumulado</span>
+                <span class="balance-value" id="shop-user-points">2,450 Puntos</span>
+            </div>
+            <i data-lucide="sparkles" style="color: var(--neon-purple); width:20px; height:20px;"></i>
+        </div>
+        
+        <div class="info-panel-box" style="border-color: var(--neon-gold); padding: 14px; margin-bottom:16px;">
+            <p class="info-panel-desc" style="font-size: 0.75rem; margin: 0; line-height: 1.4;">
+                <strong>Regla de Oro:</strong> Cada nodo de usuario cuenta con un límite máximo estricto de <strong>1 reclamo diario</strong> en todo el catálogo de la tienda.
+            </p>
+        </div>
+
+        <div class="reward-grid-compact" id="shop-rewards-wrapper"></div>
+    </section>
+
+    <section class="reviews-section-wrapper">
+        <h3 class="reviews-section-title">Feedback del Sector</h3>
+        <div class="carousel-track-container">
+            <div class="carousel-track" id="carousel-target-track"></div>
+        </div>
+    </section>
+
+    <div class="cyber-modal" id="modal-sponsor">
+        <div class="modal-content">
+            <button class="btn-modal-close" onclick="closeSponsorModal()"><i data-lucide="x"></i></button>
+            <h3 class="modal-title"><i data-lucide="award"></i>Matriz de Beneficios</h3>
+            <div class="modal-body">
+                <div class="benefit-item">
+                    <i data-lucide="crown"></i>
+                    <div><strong>Acceso VIP Absoluto:</strong> Suscripción Premium automática e ilimitada en TODOS los proyectos y bots actuales y futuros de la red.</div>
+                </div>
+                <div class="benefit-item">
+                    <i data-lucide="gift"></i>
+                    <div><strong>Sorteos Comunitarios:</strong> Capacidad nativa de realizar y validar sorteos masivos directo en tus propios canales y grupos.</div>
+                </div>
+                <div class="benefit-item">
+                    <i data-lucide="megaphone"></i>
+                    <div><strong>Publicidad Golden Ads:</strong> Banner destacado rotativo prioritario en el index central de nuestra Mini App.</div>
+                </div>
+                <div class="benefit-item">
+                    <i data-lucide="shield"></i>
+                    <div><strong>Soporte Dedicado 24/7:</strong> Canal exclusivo y directo con el equipo técnico central para integraciones de API personalizadas.</div>
+                </div>
+                <div class="benefit-item">
+                    <i data-lucide="bar-chart-3"></i>
+                    <div><strong>Métricas Avanzadas:</strong> Acceso total al panel de analíticas cruzadas de tráfico orgánico dentro de nuestro clúster.</div>
+                </div>
+            </div>
+
+            <div class="price-tag-box">
+                <span class="price-label">Suscripción Anual Colectiva</span>
+                <span class="price-value">100 USD <span style="font-size:0.75rem; color:#64748b; font-weight:500;">/ 1 año</span></span>
+            </div>
+
+            <button class="btn-cyber btn-sponsor" style="width:100%" onclick="procesarPedidoSponsor()"><i data-lucide="shopping-cart"></i>Adquirir Plan Sponsor</button>
+        </div>
+    </div>
+
     <nav class="cyber-bottom-navbar">
         <button class="nav-item-btn active-nav" onclick="switchTabApp('sec-proyectos', this)"><i data-lucide="home"></i><span>Hub</span></button>
-        <button class="nav-item-btn" onclick="switchTabApp('sec-monitor', this)"><i data-lucide="activity"></i><span>Monitor</span></button>
         <button class="nav-item-btn" onclick="switchTabApp('sec-red-sitios', this)"><i data-lucide="globe"></i><span>Red Sitios</span></button>
-        <button class="nav-item-btn" onclick="switchTabApp('sec-recompensas', this)"><i data-lucide="shopping-bag"></i><span>Tienda</span></button>
+        <button class="nav-item-btn" onclick="switchTabApp('sec-tienda', this)"><i data-lucide="gift"></i><span>Tienda</span></button>
         <button class="nav-item-btn" onclick="switchTabApp('sec-colaborar', this)"><i data-lucide="handshake"></i><span>Colaborar</span></button>
         <button class="nav-item-btn" onclick="switchTabApp('sec-promocion', this)"><i data-lucide="rocket"></i><span>Promoción</span></button>
+        <button class="nav-item-btn" onclick="switchTabApp('sec-anunciate', this)"><i data-lucide="megaphone"></i><span>Anuncios</span></button>
     </nav>
 
     <script>
         // =========================================================================
-        // 🗃️ DATA MASTER CONFIGURATION
+        // 🗃️ CONFIGURACIÓN DE DATA MASTER DE PROYECTOS (CON ID INTERNOS)
         // =========================================================================
-        const SPONSORS_DATA = [
-            { nombre: "Carlos Silva", pais: "🇪🇸 España", img: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" },
-            { nombre: "Matías Romero", pais: "🇦🇷 Argentina", img: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=100" },
-            { nombre: "Sofía Hernández", pais: "🇲🇽 México", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100" },
-            { nombre: "Diego Castillo", pais: "🇨🇱 Chile", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100" },
-            { nombre: "Valentina Gómez", pais: "🇨🇴 Colombia", img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100" }
+        const MAESTRO_DATA = [
+            {
+                id: "p_mundobots", cluster: "proyecto", titulo: "Mundo Bots", estado: "FASE BETA", estado_codigo: "beta",
+                imagen: "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=500",
+                descripcion: "Directorio avanzado y categorizado de Bots en Telegram.",
+                descripcion_larga: "Explora, puntúa y añade tus bots favoritos al directorio maestro de la red con soporte interactivo completo.",
+                etiquetas: ["BOT", "MINI-APP"], url_bot: "https://t.me/MundoBots_Bot", url_miniapp: "https://t.me/ejemplo", url_web: "",
+                sponsor: true, url_sponsor: "https://t.me/ejemplo", venderpremium: true, url_premium: "https://t.me/ejemplo",
+                sponsors_count: 42, sponsors_target: 50,
+                creacion: "02/01/26", alpha_date: "15/02/26", beta_date: "20/05/26"
+            },
+            {
+                id: "p_cleopatra", cluster: "bot_puro", titulo: "Cleopatra AI", estado: "EN PRODUCCIÓN", estado_codigo: "prod",
+                imagen: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=500",
+                descripcion: "Motor generador de contenido inteligente y creativo de alta gama.",
+                descripcion_larga: "Genera texto persuasivo, copys comerciales e imágenes fotorrealistas de alta definición mediante redes neuronales avanzadas directamente desde tus chats.",
+                etiquetas: ["BOT"], url_bot: "https://t.me/ejemplo", url_miniapp: "", url_web: "",
+                sponsor: false, venderpremium: true, url_premium: "https://t.me/ejemplo",
+                sponsors_count: 78, sponsors_target: 100,
+                creacion: "12/02/26", alpha_date: "20/03/26", beta_date: "18/06/26"
+            },
+            {
+                id: "p_goldenhub", cluster: "proyecto", titulo: "Golden Hub", estado: "FASE BETA", estado_codigo: "beta",
+                imagen: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=500",
+                descripcion: "Ecosistema unificado de Servicios Freelance verificados.",
+                descripcion_larga: "Conecta con profesionales de confianza y gestiona flujos de trabajo eficientes directamente desde Telegram.",
+                etiquetas: ["BOT", "MINI-APP"], url_bot: "https://t.me/ejemplo", url_miniapp: "https://t.me/ejemplo", url_web: "",
+                sponsor: false, venderpremium: true, url_premium: "https://t.me/ejemplo",
+                sponsors_count: 15, sponsors_target: 100,
+                creacion: "10/01/26", alpha_date: "01/03/26", beta_date: "12/06/26"
+            },
+            {
+                id: "b_cynthia", cluster: "bot_puro", titulo: "Cynthia Golden Bot", estado: "EN PRODUCCIÓN", estado_codigo: "prod",
+                imagen: "https://images.unsplash.com/photo-1531747118685-ca8fa6e08806?w=500",
+                descripcion: "Moderadora algorítmica y protectora de la comunidad.",
+                descripcion_larga: "Gestiona accesos, limpia spam eficientemente y ofrece automatización de soporte a los miembros del ecosistema.",
+                etiquetas: ["BOT"], url_bot: "https://t.me/ejemplo", url_miniapp: "", url_web: "",
+                sponsor: false, venderpremium: false, sponsors_count: 89, sponsors_target: 100,
+                creacion: "20/12/25", alpha_date: "05/01/26", beta_date: "10/02/26"
+            }
         ];
 
-        const MAESTRO_DATA = [
-            { id: "p_mundobots", cluster: "proyecto", titulo: "Mundo Bots", estado: "OPERATIVO", estado_codigo: "operativo", imagen: "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=500", descripcion: "Directorio avanzado y categorizado de Bots en Telegram.", etiquetas: ["BOT", "MINI-APP"], url_bot: "https://t.me/MundoBots_Bot", url_miniapp: "https://t.me/ejemplo" },
-            { id: "p_cleopatra", cluster: "bot_puro", titulo: "Cleopatra AI", estado: "EN MANTENIMIENTO", estado_codigo: "mantenimiento", imagen: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=500", descripcion: "Motor generador de contenido inteligente y creativo de alta gama.", etiquetas: ["BOT"], url_bot: "https://t.me/ejemplo" },
-            { id: "p_goldenhub", cluster: "proyecto", titulo: "Golden Hub", estado: "FUERA DE SERVICIO", estado_codigo: "fuera_de_servicio", imagen: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=500", descripcion: "Ecosistema unificado de Servicios Freelance verificados.", etiquetas: ["BOT", "MINI-APP"], url_bot: "https://t.me/ejemplo" },
-            { id: "b_cynthia", cluster: "bot_puro", titulo: "Cynthia Golden Bot", estado: "Finalizado", estado_codigo: "finalizado", imagen: "https://images.unsplash.com/photo-1531747118685-ca8fa6e08806?w=500", descripcion: "Moderadora algorítmica y protectora de la comunidad.", etiquetas: ["BOT"], url_bot: "https://t.me/ejemplo" }
+        // 🛍️ RECOMPENSAS DE LA TIENDA DE TRÁFICO
+        const TIENDA_RECOMPENSAS_DATA = [
+            { id: "rw_1", titulo: "Cambia la imagen del canal @ListaGolden", estrellas: 150, puntos: 500, disponibles: 3 },
+            { id: "rw_2", titulo: "Cambia el nombre del canal @ListaGolden", estrellas: 250, puntos: 800, disponibles: 2 },
+            { id: "rw_3", titulo: "Agrega un enlace en la descripción del canal @ListaGolden", estrellas: 300, puntos: 1000, disponibles: 5 },
+            { id: "rw_4", titulo: "Post fijado en el canal @ListaGolden", estrellas: 500, puntos: 1500, disponibles: 2 },
+            { id: "rw_5", titulo: "Publico un chiste malo en el canal @ListaGolden", estrellas: 50, puntos: 200, disponibles: 12 },
+            { id: "rw_6", titulo: "Mención en el canal @ListaGolden", estrellas: 200, puntos: 600, disponibles: 8 },
+            { id: "rw_7", titulo: "Post patrocinado en el canal @ListaGolden", estrellas: 400, puntos: 1200, disponibles: 4 }
+        ];
+
+        // 📝 LISTADO DE MENSAJES DE GUÍA (ADMIN CENTRAL DE TELEGRAM)
+        const MENSAJES_GUIA = [
+            { texto: "Mundo Bots está que arde, descubre uno de mis proyectos favoritos y los beneficios para miembros de pago.", targetId: "p_mundobots" },
+            { texto: "Cleopatra ai lo está petando, genera texto e imágenes de alta calidad de forma autónoma.", targetId: "p_cleopatra" },
+            { texto: "Optimiza tus búsquedas con Golden Hub, el núcleo descentralizado para contratación y gestión técnica.", targetId: "p_goldenhub" },
+            { texto: "Asegura la moderación automática en tus comunidades instalando Cynthia Golden Bot sin coste.", targetId: "b_cynthia" }
+        ];
+
+        // 🎲 BASE DE DATOS FICTICIA PARA EL FOMO DE COMPRAS VIP ABAJO IZQUIERDA
+        const HISTORIAL_COMPRAS_FOMO = [
+            { pais: "🇪🇸", nombre: "MARTA DE ESPAÑA", extras: 2, targetId: "p_mundobots" },
+            { pais: "🇦🇷", nombre: "GONZALO DE ARGENTINA", extras: 5, targetId: "p_cleopatra" },
+            { pais: "🇲🇽", nombre: "JAVIER DE MÉXICO", extras: 1, targetId: "p_goldenhub" },
+            { pais: "🇨🇱", nombre: "CLAUDIA DE CHILE", extras: 3, targetId: "p_mundobots" }
         ];
 
         const RED_SITIOS_DATA = [
-            { titulo: "Canal Core Golden", tipo: "CANAL", privacidad: "Público", categoria: "Herramientas", desc: "Notificaciones centrales de la red de desarrollo.", suscriptores: "12K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150" }
+            { titulo: "Canal Core Golden", tipo: "CANAL", categoria: "Herramientas", desc: "Notificaciones centrales de la red de desarrollo.", suscriptores: "12K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150" },
+            { titulo: "Avisos Alpha Matrix", tipo: "CANAL", categoria: "Cripto", desc: "Logs de actualizaciones críticas de nuestros bots.", suscriptores: "4.5K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=150" },
+            { titulo: "Comunidad VIP Global", tipo: "GRUPO", categoria: "Comunidad", desc: "Foro de debate para patrocinadores verificados.", suscriptores: "1.2K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=150" },
+            { titulo: "Golden Matrix Chat", tipo: "GRUPO", categoria: "Entretenimiento", desc: "Grupo de entretenimiento general de la comunidad.", suscriptores: "8.9K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=150" },
+            { titulo: "Señales de Inversión", tipo: "CANAL", categoria: "Finanzas", desc: "Análisis y proyecciones de mercados macroeconómicos.", suscriptores: "21K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=150" },
+            { titulo: "Green Cluster Apuestas", tipo: "CANAL", categoria: "Apuestas", desc: "Estadísticas algorítmicas de eventos deportivos de alto valor.", suscriptores: "5.4K", url: "https://t.me/ejemplo", imagen: "https://images.unsplash.com/photo-1518133295134-7689972d4203?w=150" }
         ];
 
-        // =========================================================================
-        // 🛍️ LISTADO DE PREMIOS CONFIGURADOS CON STOCK MENSUAL
-        // =========================================================================
-        const CATALOGO_PREMIOS = [
-            { id: "r_img", titulo: "Cambia la imagen del canal @ListaGolden", estrellas: 50, puntos: 100, stock: 4 },
-            { id: "r_name", titulo: "Cambia el nombre del canal @ListaGolden", estrellas: 75, puntos: 150, stock: 2 },
-            { id: "r_link", titulo: "Agrega un enlace en la descripción del canal @ListaGolden", estrellas: 100, puntos: 200, stock: 5 },
-            { id: "r_pin", titulo: "Post fijado en el canal @ListaGolden", estrellas: 120, puntos: 250, stock: 3 },
-            { id: "r_joke", titulo: "Publico un chiste malo en el canal @ListaGolden", estrellas: 10, puntos: 30, stock: 30 },
-            { id: "r_mention", titulo: "Mención en el canal @ListaGolden", estrellas: 40, puntos: 80, stock: 15 },
-            { id: "r_sponsor", titulo: "Post patrocinado en el canal @ListaGolden", estrellas: 150, puntos: 300, stock: 2 }
+        const REVIEWS_DATA = [
+            { autor: "Alex Rover", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100", stars: 5, text: "La automatización de la botonera Lista Golden duplicó la tracción orgánica de mi comunidad en semanas.", web: "https://t.me/ejemplo" },
+            { autor: "Elena Rostova", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100", stars: 5, text: "El soporte VIP y Cleopatra AI estructuran mi flujo comercial diario dentro de Telegram de manera sólida.", web: "https://t.me/ejemplo" },
+            { autor: "Marcus Stark", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100", stars: 4, text: "Excelente arquitectura en la Mini App. Limpia, ágil y con datos precisos en tiempo real.", web: "https://t.me/ejemplo" }
         ];
 
-        let userScore = parseInt(localStorage.getItem('user_score')) || 450; // Inicializado con puntos de ejemplo para probar la UI
-        let adDisplayTimeout, adLoopInterval;
-        let touchStartAdX = 0;
+        let activeTab = "all";
+        let activeSubFilter = "Todos";
+        let activeNetworkFilter = "Todos";
+        let cachedUserId = "548930211";
+        let cachedUserTag = "@Cargando";
+        let cachedUserFirstName = "Usuario Matrix";
+        let userSimulatedPoints = 1250; 
+        
+        let actualGuideIndex = 0;
+        let countdownInterval;
+        let autoCloseTimeout;
+        let guideAlertTimeout;
+
+        // Variables para soporte de Swipe/Deslizamiento
+        let touchStartX = 0;
+        let touchEndX = 0;
 
         // =========================================================================
-        // ⚙️ INITIALIZER & TIME MANAGEMENT (AUTO-RESET AT 00:00)
+        // 📊 SISTEMA ALGORÍTMICO SIMULADO: CONTADOR REALISTA VISTAS HOY
         // =========================================================================
-        function checkDailyReset() {
-            const hoy = new Date().toDateString();
-            const ultimoReset = localStorage.getItem('last_reset_date');
-            if (ultimoReset !== hoy) {
-                localStorage.removeItem('claimed_store_today'); 
-                localStorage.setItem('last_reset_date', hoy);
+        function inicializarContadorVistas() {
+            const ultimaLimpieza = localStorage.getItem('vistas_timestamp_reset');
+            const ahora = Date.now();
+            const unDiaMili = 24 * 60 * 60 * 1000;
+
+            if (!ultimaLimpieza || (ahora - ultimaLimpieza) >= unDiaMili) {
+                MAESTRO_DATA.forEach(item => {
+                    localStorage.setItem(`views_${item.id}`, Math.floor(Math.random() * 80) + 20);
+                });
+                localStorage.setItem('vistas_timestamp_reset', ahora);
             }
+
+            actualizarYSumarVistasInmediato();
+            setInterval(actualizarYSumarVistasInmediato, 5 * 60 * 1000);
         }
 
-        function updateScoreUI() {
-            document.getElementById("global-user-score-display").innerText = `${userScore} Puntos`;
-            localStorage.setItem('user_score', userScore);
-        }
+        function actualizarYSumarVistasInmediato() {
+            MAESTRO_DATA.forEach(item => {
+                let vistasActuales = parseInt(localStorage.getItem(`views_${item.id}`)) || 35;
+                let incrementoAleatorio = Math.floor(Math.random() * 9) + 2; 
+                let totalNuevo = vistasActuales + incrementoAleatorio;
+                localStorage.setItem(`views_${item.id}`, totalNuevo);
 
-        function handleCardActionClick() {
-            checkDailyReset();
-            userScore += 10; // Sumador de puntos aumentado para facilitar testeo de tienda
-            updateScoreUI();
-            renderRewardsCatalogue(); 
-            showToast("+10 Puntos acumulados en tu saldo.");
-        }
-
-        // =========================================================================
-        // 🎠 SPONSORS RUNNING MARQUEE
-        // =========================================================================
-        function buildSponsorsCarousel() {
-            const track = document.getElementById("sponsors-marquee-track");
-            if(!track) return;
-            const doubleList = [...SPONSORS_DATA, ...SPONSORS_DATA];
-            track.innerHTML = doubleList.map(sp => `
-                <div class="sponsor-carousel-item">
-                    <img class="sponsor-avatar-mini" src="${sp.img}" alt="Profile">
-                    <div class="sponsor-info-mini">
-                        <div class="sponsor-name-row">
-                            <span>${sp.nombre}</span>
-                            <span class="sponsor-badge-tag">SPONSOR</span>
-                        </div>
-                        <span class="sponsor-country-tag">${sp.pais}</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // =========================================================================
-        // 📢 MOTOR ANUNCIOS
-        // =========================================================================
-        function initInfiniteAdEngine() {
-            triggerDisplayAd();
-            adLoopInterval = setInterval(triggerDisplayAd, 300000);
-        }
-
-        function triggerDisplayAd() {
-            const adOverlay = document.getElementById("fomo-ad-overlay");
-            const fillBar = document.getElementById("ad-progress-bar");
-            if(!adOverlay || !fillBar) return;
-            
-            fillBar.style.transition = 'none';
-            fillBar.style.width = '100%';
-            adOverlay.style.transform = 'translateX(-50%) translateY(100px)';
-            
-            setTimeout(() => {
-                adOverlay.classList.add("is-visible");
-                adOverlay.style.transform = 'translateX(-50%) translateY(0)';
-                fillBar.style.transition = 'width 60s linear';
-                fillBar.style.width = '0%';
-            }, 100);
-
-            adDisplayTimeout = setTimeout(() => { closeAdOverlayVisuals(); }, 60000);
-        }
-
-        function closeAdOverlayVisuals() {
-            const adOverlay = document.getElementById("fomo-ad-overlay");
-            if (adOverlay) {
-                adOverlay.style.transform = 'translateX(-150%)';
-                adOverlay.style.opacity = '0';
-                setTimeout(() => {
-                    adOverlay.classList.remove("is-visible");
-                    adOverlay.style.opacity = '1';
-                }, 400);
-            }
-            clearTimeout(adDisplayTimeout);
-        }
-
-        function setupAdSwipeGestures() {
-            const box = document.getElementById("ad-swipeable-box");
-            if(!box) return;
-            box.addEventListener('touchstart', (e) => { touchStartAdX = e.changedTouches[0].screenX; }, { passive: true });
-            box.addEventListener('touchend', (e) => {
-                let diffX = touchStartAdX - e.changedTouches[0].screenX;
-                if (diffX > 80) {
-                    closeAdOverlayVisuals();
-                    showToast("Anuncio descartado.");
+                const renderElement = document.getElementById(`counter-val-${item.id}`);
+                if (renderElement) {
+                    renderElement.innerText = totalNuevo;
                 }
+            });
+        }
+
+        // =========================================================================
+        // 📢 ENGINE: ALERTA CENTRAL SUPERIOR (MISIONES CON SOPORTE SWIPE IZQUIERDA)
+        // =========================================================================
+        function lanzarSiguienteMensajeGuia() {
+            if (MENSAJES_GUIA.length === 0) return;
+            clearTimeout(guideAlertTimeout);
+            
+            const currentItem = MENSAJES_GUIA[actualGuideIndex];
+            const alertElement = document.getElementById("top-guide-container");
+            const fillBar = document.getElementById("guide-progress-fill");
+            
+            document.getElementById("guide-tg-message").innerText = currentItem.texto;
+            
+            const btnAccion = document.getElementById("guide-action-btn");
+            btnAccion.onclick = () => {
+                irAlProyectoTarjeta(currentItem.targetId);
+            };
+
+            // Reset de estilos por deslizamiento previo
+            alertElement.style.transition = "none";
+            alertElement.style.transform = "translateX(-50%) translateY(-30px)";
+            alertElement.style.opacity = "0";
+
+            setTimeout(() => {
+                alertElement.style.transition = "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
+                fillBar.style.transition = 'none';
+                fillBar.style.width = '100%';
+                alertElement.classList.add("show");
+                alertElement.style.transform = "translateX(-50%) translateY(0)";
+                alertElement.style.opacity = "1";
+            }, 50);
+
+            setTimeout(() => {
+                fillBar.style.transition = 'width 10s linear';
+                fillBar.style.width = '0%';
+            }, 200);
+
+            guideAlertTimeout = setTimeout(() => {
+                cerrarAlertaGuiaAnimada();
+            }, 10200);
+
+            actualGuideIndex = (actualGuideIndex + 1) % MENSAJES_GUIA.length;
+        }
+
+        function configurarSoporteSwipeAlerta() {
+            const el = document.getElementById("top-guide-container");
+            
+            el.addEventListener('touchstart', e => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            el.addEventListener('touchmove', e => {
+                let currentX = e.changedTouches[0].screenX;
+                let diffX = currentX - touchStartX;
+                if(diffX < 0) {
+                    el.style.transform = `translateX(calc(-50% + ${diffX}px)) translateY(0)`;
+                }
+            }, { passive: true });
+
+            el.addEventListener('touchend', e => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipeGesture();
             }, { passive: true });
         }
 
+        function handleSwipeGesture() {
+            const el = document.getElementById("top-guide-container");
+            if (touchEndX < touchStartX - 60) {
+                // Swipe a la izquierda detectado con éxito
+                el.style.transition = "all 0.2s ease-in";
+                el.style.transform = "translateX(-150%) translateY(0)";
+                el.style.opacity = "0";
+                setTimeout(() => {
+                    el.classList.remove("show");
+                    clearTimeout(guideAlertTimeout);
+                }, 200);
+            } else {
+                // Retornar a la posición de equilibrio central original
+                el.style.transform = "translateX(-50%) translateY(0)";
+            }
+        }
+
+        function cerrarAlertaGuiaAnimada() {
+            const el = document.getElementById("top-guide-container");
+            if(el.classList.contains("show")) {
+                el.style.transform = "translateX(-50%) translateY(-30px)";
+                el.style.opacity = "0";
+                setTimeout(() => el.classList.remove("show"), 300);
+            }
+        }
+
+        function syncTelegramDataConGuiaYHeader(userObj) {
+            cachedUserTag = userObj.username ? `@${userObj.username}` : "Sin Alias";
+            cachedUserFirstName = userObj.first_name || "Usuario Central";
+            const fullAdminName = userObj.first_name + (userObj.last_name ? " " + userObj.last_name : "");
+            
+            document.getElementById("guide-tg-name").innerText = fullAdminName;
+            document.getElementById("guide-tg-username").innerText = cachedUserTag;
+            
+            if(userObj.photo_url) {
+                document.getElementById("guide-tg-avatar").src = userObj.photo_url;
+            }
+        }
+
+        // =========================================================================
+        // 🚨 ENGINE: ACCESO DE COMPRAS FLOATING VIP (IZQUIERDA FOMO SYSTEM)
+        // =========================================================================
+        function dispararAlertaCompraFomoIzquierda() {
+            const aptos = MAESTRO_DATA.filter(b => b.venderpremium === true);
+            if(aptos.length === 0) return;
+
+            const fomoRandomData = HISTORIAL_COMPRAS_FOMO[Math.floor(Math.random() * HISTORIAL_COMPRAS_FOMO.length)];
+            const proyectoTarget = aptos.find(x => x.id === fomoRandomData.targetId) || aptos[0];
+            const stackContainer = document.getElementById("fomo-left-stack");
+
+            const card = document.createElement("div");
+            card.className = "fomo-alert-card";
+            card.innerHTML = `
+                <div class="fomo-text">
+                    ${fomoRandomData.pais} <strong>${fomoRandomData.nombre}</strong> y ${fomoRandomData.extras} personas más COMPRARON EL VIP DE <strong>${proyectoTarget.titulo}</strong>
+                </div>
+                <button class="btn-cyber btn-premium-sell" style="padding:4px 8px; font-size:0.62rem; width:fit-content; align-self:flex-end;" onclick="irAlProyectoTarjeta('${proyectoTarget.id}')">
+                    <i data-lucide="crown" style="width:10px; height:10px;"></i> Adquirir VIP Tarjeta
+                </button>
+            `;
+
+            stackContainer.appendChild(card);
+            if(window.lucide) window.lucide.createIcons();
+
+            setTimeout(() => {
+                card.style.animation = "none";
+                card.style.transition = "all 0.4s ease";
+                card.style.opacity = "0";
+                card.style.transform = "translateX(-30px)";
+                setTimeout(() => card.remove(), 400);
+            }, 6000);
+        }
+
+        function irAlProyectoTarjeta(id) {
+            switchTabApp('sec-proyectos', document.querySelector('.nav-item-btn:nth-child(1)'));
+            const element = document.getElementById(`card-${id}`);
+            if(element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                element.classList.add("is-expanded");
+                element.style.borderColor = "var(--neon-gold)";
+                setTimeout(() => {
+                    element.style.borderColor = "var(--border-neon)";
+                }, 3000);
+            }
+        }
+
+        // =========================================================================
+        // 📢 ANUNCIO FLOTANTE ORIGINAL MODAL SCRIPTING LOGIC
+        // =========================================================================
+        function checkAndShowAd() {
+            const hoy = new Date().toISOString().slice(0, 10);
+            const ultimoRegistro = localStorage.getItem('last_ad_view_date');
+
+            if (ultimoRegistro !== hoy) {
+                initAdCountdown(3600);
+                const overlay = document.getElementById("fomo-ad-overlay");
+                overlay.classList.add("is-visible");
+                setTimeout(() => {
+                    document.getElementById("ad-progress-bar").style.width = "0%";
+                }, 100);
+                autoCloseTimeout = setTimeout(() => { closeFloatingAd(); }, 15000);
+                localStorage.setItem('last_ad_view_date', hoy);
+            }
+        }
+
+        function initAdCountdown(durationInSeconds) {
+            let timer = durationInSeconds;
+            const targetDisplay = document.getElementById("ad-countdown");
+            countdownInterval = setInterval(() => {
+                let minutes = parseInt(timer / 60, 10);
+                let seconds = parseInt(timer % 60, 10);
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+                targetDisplay.textContent = minutes + ":" + seconds;
+                if (--timer < 0) {
+                    clearInterval(countdownInterval);
+                    targetDisplay.textContent = "00:00";
+                }
+            }, 1000);
+        }
+
+        function closeFloatingAd() {
+            const overlay = document.getElementById("fomo-ad-overlay");
+            if (overlay) overlay.classList.remove("is-visible");
+            clearTimeout(autoCloseTimeout);
+            clearInterval(countdownInterval);
+        }
+
         function ejecutarMensajePrivadoAnuncio() {
-            closeAdOverlayVisuals();
-            ejecutarMensajePrivado('Me interesa el anuncio del patrocinio oficial de la Red.');
+            closeFloatingAd();
+            ejecutarMensajePrivado('Me interesa aplicar a una de las 3/5 plazas VIP disponibles para Sponsors.');
         }
 
-        function handleCompactFilters() {
-            const cluster = document.getElementById("compact-cluster-dropdown").value;
-            const tag = document.getElementById("compact-tags-dropdown").value;
-            renderHubCards(cluster, tag);
+        // =========================================================================
+        // 🔄 RENDERING PIPELINES & SPA NAVIGATION
+        // =========================================================================
+        function switchTabApp(sectionId, elementButton) {
+            document.querySelectorAll('.app-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-item-btn').forEach(btn => btn.classList.remove('active-nav'));
+            
+            document.getElementById(sectionId).classList.add('active');
+            elementButton.classList.add('active-nav');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function renderHubCards(clusterFilter = "all", tagFilter = "Todos") {
-            const wrapper = document.getElementById("cards-wrapper");
-            if(!wrapper) return;
-            const filtrados = MAESTRO_DATA.filter(item => {
-                const matchCl = (clusterFilter === "all" || item.cluster === clusterFilter);
-                const matchTg = (tagFilter === "Todos" || item.etiquetas.includes(tagFilter));
-                return matchCl && matchTg;
-            });
+        function obtenerColorPlasma(porcentaje) {
+            if (porcentaje < 35) return 'var(--neon-magenta)';
+            if (porcentaje < 75) return 'var(--neon-amber)';
+            return 'var(--neon-green)';
+        }
 
-            wrapper.innerHTML = filtrados.map(item => `
-                <div class="cyber-card status-${item.estado_codigo}">
+        function construirTarjeta(item) {
+            const pct = Math.min(Math.round((item.sponsors_count / item.sponsors_target) * 100) || 0, 100);
+            const plasmaColor = obtenerColorPlasma(pct);
+            const vistasLocales = localStorage.getItem(`views_${item.id}`) || 45;
+
+            return `
+                <div class="cyber-card status-${item.estado_codigo}" id="card-${item.id}">
+                    
                     <div class="card-header-topline">
                         <h2 class="card-title">${item.titulo}</h2>
-                        <span class="tag-status">${item.estado}</span>
-                    </div>
-                    <p class="card-desc">${item.descripcion}</p>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
-                        <button class="btn-cyber btn-read-more" onclick="handleCardActionClick()"><i data-lucide="plus"></i>Sumar +10 Pts</button>
-                        ${item.url_bot ? `<button class="btn-cyber btn-open-bot" onclick="abrirEnlace('${item.url_bot}')"><i data-lucide="bot"></i>Abrir</button>` : ''}
-                    </div>
-                </div>
-            `).join('');
-            if(window.lucide) window.lucide.createIcons();
-        }
-
-        function renderMonitorSection() {
-            document.getElementById("monitor-count-total").innerText = MAESTRO_DATA.length;
-            document.getElementById("monitor-count-maint").innerText = MAESTRO_DATA.filter(i => i.estado_codigo === "mantenimiento").length;
-            document.getElementById("monitor-count-oos").innerText = MAESTRO_DATA.filter(i => i.estado_codigo === "fuera_de_servicio").length;
-            document.getElementById("monitor-count-fin").innerText = MAESTRO_DATA.filter(i => i.estado_codigo === "finalizado").length;
-
-            const wrapper = document.getElementById("monitor-grid-wrapper");
-            if(!wrapper) return;
-            wrapper.innerHTML = MAESTRO_DATA.map(item => `
-                <div class="cyber-card status-${item.estado_codigo}">
-                    <div class="card-header-topline">
-                        <h3 class="card-title" style="font-size:1.1rem;">${item.titulo}</h3>
-                        <span class="tag-status">${item.estado}</span>
-                    </div>
-                    <p class="card-desc" style="margin-bottom:0;">Clúster: Monitoreo Activo Nodos Estables.</p>
-                </div>
-            `).join('');
-        }
-
-        function renderRedSitiosSection() {
-            const container = document.getElementById("network-channels-wrapper");
-            if(!container) return;
-            container.innerHTML = RED_SITIOS_DATA.map(ch => `
-                <div class="cyber-card status-operativo">
-                    <div style="display:flex; justify-content:between; align-items:center; width:100%; margin-bottom:8px;">
-                        <h3 class="card-title" style="font-size:1.1rem; flex:1;">${ch.titulo}</h3>
-                        <div style="display:flex; gap:4px;">
-                            <span class="badge-tg-type ${ch.tipo.toLowerCase()}">${ch.tipo}</span>
-                            <span class="badge-privacy">${ch.privacidad}</span>
+                        <div class="card-view-counter">
+                            <span class="view-counter-number" id="counter-val-${item.id}">${vistasLocales}</span>
+                            <span class="view-counter-label">VISTAS HOY</span>
                         </div>
                     </div>
-                    <p class="card-desc">${ch.desc}</p>
-                    <button class="btn-cyber btn-open-web" onclick="handleCardActionClick(); abrirEnlace('${ch.url}');">
-                        <i data-lucide="external-link"></i>Visitar Nodo (+10 Pts)
-                    </button>
+
+                    <img src="${item.imagen}" class="card-full-banner" alt="${item.titulo}">
+
+                    <div class="badge-row">
+                        <span class="tag-status">${item.estado}</span>
+                        ${item.etiquetas.map(t => `<span class="tag-type">${t}</span>`).join('')}
+                    </div>
+                    <p class="card-desc">${item.descripcion}</p>
+                    
+                    <div class="energy-section">
+                        <div class="energy-meta"><span>Patrocinadores</span><span class="energy-count-node">${item.sponsors_count}/${item.sponsors_target} <span style="color:${plasmaColor}">${pct}%</span></span></div>
+                        <div class="energy-container-bar"><div class="energy-plasma-fill" style="width: ${pct}%; background-color: ${plasmaColor}; box-shadow: 0 0 10px ${plasmaColor};"></div></div>
+                        <div class="energy-tooltip"><i data-lucide="activity" style="width:12px; height:12px; display:inline; vertical-align:middle;"></i> Lista Golden ${item.sponsors_target} sponsors para estabilidad total.</div>
+                    </div>
+                    
+                    <div class="actions-grid">
+                        <button class="btn-cyber btn-read-more" onclick="toggleReadMore('${item.id}')"><i data-lucide="info"></i>Saber más</button>
+                        
+                        <div class="sliding-drawer" id="drawer-${item.id}">
+                            <div class="timeline-box">
+                                <div class="timeline-node"><span class="timeline-node-title">Creación</span><span class="timeline-node-date">${item.creacion}</span></div>
+                                <div class="timeline-node"><span class="timeline-node-title">Alpha</span><span class="timeline-node-date">${item.alpha_date}</span></div>
+                                <div class="timeline-node"><span class="timeline-node-title">Beta</span><span class="timeline-node-date">${item.beta_date}</span></div>
+                            </div>
+                            
+                            <div class="more-text">${item.descripcion_larga}</div>
+                            <div class="links-row">
+                                ${item.url_bot ? `<button class="btn-cyber btn-open-bot" onclick="abrirEnlace('${item.url_bot}')"><i data-lucide="bot"></i>Abrir Bot</button>` : ''}
+                                ${item.url_miniapp ? `<button class="btn-cyber btn-open-ma" onclick="abrirEnlace('${item.url_miniapp}')"><i data-lucide="cpu"></i>Ver Mini App</button>` : ''}
+                            </div>
+                            <div class="monetization-row">
+                                ${item.sponsor ? `<button class="btn-cyber btn-sponsor" onclick="abrirEnlace('${item.url_sponsor}')"><i data-lucide="heart-handshake"></i>Apoyar</button>` : ''}
+                                ${item.venderpremium ? `<button class="btn-cyber btn-premium-sell" onclick="abrirEnlace('${item.url_premium}')"><i data-lucide="crown"></i>Comprar VIP</button>` : ''}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            `).join('');
-            if(window.lucide) window.lucide.createIcons();
+            `;
         }
 
         // =========================================================================
-        // 🏬 RENDERIZADOR COMPACTO DE LA TIENDA DE RECOMPENSAS DIARIAS
+        // 🛒 ENGINE: SISTEMA LOGÍSTICO DE LA TIENDA DE RECOMPENSAS
         // =========================================================================
-        function renderRewardsCatalogue() {
-            checkDailyReset();
-            const wrapper = document.getElementById("rewards-cards-wrapper");
-            if(!wrapper) return;
+        function renderizarTiendaRecompensas() {
+            const container = document.getElementById("shop-rewards-wrapper");
+            document.getElementById("shop-user-points").innerText = `${userSimulatedPoints.toLocaleString()} Puntos`;
 
-            const haReclamadoHoy = localStorage.getItem('claimed_store_today') === 'true';
+            const hoy = new Date().toISOString().slice(0, 10);
+            const ultimaFechaReclamo = localStorage.getItem("last_reward_claim_date");
+            const yaReclamoHoy = (ultimaFechaReclamo === hoy);
 
-            wrapper.innerHTML = CATALOGO_PREMIOS.map(item => {
-                const stockClave = `stock_mes_${item.id}`;
-                let currentStock = localStorage.getItem(stockClave);
-                if (currentStock === null) {
-                    localStorage.setItem(stockClave, item.stock);
-                    currentStock = item.stock;
-                } else {
-                    currentStock = parseInt(currentStock);
+            container.innerHTML = TIENDA_RECOMPENSAS_DATA.map(rw => {
+                const tienePuntosSuficientes = (userSimulatedPoints >= rw.puntos);
+                let lockStatusClass = "locked";
+                let botonTexto = "Puntos Insuficientes";
+
+                if (tienePuntosSuficientes) {
+                    lockStatusClass = "unlocked";
+                    botonTexto = "Reclamar Premio";
                 }
-
-                const tienePuntos = userScore >= item.puntos;
-                const sinStock = currentStock <= 0;
-                
-                let btnText = "Bloqueado (Faltan Puntos)";
-                let btnClass = "btn-claim-reward-node";
-                let isDisabled = true;
-
-                if (sinStock) {
-                    btnText = "Agotado este mes";
-                } else if (haReclamadoHoy) {
-                    btnText = "Límite Diario Alcanzado";
-                } else if (tienePuntos) {
-                    btnText = "Reclamar Premio";
-                    btnClass = "btn-claim-reward-node unlocked";
-                    isDisabled = false;
+                if (yaReclamoHoy) {
+                    lockStatusClass = "locked";
+                    botonTexto = "Límite Diario Alcanzado";
                 }
 
                 return `
-                    <div class="reward-card">
-                        <div class="reward-header-row">
-                            <h4 class="reward-card-title">${item.titulo}</h4>
-                            <div class="reward-stock-badge">
-                                <i data-lucide="layers" style="width:10px; height:10px;"></i> Mes: <span>${currentStock} ud</span>
-                            </div>
+                    <div class="reward-mini-card">
+                        <div class="reward-meta-header">
+                            <h3 class="reward-title-main">${rw.titulo}</h3>
+                            <span class="reward-stock-pill">Disp: ${rw.disponibles}/mes</span>
                         </div>
-                        <div class="reward-pricing-grid">
-                            <div class="price-tag-item stars">
-                                <i data-lucide="star" style="width:12px; height:12px; fill:var(--neon-gold);"></i> ${item.estrellas} ⭐
-                            </div>
-                            <div class="price-tag-item points">
-                                <i data-lucide="zap" style="width:12px; height:12px; fill:var(--neon-cyan);"></i> ${item.puntos} Pts
-                            </div>
+                        <div class="reward-pricing-row">
+                            <span class="price-badge-stars"><i data-lucide="star" style="width:11px; height:11px; fill:currentColor;"></i> ${rw.estrellas}</span>
+                            <span class="price-badge-points"><i data-lucide="database" style="width:11px; height:11px;"></i> ${rw.puntos} pts</span>
                         </div>
-                        <button class="${btnClass}" ${isDisabled ? 'disabled' : ''} onclick="ejecutarCompraPremio('${item.id}', ${item.puntos})">
-                            <i data-lucide="${haReclamadoHoy ? 'lock' : 'gift'}"></i> ${btnText}
+                        <button class="btn-claim-reward ${lockStatusClass}" 
+                                onclick="procesarReclamoPremio('${rw.id}', '${rw.titulo.replace(/'/g, "\\'")}', ${rw.puntos}, ${rw.estrellas}, ${yaReclamoHoy})">
+                            <i data-lucide="gift" style="width:13px; height:13px;"></i> ${botonTexto}
                         </button>
                     </div>
                 `;
             }).join('');
+
+            if(window.lucide) window.lucide.createIcons();
+        }
+
+        function procesarReclamoPremio(idRecompensa, titulo, costePuntos, costeEstrellas, bloqueadoPorFecha) {
+            if (bloqueadoPorFecha) {
+                showToast("Regla de Oro: Solo se permite 1 premio diario por usuario.");
+                return;
+            }
+            if (userSimulatedPoints < costePuntos) {
+                showToast("No dispones de los puntos requeridos acumulados.");
+                return;
+            }
+
+            // Aplicar descuento inmediato en saldo simulado
+            userSimulatedPoints -= costePuntos;
+            const hoy = new Date().toISOString().slice(0, 10);
+            localStorage.setItem("last_reward_claim_date", hoy);
+
+            // Refrescar paneles de UI inmediatamente
+            renderizarTiendaRecompensas();
+
+            // Construcción y codificación de los datos extraídos para el chat privado de Telegram
+            const mensajePremio = `🎁 SOLICITUD DE RECOMPENSA COLCETIVA\n` +
+                                  `──────────────────────\n` +
+                                  `🏆 Premio: ${titulo}\n` +
+                                  `💵 Coste: ${costeEstrellas} Estrellas + ${costePuntos} Puntos\n` +
+                                  `👤 Usuario Telegram: ${cachedUserTag}\n` +
+                                  `🆔 Nombre: ${cachedUserFirstName}\n` +
+                                  `🆔 Telegram ID: ${cachedUserId}\n` +
+                                  `📅 Sincronización: ${hoy}`;
+
+            const textRaw = encodeURIComponent(mensajePremio);
+            showToast("Premio procesado. Abriendo chat de entrega...");
             
+            setTimeout(() => {
+                abrirEnlace(`https://t.me/Airdayz?start=${textRaw}`);
+            }, 1000);
+        }
+
+        function setNetworkFilter(cat) {
+            activeNetworkFilter = cat;
+            document.querySelectorAll("#network-categories-scroll .subfilter-pill").forEach(p => {
+                p.classList.toggle("active", p.innerText === cat);
+            });
+            renderizarRedSitios();
+        }
+
+        function renderizarRedSitios() {
+            const container = document.getElementById("network-channels-wrapper");
+            const filtrados = RED_SITIOS_DATA.filter(ch => activeNetworkFilter === "Todos" || ch.categoria === activeNetworkFilter);
+
+            if (filtrados.length === 0) {
+                container.innerHTML = `<p style="font-size:0.8rem; color:var(--text-muted); text-align:center; padding:20px;">Ningún nodo operativo en esta categoría.</p>`;
+                return;
+            }
+
+            container.innerHTML = filtrados.map(ch => {
+                const esCanal = ch.tipo === "CANAL";
+                const badgeClass = esCanal ? "canal" : "grupo";
+                const botonTexto = esCanal ? "Abrir Canal" : "Abrir Grupo";
+                const iconoBoton = esCanal ? "megaphone" : "users";
+
+                return `
+                    <div class="cyber-card status-prod" style="--border-neon: rgba(0, 240, 255, 0.2); padding:16px;">
+                        <div style="display:flex; gap:12px; align-items:center; margin-bottom:10px;">
+                            <img src="${ch.imagen}" style="width:50px; height:50px; border-radius:10px; object-fit:cover;" alt="${ch.titulo}">
+                            <div class="card-title-block">
+                                <div class="card-title-row">
+                                    <h3 class="card-title" style="margin:0; font-size:1.1rem;">${ch.titulo}</h3>
+                                    <span class="badge-tg-type ${badgeClass}">${ch.tipo}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; margin-top: 4px;">
+                            <span style="font-size:0.6rem; color:var(--neon-gold); background:rgba(255,215,0,0.05); padding:2px 6px; border-radius:4px; font-weight:800; text-transform:uppercase;">${ch.categoria}</span>
+                            <span style="font-size:0.65rem; color:var(--neon-cyan); background:rgba(0,240,255,0.1); padding:2px 6px; border-radius:4px; font-weight:800;">${ch.suscriptores} Nodos</span>
+                        </div>
+                        
+                        <p class="card-desc">${ch.desc}</p>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+                            <button class="btn-cyber btn-read-more" onclick="showToast('Módulo informativo extendido en canal principal.')"><i data-lucide="info"></i>Saber Más</button>
+                            <button class="btn-cyber btn-open-web" onclick="abrirEnlace('${ch.url}')"><i data-lucide="${iconoBoton}"></i>${botonTexto}</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            if(window.lucide) window.lucide.createIcons();
+        }
+
+        function renderizarReviews() {
+            const track = document.getElementById("carousel-target-track");
+            track.innerHTML = REVIEWS_DATA.map(rev => `
+                <div class="review-card-item">
+                    <div>
+                        <div class="review-header-node">
+                            <img class="review-img" src="${rev.img}" alt="User">
+                            <div>
+                                <span class="review-author">${rev.autor}</span>
+                                <div class="review-stars">${'★'.repeat(rev.stars)}${'☆'.repeat(5-rev.stars)}</div>
+                            </div>
+                        </div>
+                        <p class="review-text-quote">"${rev.text}"</p>
+                    </div>
+                    <button class="btn-cyber btn-open-web" style="padding:6px; font-size:0.65rem; margin-top:4px;" onclick="abrirEnlace('${rev.web}')">
+                        <i data-lucide="globe" style="width:12px; height:12px;"></i>Visitar Web
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function filtrarYRenderizar() {
+            const wrapper = document.getElementById("cards-wrapper");
+            const filtrados = MAESTRO_DATA.filter(item => {
+                const cumpleTab = (activeTab === "all" || item.cluster === activeTab);
+                let cumpleSub = true;
+                if(activeSubFilter === "Mini-App") cumpleSub = item.etiquetas.includes("MINI-APP");
+                if(activeSubFilter === "Bot") cumpleSub = item.etiquetas.includes("BOT");
+                if(activeSubFilter === "Web") cumpleSub = item.etiquetas.includes("WEB");
+                return cumpleTab && cumpleSub;
+            });
+            wrapper.innerHTML = filtrados.map(item => construirTarjeta(item)).join('');
+            
+            document.getElementById("count-total").innerText = filtrados.length;
+            document.getElementById("count-beta").innerText = MAESTRO_DATA.filter(i => i.estado_codigo === "beta").length;
+            document.getElementById("count-dev").innerText = MAESTRO_DATA.filter(i => i.estado_codigo === "alpha" || i.estado_codigo === "prod").length;
+
             if(window.lucide) window.lucide.createIcons();
         }
 
         // =========================================================================
-        // 🔐 PROCESADOR EXCLUSIVO DE RECLAMACIÓN Y REDIRECCIÓN TELEGRAM
+        // 🛠 UTILITIES & TELEGRAM TELEMETRY INTERFACES
         // =========================================================================
-        function ejecutarCompraPremio(premioId, puntosCosto) {
-            checkDailyReset();
-            
-            if (localStorage.getItem('claimed_store_today') === 'true') {
-                showToast("Regla de Oro: Solo puedes reclamar 1 premio diario.");
-                return;
+        function syncTelegramUser() {
+            if (window.Telegram?.WebApp?.initDataUnsafe?.user) {
+                const user = window.Telegram.WebApp.initDataUnsafe.user;
+                cachedUserId = user.id.toString();
+                cachedUserTag = user.username ? `@${user.username}` : "Sin Alias";
+                cachedUserFirstName = user.first_name || "Usuario Real";
+                
+                document.getElementById("tg-user-name").innerText = `Hola, ${user.username ? '@' + user.username : user.first_name}`;
+                document.getElementById("tg-user-id").innerText = `ID: ${user.id}`;
+                if(user.photo_url) {
+                    document.getElementById("tg-user-avatar").src = user.photo_url;
+                }
+                syncTelegramDataConGuiaYHeader(user);
+            } else {
+                const ficticioAdmin = { first_name: "Airdayz Central", username: "Airdayz", photo_url: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150" };
+                syncTelegramDataConGuiaYHeader(ficticioAdmin);
             }
-
-            const premio = CATALOGO_PREMIOS.find(p => p.id === premioId);
-            if (!premio) return;
-
-            const stockClave = `stock_mes_${premioId}`;
-            let stockActual = parseInt(localStorage.getItem(stockClave)) || 0;
-            if (stockActual <= 0) {
-                showToast("Premio agotado para este ciclo mensual.");
-                return;
-            }
-
-            if (userScore < puntosCosto) {
-                showToast("Saldo de puntos insuficiente.");
-                return;
-            }
-
-            // Descontar recursos de inmediato y guardar banderas de protección diaria
-            userScore -= puntosCosto;
-            stockActual -= 1;
-            localStorage.setItem(stockClave, stockActual);
-            localStorage.setItem('claimed_store_today', 'true');
-            updateScoreUI();
-
-            // Disparar Confeti de celebración
-            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#00f0ff', '#ff007f', '#ffd700'] });
-
-            // Extraer metadatos nativos del WebApp de Telegram
-            let tgUserId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id || "WEB_USER_ID";
-            let tgFirstName = window.Telegram?.WebApp?.initDataUnsafe?.user?.first_name || "Web";
-            let tgLastName = window.Telegram?.WebApp?.initDataUnsafe?.user?.last_name || "User";
-            let tgUsername = window.Telegram?.WebApp?.initDataUnsafe?.user?.username ? `@${window.Telegram.WebApp.initDataUnsafe.user.username}` : "Sin Alias";
-
-            let infoUsuarioFormateada = `${tgFirstName} ${tgLastName} (${tgUsername})`;
-
-            // Construcción estructurada del mensaje de entrega
-            const mensajeEstructurado = 
-                `🛒 NUEVA RECLAMACIÓN DE PREMIO MATRIX\n` +
-                `──────────────────────────\n` +
-                `🏆 PREMIO: ${premio.titulo}\n` +
-                `💰 COSTE: ${premio.estrellas} Estrellas + ${premio.puntos} Puntos\n` +
-                `──────────────────────────\n` +
-                `👤 USUARIO: ${infoUsuarioFormateada}\n` +
-                `🆔 ID TELEGRAM: ${tgUserId}\n` +
-                `⚡ ESTADO: Saldo Descontado con Éxito.`;
-
-            showToast("Procesando reclamación... Abriendo Chat Privado.");
-            
-            setTimeout(() => {
-                renderRewardsCatalogue(); // Refresca las tarjetas
-                abrirEnlace(`https://t.me/Airdayz?start=${encodeURIComponent(mensajeEstructurado)}`);
-            }, 1500);
         }
 
-        // =========================================================================
-        // 📢 ENGINE: ALERTA CENTRAL SUPERIOR COMPONENT
-        // =========================================================================
-        const MENSAJES_GUIA = [
-            { texto: "Mundo Bots está que arde, descubre uno de mis proyectos favoritos.", targetId: "p_mundobots" },
-            { texto: "Cleopatra AI lo está petando, genera texto e imágenes autónomas.", targetId: "p_cleopatra" }
-        ];
-        let actualGuideIndex = 0;
-        let guideTimeout;
-
-        function lanzarSiguienteMensajeGuia() {
-            if (MENSAJES_GUIA.length === 0) return;
-            clearTimeout(guideTimeout);
-            const currentItem = MENSAJES_GUIA[actualGuideIndex];
-            const fillBar = document.getElementById("guide-progress-fill");
-            const alertElement = document.getElementById("top-guide-container");
-            if(!alertElement || !fillBar) return;
-            
-            document.getElementById("guide-tg-message").innerText = currentItem.texto;
-            document.getElementById("guide-action-btn").onclick = () => {
-                switchTabApp('sec-proyectos', document.querySelector('.nav-item-btn:nth-child(1)'));
-            };
-
-            alertElement.style.transition = 'none';
-            alertElement.style.transform = 'translateX(-50%) translateY(-30px)';
-            alertElement.style.opacity = '0';
-            fillBar.style.transition = 'none';
-            fillBar.style.width = '100%';
-            
-            setTimeout(() => {
-                alertElement.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-                alertElement.classList.add("show");
-                alertElement.style.transform = 'translateX(-50%) translateY(0)';
-                alertElement.style.opacity = '1';
-                fillBar.style.transition = 'width 10s linear';
-                fillBar.style.width = '0%';
-            }, 50);
-
-            guideTimeout = setTimeout(() => { removerAlertaGuia(); }, 10000);
-            actualGuideIndex = (actualGuideIndex + 1) % MENSAJES_GUIA.length;
-        }
-
-        function removerAlertaGuia() {
-            const alertElement = document.getElementById("top-guide-container");
-            if (alertElement) alertElement.classList.remove("show");
-        }
-
-        function switchTabApp(sectionId, elementButton) {
-            document.querySelectorAll('.app-section').forEach(sec => sec.classList.remove('active'));
-            document.querySelectorAll('.nav-item-btn').forEach(btn => btn.classList.remove('active-nav'));
-            document.getElementById(sectionId).classList.add('active');
-            if (elementButton) elementButton.classList.add('active-nav');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        function copiarTelegramIdInfo() {
+            navigator.clipboard.writeText(cachedUserId).then(() => {
+                showToast(`ID: ${cachedUserId} Copiado`);
+            }).catch(() => {
+                showToast("Error al copiar automáticamente.");
+            });
         }
 
         function showToast(msj) {
             const toast = document.getElementById("app-toast");
-            if(!toast) return;
             toast.innerText = msj;
             toast.classList.add("show");
             setTimeout(() => toast.classList.remove("show"), 2200);
         }
 
+        function procesarPedidoSponsor() {
+            closeSponsorModal();
+            let userTag = "@Airdayz";
+            let userRealName = "Usuario Mini App";
+            
+            if (window.Telegram?.WebApp?.initDataUnsafe?.user) {
+                const tgUser = window.Telegram.WebApp.initDataUnsafe.user;
+                userTag = tgUser.username ? `@${tgUser.username}` : "Sin Alias";
+                userRealName = tgUser.first_name + (tgUser.last_name ? " " + tgUser.last_name : "");
+            }
+
+            const hashPedido = "SP-ORDER-" + Math.floor(1000 + Math.random() * 9000);
+            
+            const motivoConstruido = `🛒 NUEVO PEDIDO DE SPONSOR\n` +
+                                     `───────────────────\n` +
+                                     `📦 Pedido: Plan Matriz Colectiva (1 Año)\n` +
+                                     `🆔 ID Pedido: ${hashPedido}\n` +
+                                     `💵 Importe: 100 USD / Año\n` +
+                                     `👤 Nombre: ${userRealName}\n` +
+                                     `🏷️ Telegram: ${userTag}\n` +
+                                     `🆔 Telegram ID: ${cachedUserId}`;
+
+            const textRaw = encodeURIComponent(motivoConstruido);
+            abrirEnlace(`https://t.me/Airdayz?start=${textRaw}`);
+        }
+
         function ejecutarMensajePrivado(motivo) {
-            abrirEnlace(`https://t.me/Airdayz?start=${encodeURIComponent(motivo)}`);
+            let userTag = "@Airdayz";
+            if (window.Telegram?.WebApp?.initDataUnsafe?.user?.username) {
+                userTag = `@${window.Telegram.WebApp.initDataUnsafe.user.username}`;
+            }
+            const textRaw = encodeURIComponent([CORE MATRIX] ${motivo}\nCuenta ID: ${cachedUserId}\nUsuario: ${userTag});
+            abrirEnlace(`https://t.me/Airdayz?start=${textRaw}`);
         }
 
-        function abrirEnlace(url) {
-            if (window.Telegram?.WebApp?.openTelegramLink) { window.Telegram.WebApp.openTelegramLink(url); } 
-            else { window.open(url, '_blank'); }
+        function initCarouselAutoScroll() {
+            const track = document.getElementById("carousel-target-track");
+            let index = 0;
+            setInterval(() => {
+                if(!track) return;
+                const max = REVIEWS_DATA.length - 1;
+                index = index >= max ? 0 : index + 1;
+                const offset = index * 294;
+                track.style.transform = `translateX(-${offset}px)`;
+            }, 3500);
         }
 
-        // =========================================================================
-        // 🚀 ORCHESTRATION ON CONTENT DEPLOYED
-        // =========================================================================
+        function setGlobalTab(t) { activeTab = t; document.querySelectorAll(".tab-btn").forEach((b, i) => b.classList.toggle("active", (t==='all'&&i===0)||(t==='proyecto'&&i===1)||(t==='bot_puro'&&i===2))); filtrarYRenderizar(); }
+        function setSubFilter(s) { activeSubFilter = s; document.querySelectorAll(".subfilter-pill").forEach(p => p.classList.toggle("active", p.id===('pill-'+(s==='Todos'?'todos':s==='Mini-App'?'ma':s==='Bot'?'bot':'web')))); filtrarYRenderizar(); }
+        
+        function toggleReadMore(id) { 
+            const card = document.getElementById(`card-${id}`); 
+            if(card) card.classList.toggle("is-expanded");
+        }
+        
+        function openSponsorModal() { document.getElementById("modal-sponsor").classList.add("is-open"); }
+        function closeSponsorModal() { document.getElementById("modal-sponsor").classList.remove("is-open"); }
+        function abrirEnlace(url) { if (window.Telegram?.WebApp?.openTelegramLink) { window.Telegram.WebApp.openTelegramLink(url); } else { window.open(url, '_blank'); } }
+
         document.addEventListener("DOMContentLoaded", () => {
             if(window.Telegram?.WebApp) {
                 window.Telegram.WebApp.ready();
                 window.Telegram.WebApp.expand();
             }
-            checkDailyReset();
-            updateScoreUI();
-            buildSponsorsCarousel();
-            renderHubCards();
-            renderMonitorSection();
-            renderRedSitiosSection();
-            renderRewardsCatalogue();
-            initInfiniteAdEngine();
-            setupAdSwipeGestures();
+            inicializarContadorVistas();
+            syncTelegramUser();
+            filtrarYRenderizar();
+            renderizarRedSitios();
+            renderizarReviews();
+            renderizarTiendaRecompensas();
+            initCarouselAutoScroll();
+            checkAndShowAd();
+            configurarSoporteSwipeAlerta();
 
+            // Loop de mensajes de guía arriba centro: duración exacta 10s en pantalla, intervalo cada 60s
             lanzarSiguienteMensajeGuia();
-            setInterval(lanzarSiguienteMensajeGuia, 20000);
+            setInterval(lanzarSiguienteMensajeGuia, 60000);
+
+            // Loop de alertas flotantes VIP abajo izquierda
+            setInterval(dispararAlertaCompraFomoIzquierda, 22000);
+            setTimeout(dispararAlertaCompraFomoIzquierda, 4000);
         });
     </script>
 </body>
