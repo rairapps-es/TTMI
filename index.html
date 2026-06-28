@@ -673,7 +673,7 @@
                 <div class="selector-floating-menu" id="menu-cluster">
                     <div class="floating-option-item selected" onclick="selectClusterOption('all', 'Todo')">Todo</div>
                     <div class="floating-option-item" onclick="selectClusterOption('proyecto', 'Proyectos')">Proyectos</div>
-                    <div class="floating-option-item" onclick="selectClusterOption('bot_puro', 'Bots Propios')">Bots Propios</div>
+                    <div class="floating-option-item" onclick="selectClusterOption('bot_puro', 'Bots Propios')">Bots</div>
                 </div>
             </div>
 
@@ -737,7 +737,7 @@
             <h3 class="info-panel-title" style="color: var(--neon-green);"><i data-lucide="rocket"></i>Promoción Gratuita Lista Golden</h3>
             <p class="info-panel-desc">Integra tus canales a nuestros sistemas de distribución orgánica. Automatizamos el crecimiento cruzado mediante clusters segmentados según el volumen real de tu audiencia.</p>
             
-            <button class="btn-cyber btn-read-more" style="margin-bottom:14px;" onclick="openSponsorModal()"><i data-lucide="plus-circle"></i>Saber más Beneficios</button>
+            <button class="btn-cyber btn-read-more" style="margin-bottom:14px;" onclick="openSponsorModal()"><i data-lucide="plus-circle"></i>Beneficios para Patrocinadores</button>
             
             <h4 style="font-size:0.7rem; color:var(--text-muted); margin-bottom:6px; font-weight:800; text-transform:uppercase;">Categoría de Ingreso Directo:</h4>
             <div class="promo-grid-buttons">
@@ -748,7 +748,7 @@
 
             <h4 style="font-size:0.7rem; color:var(--text-muted); margin-bottom:6px; font-weight:800; text-transform:uppercase;">Nuestras Botoneras Activas:</h4>
             <div style="display:flex; flex-direction:column; gap:6px;">
-                <button class="btn-cyber btn-bot-link" onclick="abrirEnlace('https://t.me/BotoneraListaGoldenBot')"><i data-lucide="layout-grid"></i>Botonera General </button>
+                <button class="btn-cyber btn-bot-link" onclick="abrirEnlace('https://t.me/BotoneraListaGolden_Bot')"><i data-lucide="layout-grid"></i>Botonera General </button>
                 <button class="btn-cyber btn-sponsor" onclick="abrirEnlace('https://t.me/ListaG_Bot')"><i data-lucide="layers"></i>Botonera por Categorías</button>
             </div>
         </div>
@@ -759,7 +759,7 @@
             <h3 class="info-panel-title" style="color: var(--neon-magenta);"><i data-lucide="megaphone"></i>Campañas Publicitarias</h3>
             <p class="info-panel-desc">Posiciona tu proyecto, bot o comunidad frente a miles de usuarios activos dentro de nuestra Mini App y red de canales integrados. Desarrollamos impactos visuales de alto rendimiento sin saturación.</p>
             <button class="btn-cyber btn-open-ma" style="width: 100%;" onclick="ejecutarMensajePrivado('Quiero solicitar cotización para anunciarme en la red Lista Golden.')">
-                <i data-lucide="message-square-code"></i>Contactar con Ventas Privadas
+                <i data-lucide="message-square-code"></i>Contactar con Ventas
             </button>
         </div>
     </section>
@@ -768,7 +768,7 @@
         <div class="shop-balance-bar">
             <div class="balance-info">
                 <span class="balance-label">Tu Saldo</span>
-                <span class="balance-value" id="shop-user-points">2,450 Pts</span>
+                <span class="balance-value" id="shop-user-points">0 Pts</span>
             </div>
             <div class="energy-live-box">
                 <span class="energy-live-label">Energía de Hoy</span>
@@ -786,7 +786,7 @@
     </section>
 
     <section class="reviews-section-wrapper">
-        <h3 class="reviews-section-title">Feedback de admins</h3>
+        <h3 class="reviews-section-title">Feedback admins</h3>
         <div class="carousel-track-container">
             <div class="carousel-track" id="carousel-target-track"></div>
         </div>
@@ -795,7 +795,7 @@
     <div class="cyber-modal" id="modal-sponsor">
         <div class="modal-content">
             <button class="btn-modal-close" onclick="closeSponsorModal()"><i data-lucide="x"></i></button>
-            <h3 class="modal-title"><i data-lucide="award"></i>Matriz de Beneficios</h3>
+            <h3 class="modal-title"><i data-lucide="award"></i>Beneficios para Sponsors</h3>
             <div class="modal-body">
                 <div class="benefit-item">
                     <i data-lucide="crown"></i>
@@ -815,12 +815,12 @@
                 </div>
                 <div class="benefit-item">
                     <i data-lucide="bar-chart-3"></i>
-                    <div><strong>Exposición y mención:</strong> Te mencionamos en el canal @ListaGolden y compartimos tu canal, proyecro o negocio en nuestro canal mediante una publicación.</div>
+                    <div><strong>Exposición y @mención:</strong> Te mencionamos en el canal @ListaGolden y compartimos tu canal, proyecro o negocio en nuestro canal mediante una publicación.</div>
                 </div>
             </div>
 
             <div class="price-tag-box">
-                <span class="price-label">Suscripción Anual Colectiva</span>
+                <span class="price-label">Suscripción Anual</span>
                 <span class="price-value">100 EUR<span style="font-size:0.75rem; color:#64748b; font-weight:500;">/ 1 año</span></span>
             </div>
 
@@ -855,11 +855,11 @@
 
     <nav class="cyber-bottom-navbar">
         <button class="nav-item-btn active-nav" onclick="switchTabApp('sec-proyectos', this)"><i data-lucide="home"></i><span>Hub</span></button>
-        <button class="nav-item-btn" onclick="switchTabApp('sec-red-sitios', this)"><i data-lucide="globe"></i><span>Red Sitios</span></button>
+        <button class="nav-item-btn" onclick="switchTabApp('sec-red-sitios', this)"><i data-lucide="globe"></i><span>Red</span></button>
         <button class="nav-item-btn" onclick="switchTabApp('sec-tienda', this)"><i data-lucide="gift"></i><span>Tienda</span></button>
         <button class="nav-item-btn" onclick="switchTabApp('sec-colaborar', this)"><i data-lucide="handshake"></i><span>Colaborar</span></button>
-        <button class="nav-item-btn" onclick="switchTabApp('sec-promocion', this)"><i data-lucide="rocket"></i><span>Promoción</span></button>
-        <button class="nav-item-btn" onclick="switchTabApp('sec-anunciate', this)"><i data-lucide="megaphone"></i><span>Anuncios</span></button>
+        <button class="nav-item-btn" onclick="switchTabApp('sec-promocion', this)"><i data-lucide="rocket"></i><span>Promo</span></button>
+        <button class="nav-item-btn" onclick="switchTabApp('sec-anunciate', this)"><i data-lucide="megaphone"></i><span>Ads</span></button>
     </nav>
 
     <script>
