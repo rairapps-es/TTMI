@@ -167,7 +167,7 @@
         .sponsor-panel-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
         /* =========================================================================
-           📅 METADATOS DE CICLO DE VIDA (Ocultos inicialmente en el Hub)
+           📅 METADATOS DE CICLO DE LIFE
            ========================================================================= */
         .timeline-box {
             display: none; grid-template-columns: repeat(3, 1fr); gap: 6px;
@@ -183,7 +183,7 @@
         .status-prod .timeline-node:nth-child(3) .timeline-node-title { color: var(--neon-green); }
 
         /* =========================================================================
-           📊 MONITOR METRICS PANEL & FILTERS
+           📊 MONITOR METRICS PANEL
            ========================================================================= */
         .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
         .metric-box { background: var(--card-bg); border: 1px solid var(--border-neon); border-radius: 10px; padding: 12px 6px; text-align: center; position: relative; }
@@ -197,16 +197,80 @@
         .box-dev .metric-value { text-shadow: 0 0 8px var(--neon-green); }
         .metric-label { font-size: 0.62rem; color: #94a3b8; text-transform: uppercase; font-weight: 800; margin-top: 4px; }
 
-        .filter-section { margin-bottom: 22px; display: flex; flex-direction: column; gap: 12px; }
-        .tabs-container { display: flex; background: rgba(255, 255, 255, 0.03); border-radius: 8px; padding: 4px; border: 1px solid rgba(255, 255, 255, 0.06); }
-        .tab-btn { flex: 1; background: none; border: none; padding: 10px 4px; color: #64748b; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; cursor: pointer; border-radius: 6px; transition: all 0.2s; }
-        .tab-btn.active { background: var(--neon-cyan); color: #020205; box-shadow: 0 0 12px rgba(0, 240, 255, 0.35); }
-        .subfilters-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
-        .subfilter-pill { background: rgba(8, 8, 15, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); color: var(--text-main); padding: 6px 14px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; white-space: nowrap; cursor: pointer; transition: all 0.2s; }
-        .subfilter-pill.active { border-color: var(--neon-magenta); color: var(--neon-magenta); box-shadow: 0 0 8px rgba(255, 0, 127, 0.25); }
+        /* =========================================================================
+           ⚡ ULTRA COMPACT INLINE FILTER SYSTEM WITH FLOATING DROP-DOWNS
+           ========================================================================= */
+        .compact-filter-row {
+            margin-bottom: 22px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            position: relative;
+            z-index: 950;
+        }
+        .selector-floating-wrapper {
+            position: relative;
+        }
+        .selector-trigger-btn {
+            width: 100%;
+            background: rgba(10, 10, 20, 0.9);
+            border: 1px solid var(--neon-cyan);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: #fff;
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.1);
+            transition: all 0.2s;
+        }
+        .selector-trigger-btn.active-focus {
+            border-color: var(--neon-magenta);
+            box-shadow: 0 0 12px rgba(255, 0, 127, 0.25);
+        }
+        .selector-floating-menu {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            width: 100%;
+            background: rgba(6, 6, 12, 0.98);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.8);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1000;
+        }
+        .selector-floating-menu.show {
+            display: flex;
+        }
+        .floating-option-item {
+            padding: 10px 14px;
+            font-size: 0.72rem;
+            color: #cbd5e1;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.15s;
+        }
+        .floating-option-item:hover {
+            background: rgba(0, 240, 255, 0.08);
+            color: var(--neon-cyan);
+        }
+        .floating-option-item.selected {
+            background: rgba(255, 0, 127, 0.1);
+            color: var(--neon-magenta);
+            font-weight: 900;
+        }
 
         /* =========================================================================
-           🎴 CYBER CARDS SYSTEM (DISEÑO ANCHO COMPLETO EXCLUSIVO)
+           🎴 CYBER CARDS SYSTEM (TITULO SOBREPUESTO EN BANNER)
            ========================================================================= */
         .cards-container { display: flex; flex-direction: column; gap: 18px; }
         .cyber-card { background: var(--card-bg); border: 1px solid var(--border-neon); border-radius: 14px; padding: 16px; position: relative; box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6); overflow: hidden; }
@@ -214,15 +278,52 @@
         .cyber-card.status-beta { --border-neon: rgba(255, 170, 0, 0.25); }
         .cyber-card.status-prod { --border-neon: rgba(57, 255, 20, 0.25); }
         
-        /* Modificación Estructural Solicitada */
-        .card-header-topline { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; width: 100%; }
-        .card-title { font-size: 1.25rem; font-weight: 900; color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.1); }
-        .card-view-counter { background: rgba(0, 240, 255, 0.08); border: 1px solid rgba(0, 240, 255, 0.3); padding: 4px 8px; border-radius: 6px; display: flex; flex-direction: column; align-items: flex-end; }
-        .view-counter-number { font-size: 0.9rem; font-weight: 900; color: var(--neon-cyan); font-family: monospace; text-shadow: 0 0 6px var(--neon-cyan); }
-        .view-counter-label { font-size: 0.52rem; font-weight: 800; color: #94a3b8; letter-spacing: 0.5px; }
-
-        .card-full-banner { width: calc(100% + 32px); height: 160px; object-fit: cover; margin-left: -16px; margin-right: -16px; margin-bottom: 14px; border-top: 1px solid var(--border-neon); border-bottom: 1px solid var(--border-neon); }
+        /* Contenedor relativo para alojar banner y título sobrepuesto */
+        .card-visual-header {
+            position: relative;
+            width: calc(100% + 32px);
+            margin-left: -16px;
+            margin-right: -16px;
+            margin-bottom: 14px;
+            height: 160px;
+            overflow: hidden;
+            border-top: 1px solid var(--border-neon);
+            border-bottom: 1px solid var(--border-neon);
+        }
+        .card-full-banner { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            display: block;
+        }
+        .card-overlay-scrim {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 70%;
+            background: linear-gradient(to top, rgba(2, 2, 5, 0.95) 15%, rgba(2, 2, 5, 0.4) 65%, transparent 100%);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding: 0 16px 12px 16px;
+        }
+        .card-title { font-size: 1.2rem; font-weight: 900; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.8); line-height: 1.2; padding-right: 8px; }
         
+        .card-view-counter { 
+            background: rgba(2, 2, 5, 0.85); 
+            border: 1px solid rgba(0, 240, 255, 0.4); 
+            padding: 3px 8px; 
+            border-radius: 6px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: flex-end;
+            backdrop-filter: blur(4px);
+            flex-shrink: 0;
+        }
+        .view-counter-number { font-size: 0.85rem; font-weight: 900; color: var(--neon-cyan); font-family: monospace; text-shadow: 0 0 6px var(--neon-cyan); }
+        .view-counter-label { font-size: 0.5rem; font-weight: 800; color: #94a3b8; letter-spacing: 0.5px; }
+
         .badge-tg-type { font-size: 0.58rem; font-weight: 900; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
         .badge-tg-type.canal { background: rgba(0, 240, 255, 0.15); color: var(--neon-cyan); border: 1px solid var(--neon-cyan); }
         .badge-tg-type.grupo { background: rgba(157, 78, 221, 0.15); color: var(--neon-purple); border: 1px solid var(--neon-purple); }
@@ -241,7 +342,7 @@
         .more-text { font-size: 0.78rem; color: #cbd5e1; background: rgba(0,0,0,0.3); border-radius: 8px; padding: 10px; border-left: 2px solid var(--neon-cyan); margin-bottom: 8px; }
 
         /* =========================================================================
-           🔋 BARRA DE ENERGÍA DE SPONSORS
+           🔋 BARRA DE ENERGÍA DE SPONSORS & SALDO RESEADO
            ========================================================================= */
         .energy-section { margin-bottom: 4px; position: relative; }
         .energy-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; font-size: 0.68rem; font-weight: 700; color: #94a3b8; }
@@ -278,6 +379,16 @@
         .balance-info { display: flex; flex-direction: column; }
         .balance-label { font-size: 0.6rem; color: #a5b4fc; text-transform: uppercase; font-weight: 800; }
         .balance-value { font-size: 1.15rem; font-weight: 900; color: #fff; font-family: monospace; text-shadow: 0 0 8px var(--neon-purple); }
+        
+        /* Subcontenedor de Energía Reiniciable */
+        .energy-live-box {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+        }
+        .energy-live-label { font-size: 0.55rem; color: var(--neon-green); text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px; }
+        .energy-live-value { font-size: 1rem; font-weight: 900; color: #fff; font-family: monospace; text-shadow: 0 0 6px var(--neon-green); }
+
         .reward-grid-compact { display: grid; grid-template-columns: 1fr; gap: 14px; }
         .reward-mini-card {
             background: rgba(10, 10, 18, 0.9); border: 1px solid rgba(255, 215, 0, 0.12);
@@ -497,17 +608,28 @@
             <div class="metric-box box-dev"><span class="metric-value" id="count-dev">0</span><span class="metric-label">En Producción</span></div>
         </div>
 
-        <div class="filter-section">
-            <div class="tabs-container">
-                <button class="tab-btn active" onclick="setGlobalTab('all')">Todo</button>
-                <button class="tab-btn" onclick="setGlobalTab('proyecto')">Proyectos</button>
-                <button class="tab-btn" onclick="setGlobalTab('bot_puro')">Bots Propios</button>
+        <div class="compact-filter-row">
+            <div class="selector-floating-wrapper">
+                <div class="selector-trigger-btn" id="trigger-cluster" onclick="toggleFloatingMenu('menu-cluster', 'trigger-cluster')">
+                    <span id="txt-cluster">Todo</span> <i data-lucide="chevron-down" style="width:12px; height:12px;"></i>
+                </div>
+                <div class="selector-floating-menu" id="menu-cluster">
+                    <div class="floating-option-item selected" onclick="selectClusterOption('all', 'Todo')">Todo</div>
+                    <div class="floating-option-item" onclick="selectClusterOption('proyecto', 'Proyectos')">Proyectos</div>
+                    <div class="floating-option-item" onclick="selectClusterOption('bot_puro', 'Bots Propios')">Bots Propios</div>
+                </div>
             </div>
-            <div class="subfilters-scroll">
-                <span class="subfilter-pill active" id="pill-todos" onclick="setSubFilter('Todos')">Todos</span>
-                <span class="subfilter-pill" id="pill-ma" onclick="setSubFilter('Mini-App')">Mini-Apps</span>
-                <span class="subfilter-pill" id="pill-bot" onclick="setSubFilter('Bot')">Bots</span>
-                <span class="subfilter-pill" id="pill-web" onclick="setSubFilter('Web')">Web</span>
+
+            <div class="selector-floating-wrapper">
+                <div class="selector-trigger-btn" id="trigger-tag" onclick="toggleFloatingMenu('menu-tag', 'trigger-tag')">
+                    <span id="txt-tag">Todos</span> <i data-lucide="chevron-down" style="width:12px; height:12px;"></i>
+                </div>
+                <div class="selector-floating-menu" id="menu-tag">
+                    <div class="floating-option-item selected" onclick="selectTagOption('Todos', 'Todos')">Todos</div>
+                    <div class="floating-option-item" onclick="selectTagOption('Mini-App', 'Mini-Apps')">Mini-Apps</div>
+                    <div class="floating-option-item" onclick="selectTagOption('Bot', 'Bots')">Bots</div>
+                    <div class="floating-option-item" onclick="selectTagOption('Web', 'Web')">Web</div>
+                </div>
             </div>
         </div>
 
@@ -536,11 +658,19 @@
     </section>
 
     <section id="sec-colaborar" class="app-section">
-        <div class="info-panel-box" style="border-color: var(--neon-purple);">
+        <div class="info-panel-box" style="border-color: var(--neon-purple); margin-bottom: 16px;">
             <h3 class="info-panel-title" style="color: var(--neon-purple);"><i data-lucide="users"></i>Alianzas Estratégicas</h3>
             <p class="info-panel-desc">Buscamos desarrolladores, creadores de contenido y administradores de comunidades que busquen escalar soluciones tecnológicas cruzadas en Telegram. Obtén accesos premium dedicados y monetiza tus integraciones de forma conjunta.</p>
             <button class="btn-cyber btn-premium-sell" style="width: 100%;" onclick="ejecutarMensajePrivado('Hola, me interesa conocer los términos de colaboración estratégica.')">
                 <i data-lucide="send"></i>Enviar Mensaje de Propuesta
+            </button>
+        </div>
+
+        <div class="info-panel-box" style="border-color: var(--neon-gold);">
+            <h3 class="info-panel-title" style="color: var(--neon-gold);"><i data-lucide="crown"></i>Creadores & Influencers</h3>
+            <p class="info-panel-desc">Si tienes una audiencia activa o generas contenido, únete a nuestra red. Ofrecemos <strong>beneficios premium absolutos exclusivos</strong> y la infraestructura completa para realizar <strong>sorteos masivos automatizados</strong> para fidelizar a tu comunidad a cambio de difusión estratégica mutua.</p>
+            <button class="btn-cyber btn-sponsor" style="width: 100%; border-color: var(--neon-gold); background: rgba(255, 215, 0, 0.05);" onclick="ejecutarMensajePrivado('Hola! Soy creador/influencer y me interesa colaborar a cambio de beneficios premium y sorteos para mi comunidad.')">
+                <i data-lucide="message-square"></i>Contactar por Telegram Privado
             </button>
         </div>
     </section>
@@ -583,12 +713,15 @@
                 <span class="balance-label">Tu Saldo Acumulado</span>
                 <span class="balance-value" id="shop-user-points">2,450 Puntos</span>
             </div>
-            <i data-lucide="sparkles" style="color: var(--neon-purple); width:20px; height:20px;"></i>
+            <div class="energy-live-box">
+                <span class="energy-live-label">Energía de Hoy</span>
+                <span class="energy-live-value" id="shop-user-energy">0 ENERGÍA</span>
+            </div>
         </div>
         
         <div class="info-panel-box" style="border-color: var(--neon-gold); padding: 14px; margin-bottom:16px;">
             <p class="info-panel-desc" style="font-size: 0.75rem; margin: 0; line-height: 1.4;">
-                <strong>Regla de Oro:</strong> Cada nodo de usuario cuenta con un límite máximo estricto de <strong>1 reclamo diario</strong> en todo el catálogo de la tienda.
+                <strong>Regla de Oro:</strong> Cada nodo de usuario cuenta con un límite máximo estricto de <strong>1 reclamo diario</strong> en todo el catálogo de la tienda. El saldo de puntos acumulado se mantiene, pero el contador de bonificación de clics de Energía se reinicia automáticamente cada 00:00 local.
             </p>
         </div>
 
@@ -693,7 +826,6 @@
             }
         ];
 
-        // 🛍️ RECOMPENSAS DE LA TIENDA DE TRÁFICO
         const TIENDA_RECOMPENSAS_DATA = [
             { id: "rw_1", titulo: "Cambia la imagen del canal @ListaGolden", estrellas: 150, puntos: 500, disponibles: 3 },
             { id: "rw_2", titulo: "Cambia el nombre del canal @ListaGolden", estrellas: 250, puntos: 800, disponibles: 2 },
@@ -704,7 +836,6 @@
             { id: "rw_7", titulo: "Post patrocinado en el canal @ListaGolden", estrellas: 400, puntos: 1200, disponibles: 4 }
         ];
 
-        // 📝 LISTADO DE MENSAJES DE GUÍA (ADMIN CENTRAL DE TELEGRAM)
         const MENSAJES_GUIA = [
             { texto: "Mundo Bots está que arde, descubre uno de mis proyectos favoritos y los beneficios para miembros de pago.", targetId: "p_mundobots" },
             { texto: "Cleopatra ai lo está petando, genera texto e imágenes de alta calidad de forma autónoma.", targetId: "p_cleopatra" },
@@ -712,7 +843,6 @@
             { texto: "Asegura la moderación automática en tus comunidades instalando Cynthia Golden Bot sin coste.", targetId: "b_cynthia" }
         ];
 
-        // 🎲 BASE DE DATOS FICTICIA PARA EL FOMO DE COMPRAS VIP ABAJO IZQUIERDA
         const HISTORIAL_COMPRAS_FOMO = [
             { pais: "🇪🇸", nombre: "MARTA DE ESPAÑA", extras: 2, targetId: "p_mundobots" },
             { pais: "🇦🇷", nombre: "GONZALO DE ARGENTINA", extras: 5, targetId: "p_cleopatra" },
@@ -741,16 +871,107 @@
         let cachedUserId = "548930211";
         let cachedUserTag = "@Cargando";
         let cachedUserFirstName = "Usuario Matrix";
-        let userSimulatedPoints = 1250; 
         
+        // 💾 LOGÍSTICA DE PUNTOS DE SALDO Y ENERGÍA REINICIABLE
+        let userSimulatedPoints = parseInt(localStorage.getItem('user_simulated_points')) || 1250; 
+        let userEnergyPoints = parseInt(localStorage.getItem('user_energy_points')) || 0;
+
         let actualGuideIndex = 0;
         let countdownInterval;
         let autoCloseTimeout;
         let guideAlertTimeout;
 
-        // Variables para soporte de Swipe/Deslizamiento
         let touchStartX = 0;
         let touchEndX = 0;
+
+        // =========================================================================
+        // 🔋 ENGINE: RESET DIARIO DE ENERGÍA A LAS 00:00 (HORA LOCAL DEL USUARIO)
+        // =========================================================================
+        function comprobarYResetearEnergiaDiaria() {
+            const hoyLocal = new Date().toLocaleDateString();
+            const ultimoReset = localStorage.getItem('last_energy_reset_date');
+            
+            if (ultimoReset !== hoyLocal) {
+                userEnergyPoints = 0;
+                localStorage.setItem('user_energy_points', userEnergyPoints);
+                localStorage.setItem('last_energy_reset_date', hoyLocal);
+                actualizarVisualizacionSaldos();
+            }
+        }
+
+        function actualizarVisualizacionSaldos() {
+            localStorage.setItem('user_simulated_points', userSimulatedPoints);
+            localStorage.setItem('user_energy_points', userEnergyPoints);
+            
+            const nodePoints = document.getElementById("shop-user-points");
+            if (nodePoints) nodePoints.innerText = `${userSimulatedPoints.toLocaleString()} Puntos`;
+            
+            const nodeEnergy = document.getElementById("shop-user-energy");
+            if (nodeEnergy) nodeEnergy.innerText = `${userEnergyPoints} ENERGÍA`;
+        }
+
+        // Ejecución al presionar botones URL en las tarjetas
+        function registrarInteraccionUrlPuntos() {
+            comprobarYResetearEnergiaDiaria(); // Valida desfases antes de operar
+            userSimulatedPoints += 1;
+            userEnergyPoints += 1;
+            actualizarVisualizacionSaldos();
+            showToast("¡+1 Punto de Saldo y +1 de Energía Inyectados!");
+        }
+
+        // =========================================================================
+        // ⚡ ENGINE: CONTROLADORES DE LOS SELECTORES INTERNOS FLOTANTES
+        // =========================================================================
+        function toggleFloatingMenu(menuId, triggerId) {
+            const menu = document.getElementById(menuId);
+            const trigger = document.getElementById(triggerId);
+            const isVisible = menu.classList.contains("show");
+            
+            // Cerrar todos primero
+            document.querySelectorAll(".selector-floating-menu").forEach(m => m.classList.remove("show"));
+            document.querySelectorAll(".selector-trigger-btn").forEach(t => t.classList.remove("active-focus"));
+            
+            if (!isVisible) {
+                menu.classList.add("show");
+                trigger.classList.add("active-focus");
+            }
+        }
+
+        function selectClusterOption(val, textoLabel) {
+            activeTab = val;
+            document.getElementById("txt-cluster").innerText = textoLabel;
+            
+            const menu = document.getElementById("menu-cluster");
+            menu.querySelectorAll(".floating-option-item").forEach(item => {
+                item.classList.toggle("selected", item.innerText === textoLabel);
+            });
+            
+            menu.classList.remove("show");
+            document.getElementById("trigger-cluster").classList.remove("active-focus");
+            filtrarYRenderizar();
+        }
+
+        function selectTagOption(val, textoLabel) {
+            activeSubFilter = val;
+            document.getElementById("txt-tag").innerText = textoLabel;
+            
+            const menu = document.getElementById("menu-tag");
+            menu.querySelectorAll(".floating-option-item").forEach(item => {
+                item.classList.toggle("selected", item.innerText === textoLabel);
+            });
+            
+            menu.classList.remove("show");
+            document.getElementById("trigger-tag").classList.remove("active-focus");
+            filtrarYRenderizar();
+        }
+
+        // Cerrar menús al hacer clic fuera
+        document.addEventListener("click", (e) => {
+            if (!e.target.closest(".selector-floating-wrapper")) {
+                document.querySelectorAll(".selector-floating-menu").forEach(m => m.classList.remove("show"));
+                document.querySelectorAll(".selector-trigger-btn").forEach(t => t.classList.remove("active-focus"));
+            }
+        });
 
         // =========================================================================
         // 📊 SISTEMA ALGORÍTMICO SIMULADO: CONTADOR REALISTA VISTAS HOY
@@ -803,7 +1024,6 @@
                 irAlProyectoTarjeta(currentItem.targetId);
             };
 
-            // Reset de estilos por deslizamiento previo
             alertElement.style.transition = "none";
             alertElement.style.transform = "translateX(-50%) translateY(-30px)";
             alertElement.style.opacity = "0";
@@ -853,7 +1073,6 @@
         function handleSwipeGesture() {
             const el = document.getElementById("top-guide-container");
             if (touchEndX < touchStartX - 60) {
-                // Swipe a la izquierda detectado con éxito
                 el.style.transition = "all 0.2s ease-in";
                 el.style.transform = "translateX(-150%) translateY(0)";
                 el.style.opacity = "0";
@@ -862,7 +1081,6 @@
                     clearTimeout(guideAlertTimeout);
                 }, 200);
             } else {
-                // Retornar a la posición de equilibrio central original
                 el.style.transform = "translateX(-50%) translateY(0)";
             }
         }
@@ -1001,6 +1219,12 @@
             return 'var(--neon-green)';
         }
 
+        // Wrapper centralizado de redirección URL intermitente
+        function ejecutarAccionBotonUrl(url) {
+            registrarInteraccionUrlPuntos();
+            abrirEnlace(url);
+        }
+
         function construirTarjeta(item) {
             const pct = Math.min(Math.round((item.sponsors_count / item.sponsors_target) * 100) || 0, 100);
             const plasmaColor = obtenerColorPlasma(pct);
@@ -1009,15 +1233,16 @@
             return `
                 <div class="cyber-card status-${item.estado_codigo}" id="card-${item.id}">
                     
-                    <div class="card-header-topline">
-                        <h2 class="card-title">${item.titulo}</h2>
-                        <div class="card-view-counter">
-                            <span class="view-counter-number" id="counter-val-${item.id}">${vistasLocales}</span>
-                            <span class="view-counter-label">VISTAS HOY</span>
+                    <div class="card-visual-header">
+                        <img src="${item.imagen}" class="card-full-banner" alt="${item.titulo}">
+                        <div class="card-overlay-scrim">
+                            <h2 class="card-title">${item.titulo}</h2>
+                            <div class="card-view-counter">
+                                <span class="view-counter-number" id="counter-val-${item.id}">${vistasLocales}</span>
+                                <span class="view-counter-label">VISTAS HOY</span>
+                            </div>
                         </div>
                     </div>
-
-                    <img src="${item.imagen}" class="card-full-banner" alt="${item.titulo}">
 
                     <div class="badge-row">
                         <span class="tag-status">${item.estado}</span>
@@ -1043,12 +1268,12 @@
                             
                             <div class="more-text">${item.descripcion_larga}</div>
                             <div class="links-row">
-                                ${item.url_bot ? `<button class="btn-cyber btn-open-bot" onclick="abrirEnlace('${item.url_bot}')"><i data-lucide="bot"></i>Abrir Bot</button>` : ''}
-                                ${item.url_miniapp ? `<button class="btn-cyber btn-open-ma" onclick="abrirEnlace('${item.url_miniapp}')"><i data-lucide="cpu"></i>Ver Mini App</button>` : ''}
+                                ${item.url_bot ? `<button class="btn-cyber btn-open-bot" onclick="ejecutarAccionBotonUrl('${item.url_bot}')"><i data-lucide="bot"></i>Abrir Bot</button>` : ''}
+                                ${item.url_miniapp ? `<button class="btn-cyber btn-open-ma" onclick="ejecutarAccionBotonUrl('${item.url_miniapp}')"><i data-lucide="cpu"></i>Ver Mini App</button>` : ''}
                             </div>
                             <div class="monetization-row">
-                                ${item.sponsor ? `<button class="btn-cyber btn-sponsor" onclick="abrirEnlace('${item.url_sponsor}')"><i data-lucide="heart-handshake"></i>Apoyar</button>` : ''}
-                                ${item.venderpremium ? `<button class="btn-cyber btn-premium-sell" onclick="abrirEnlace('${item.url_premium}')"><i data-lucide="crown"></i>Comprar VIP</button>` : ''}
+                                ${item.sponsor ? `<button class="btn-cyber btn-sponsor" onclick="ejecutarAccionBotonUrl('${item.url_sponsor}')"><i data-lucide="heart-handshake"></i>Apoyar</button>` : ''}
+                                ${item.venderpremium ? `<button class="btn-cyber btn-premium-sell" onclick="ejecutarAccionBotonUrl('${item.url_premium}')"><i data-lucide="crown"></i>Comprar VIP</button>` : ''}
                             </div>
                         </div>
                     </div>
@@ -1061,7 +1286,7 @@
         // =========================================================================
         function renderizarTiendaRecompensas() {
             const container = document.getElementById("shop-rewards-wrapper");
-            document.getElementById("shop-user-points").innerText = `${userSimulatedPoints.toLocaleString()} Puntos`;
+            actualizarVisualizacionSaldos();
 
             const hoy = new Date().toISOString().slice(0, 10);
             const ultimaFechaReclamo = localStorage.getItem("last_reward_claim_date");
@@ -1112,15 +1337,13 @@
                 return;
             }
 
-            // Aplicar descuento inmediato en saldo simulado
             userSimulatedPoints -= costePuntos;
             const hoy = new Date().toISOString().slice(0, 10);
             localStorage.setItem("last_reward_claim_date", hoy);
 
-            // Refrescar paneles de UI inmediatamente
+            actualizarVisualizacionSaldos();
             renderizarTiendaRecompensas();
 
-            // Construcción y codificación de los datos extraídos para el chat privado de Telegram
             const mensajePremio = `🎁 SOLICITUD DE RECOMPENSA COLCETIVA\n` +
                                   `──────────────────────\n` +
                                   `🏆 Premio: ${titulo}\n` +
@@ -1167,7 +1390,7 @@
                             <img src="${ch.imagen}" style="width:50px; height:50px; border-radius:10px; object-fit:cover;" alt="${ch.titulo}">
                             <div class="card-title-block">
                                 <div class="card-title-row">
-                                    <h3 class="card-title" style="margin:0; font-size:1.1rem;">${ch.titulo}</h3>
+                                    <h3 class="card-title" style="margin:0; font-size:1.1rem; position:static; text-shadow:none;">${ch.titulo}</h3>
                                     <span class="badge-tg-type ${badgeClass}">${ch.tipo}</span>
                                 </div>
                             </div>
@@ -1298,7 +1521,6 @@
             if (window.Telegram?.WebApp?.initDataUnsafe?.user?.username) {
                 userTag = `@${window.Telegram.WebApp.initDataUnsafe.user.username}`;
             }
-            // CORREGIDO: Se han añadido las comillas invertidas (backticks) obligatorias para evitar el error de sintaxis crítico.
             const textRaw = encodeURIComponent(`[CORE MATRIX] ${motivo}\nCuenta ID: ${cachedUserId}\nUsuario: ${userTag}`);
             abrirEnlace(`https://t.me/Airdayz?start=${textRaw}`);
         }
@@ -1315,9 +1537,6 @@
             }, 3500);
         }
 
-        function setGlobalTab(t) { activeTab = t; document.querySelectorAll(".tab-btn").forEach((b, i) => b.classList.toggle("active", (t==='all'&&i===0)||(t==='proyecto'&&i===1)||(t==='bot_puro'&&i===2))); filtrarYRenderizar(); }
-        function setSubFilter(s) { activeSubFilter = s; document.querySelectorAll(".subfilter-pill").forEach(p => p.classList.toggle("active", p.id===('pill-'+(s==='Todos'?'todos':s==='Mini-App'?'ma':s==='Bot'?'bot':'web')))); filtrarYRenderizar(); }
-        
         function toggleReadMore(id) { 
             const card = document.getElementById(`card-${id}`); 
             if(card) card.classList.toggle("is-expanded");
@@ -1334,6 +1553,11 @@
             }
             inicializarContadorVistas();
             syncTelegramUser();
+            
+            // Comprobar y setear balance energético inicial
+            comprobarYResetearEnergiaDiaria();
+            actualizarVisualizacionSaldos();
+            
             filtrarYRenderizar();
             renderizarRedSitios();
             renderizarReviews();
@@ -1342,14 +1566,11 @@
             checkAndShowAd();
             configurarSoporteSwipeAlerta();
 
-            // Sincronización final y forzada de los componentes Lucide estáticos iniciales
             if(window.lucide) window.lucide.createIcons();
 
-            // Loop de mensajes de guía arriba centro: duración exacta 10s en pantalla, intervalo cada 60s
             lanzarSiguienteMensajeGuia();
             setInterval(lanzarSiguienteMensajeGuia, 60000);
 
-            // Loop de alertas flotantes VIP abajo izquierda
             setInterval(dispararAlertaCompraFomoIzquierda, 22000);
             setTimeout(dispararAlertaCompraFomoIzquierda, 4000);
         });
