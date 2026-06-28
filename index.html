@@ -697,11 +697,11 @@
                 <span class="subfilter-pill" id="pill-net-herramientas" onclick="setNetworkFilter('Herramientas')">Herramientas</span>
                 <span class="subfilter-pill" id="pill-net-finanzas" onclick="setNetworkFilter('Ia')">IA</span>
                 <span class="subfilter-pill" id="pill-net-cripto" onclick="setNetworkFilter('Cripto')">Cripto</span>
-                <span class="subfilter-pill" id="pill-net-apuestas" onclick="setNetworkFilter('Apuestas')">Apuestas</span>
-                <span class="subfilter-pill" id="pill-net-comunidad" onclick="setNetworkFilter('Comunidad')">Comunidad</span>
-                <span class="subfilter-pill" id="pill-net-comunidad" onclick="setNetworkFilter('Humor')">Humor</span>
-                <span class="subfilter-pill" id="pill-net-comunidad" onclick="setNetworkFilter('Deportes')">Deportes</span>
+                <span class="subfilter-pill" id="pill-net-apuestas" onclick="setNetworkFilter('Deportes')">Deportes</span>
                 <span class="subfilter-pill" id="pill-net-comunidad" onclick="setNetworkFilter('Motor')">Motor</span>
+                <span class="subfilter-pill" id="pill-net-comunidad" onclick="setNetworkFilter('Humor')">Humor</span>
+                <span class="subfilter-pill" id="pill-net-comunidad" onclick="setNetworkFilter('Noticias')">Noticias</span>
+                <span class="subfilter-pill" id="pill-net-comunidad" onclick="setNetworkFilter('Emprendimiento')">Emprendimiento</span>
          
             </div>
         </div>
@@ -929,11 +929,11 @@
 
         const HISTORIAL_COMPRAS_FOMO = [
             { pais: "🇪🇸", nombre: "Marta de España", extras: 2, targetId: "p_mundobots" },
-            { pais: "🇦🇷", nombre: "Gonzalo de Argentina", extras: 5, targetId: "p_cleopatra" },
+            { pais: "🇦🇷", nombre: "Maxi de Argentina", extras: 5, targetId: "p_cleopatra" },
             { pais: "🇲🇽", nombre: "Javier de México", extras: 1, targetId: "p_goldenhub" },
             { pais: "🇨🇱", nombre: "Claudia de Chile", extras: 3, targetId: "p_mundobots" },
-            { pais: "🇪🇸", nombre: "Carlos de España", extras: 2, targetId: "p_mundobots" },
-            { pais: "🇦🇷", nombre: "Maxi de Argentina", extras: 5, targetId: "p_cleopatra" },
+            { pais: "🇵🇦", nombre: "Fernando de Panamá", extras: 2, targetId: "p_mundobots" },
+            { pais: "🇨🇴", nombre: "Robert de Colombia", extras: 5, targetId: "p_cleopatra" },
             { pais: "🇺🇾", nombre: "Fede de Uruguay", extras: 1, targetId: "p_goldenhub" },
             { pais: "🇨🇺", nombre: "Ernesto de Cuba", extras: 3, targetId: "p_mundobots" }
         ];
@@ -990,6 +990,7 @@
         const REVIEWS_DATA = [
             { autor: "Rover Dimas", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100", stars: 5, text: "La automatización de la botonera Lista Golden duplicó la tracción orgánica de mi comunidad en semanas.", web: "https://t.me/ejemplo" },
             { autor: "Elena Domínguez", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100", stars: 5, text: "El soporte VIP y Cleopatra AI estructuran mi flujo comercial diario dentro de Telegram de manera sólida.", web: "https://t.me/ejemplo" },
+            { autor: "Andrés Palacios", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100", stars: 5, text: "Gracias", web: "https://t.me/ejemplo" },
             { autor: "Marco Díaz", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100", stars: 4, text: "Excelente arquitectura en la Mini App. Limpia, ágil y con datos precisos en tiempo real.", web: "https://t.me/ejemplo" }
         ];
 
@@ -1472,12 +1473,12 @@
                     <div class="badge-row">
                         <span class="tag-status">${item.estado}</span>
                         ${item.etiquetas.map(t => `<span class="tag-type">${t}</span>`).join('')}
-                        <span class="card-multiplier-pill">Multiplicardor x${multiplierActual}</span>
+                        <span class="card-multiplier-pill">⚡ Multiplicardor x${multiplierActual}</span>
                     </div>
                     <p class="card-desc">${item.descripcion}</p>
                     
                     <div class="energy-section">
-                        <div class="energy-meta"><span>Patrocinadores</span><span class="energy-count-node">${item.sponsors_count}/${item.sponsors_target} <span style="color:${plasmaColor}">${pct}%</span></span></div>
+                        <div class="energy-meta"><span>⭐ Patrocinadores</span><span class="energy-count-node">${item.sponsors_count}/${item.sponsors_target}👥 <span style="color:${plasmaColor}">${pct}%🔋</span></span></div>
                         <div class="energy-container-bar"><div class="energy-plasma-fill" style="width: ${pct}%; background-color: ${plasmaColor}; box-shadow: 0 0 10px ${plasmaColor};"></div></div>
                         <div class="energy-tooltip"><i data-lucide="activity" style="width:12px; height:12px; display:inline; vertical-align:middle;"></i> Lista Golden necesita al menos ${item.sponsors_target} sponsors para la estabilidad total de este proyecto.</div>
                     </div>
@@ -1487,9 +1488,9 @@
                         
                         <div class="sliding-drawer" id="drawer-${item.id}">
                             <div class="timeline-box">
-                                <div class="timeline-node"><span class="timeline-node-title">Creación</span><span class="timeline-node-date">${item.creacion}</span></div>
-                                <div class="timeline-node"><span class="timeline-node-title">Beta</span><span class="timeline-node-date">${item.alpha_date}</span></div>
-                                <div class="timeline-node"><span class="timeline-node-title">En Producción</span><span class="timeline-node-date">${item.beta_date}</span></div>
+                                <div class="timeline-node"><span class="timeline-node-title">🌱 Creación</span><span class="timeline-node-date">${item.creacion}</span></div>
+                                <div class="timeline-node"><span class="timeline-node-title">🧪 Beta</span><span class="timeline-node-date">${item.alpha_date}</span></div>
+                                <div class="timeline-node"><span class="timeline-node-title">🚀 En Producción</span><span class="timeline-node-date">${item.beta_date}</span></div>
                             </div>
                             
                             <div class="more-text">${item.descripcion_larga}</div>
@@ -1618,14 +1619,15 @@
                                 <div class="card-title-row">
                                     <h3 class="card-title" style="margin:0; font-size:1.1rem; position:static; text-shadow:none;">${ch.titulo}</h3>
                                     <span class="badge-tg-type ${badgeClass}">${ch.tipo}</span>
+                                    <span style="font-size:0.6rem; color:var(--neon-gold); background:rgba(255,215,0,0.05); padding:2px 6px; border-radius:4px; font-weight:800; text-transform:uppercase;">${ch.categoria}</span>
+                            <span style="font-size:0.65rem; color:var(--neon-cyan); background:rgba(0,240,255,0.1); padding:2px 6px; border-radius:4px; font-weight:800;">${ch.suscriptores} 👥 Subs</span>
+                       
                                 </div>
                             </div>
                         </div>
                         
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; margin-top: 4px;">
-                            <span style="font-size:0.6rem; color:var(--neon-gold); background:rgba(255,215,0,0.05); padding:2px 6px; border-radius:4px; font-weight:800; text-transform:uppercase;">${ch.categoria}</span>
-                            <span style="font-size:0.65rem; color:var(--neon-cyan); background:rgba(0,240,255,0.1); padding:2px 6px; border-radius:4px; font-weight:800;">${ch.suscriptores} 👥 Subs</span>
-                        </div>
+                             </div>
                         
                         <p class="card-desc">${ch.desc}</p>
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
