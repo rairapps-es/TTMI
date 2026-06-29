@@ -1131,6 +1131,15 @@
             showToast(`¡+${incrementoPuntosBase} Puntos (x${nivelActualMultiplier}) y +1 Energía Inyectados!${mensajeExtra}`);
         }
 
+        // Asegúrate de que la Web App de Telegram esté lista
+window.Telegram.WebApp.ready();
+
+// Opción A: Forzar un color personalizado en Hexadecimal (ej. un dorado o negro premium)
+window.Telegram.WebApp.setHeaderColor('#FFD700'); // Reemplaza por tu color corporativo
+
+// Opción B: Forzar el fondo de la app (puedes pasarle 'bg_color' o 'secondary_bg_color')
+window.Telegram.WebApp.setHeaderColor('bg_color'); 
+
         // =========================================================================
         // ⚡ ENGINE: CONTROLADORES DE LOS SELECTORES INTERNOS FLOTANTES
         // =========================================================================
