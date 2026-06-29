@@ -747,6 +747,23 @@
                 <button class="btn-cyber btn-sponsor" onclick="abrirEnlace('https://t.me/ListaG_Bot')"><i data-lucide="layers"></i>Botonera por Categorías</button>
             </div>
         </div>
+
+        <div class="seccion-vinculacion" style="padding: 20px; font-family: sans-serif;">
+    <h2 style="color: #FFD700;">Promoción Manual GoldenHub</h2>
+    <p>Sigue estos sencillos pasos para activar la promoción en tu canal:</p>
+    
+    <ol style="line-height: 1.6; margin-bottom: 25px;">
+        <li>Haz clic en el botón de abajo <b>"Seleccionar mi canal"</b>.</li>
+        <li>Elige el canal donde quieres la promoción de la lista que te mostrará Telegram.</li>
+        <li>Acepta los permisos pre-configurados para añadir a <b>@Airdayz</b> como administrador.</li>
+        <li>Regresa aquí y presiona el botón dorado inferior para enviarme el aviso.</li>
+    </ol>
+
+    <button onclick="iniciarVinculacionCanal()" style="background-color: #222; color: #fff; border: 1px solid #FFD700; padding: 12px 20px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold;">
+        🔗 Seleccionar mi canal y buscar @Airdayz
+    </button>
+</div>
+
     </section>
 
     <section id="sec-anunciate" class="app-section">
@@ -1700,6 +1717,45 @@ window.Telegram.WebApp.setHeaderColor('bg_color');
             if(window.lucide) window.lucide.createIcons();
         }
 
+        function iniciarVinculacionCanal() {
+    const tg = window.Telegram.WebApp;
+    
+    // 1. Hacemos vibrar el teléfono para confirmar la acción
+    tg.HapticFeedback.impactOccurred('medium');
+
+    // 2. Tu nombre de usuario en Telegram (sin el @)
+    const tuUsuario = "Airdayz"; 
+    
+    // 3. Los permisos pre-solicitados (separados por comas)
+    // post_messages = Publicar, edit_messages = Editar, delete_messages = Eliminar
+    const permisos = "post_messages,edit_messages,delete_messages";
+    
+    // Enlace mágico que le ahorra tener que buscar tu @ manualmente en la configuración
+    const enlaceMagico = `https://t.me/${tuUsuario}?startchannel=true&admin=${permisos}`;
+    
+    // 4. Abrimos el enlace nativamente en Telegram
+    tg.openTelegramLink(enlaceMagico);
+    
+    // 5. Activamos el botón principal nativo abajo para que te avise cuando termine
+    configurarBotonAvisoManual();
+}
+
+function configurarBotonAvisoManual() {
+    const tg = window.Telegram.WebApp;
+    
+    tg.MainButton.setText("¡YA TE AGREGUÉ! AVISAR A AIRDAYZ");
+    tg.MainButton.setColor("#FFD700"); // Dorado GoldenHub
+    tg.MainButton.textColor = "#000000";
+    tg.MainButton.show();
+
+    tg.MainButton.onClick(function() {
+        tg.HapticFeedback.notificationOccurred('success');
+        
+        // Mensaje pre-formateado para tu chat privado
+        const mensajeTexto = encodeURIComponent("¡Hola! Ya te añadí como administrador con los permisos requeridos.\n\n• Mi Canal es: ");
+        tg.openTelegramLink(`https://t.me/Airdayz?text=${mensajeTexto}`);
+    });
+}
         // =========================================================================
         // 🛠 LÓGICA DE CELEBRACIÓN ÉPICA INTERNA CON CONFETTI DINÁMICO
         // =========================================================================
