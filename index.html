@@ -748,19 +748,22 @@
             </div>
         </div>
 
-        <div class="seccion-vinculacion" style="padding: 20px; font-family: sans-serif;">
-    <h2 style="color: #FFD700;">Promoción Manual GoldenHub</h2>
-    <p>Sigue estos sencillos pasos para activar la promoción en tu canal:</p>
+        <div class="seccion-promocion" style="padding: 20px; font-family: sans-serif; background: #121212; color: #fff; border-radius: 12px; max-width: 400px; margin: auto; border: 1px solid #222;">
+    <h2 style="color: #FFD700; margin-top: 0;">Promoción en Red Golden</h2>
     
-    <ol style="line-height: 1.6; margin-bottom: 25px;">
-        <li>Haz clic en el botón de abajo <b>"Seleccionar mi canal"</b>.</li>
-        <li>Elige el canal donde quieres la promoción de la lista que te mostrará Telegram.</li>
-        <li>Acepta los permisos pre-configurados para añadir a <b>@Airdayz</b> como administrador.</li>
-        <li>Regresa aquí y presiona el botón dorado inferior para enviarme el aviso.</li>
+    <ol style="line-height: 1.6; padding-left: 20px; margin-bottom: 20px; color: #ccc;">
+        <li>Toca el botón azul para elegir tu canal y otorgar los permisos a <b>@Airdayz</b>.</li>
+        <li>Regresa aquí y toca el botón dorado para enviarme el aviso de verificación.</li>
     </ol>
 
-    <button onclick="iniciarVinculacionCanal()" style="background-color: #222; color: #fff; border: 1px solid #FFD700; padding: 12px 20px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold;">
-        🔗 Seleccionar mi canal y buscar @Airdayz
+    <!-- PASO 1: Botón para ir a Telegram a añadirte -->
+    <button id="btnSeleccionarCanal" onclick="redirigirAñadirAdmin()" style="background-color: #2481cc; color: #fff; border: none; padding: 14px 20px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; font-size: 15px; margin-bottom: 12px; transition: 0.3s;">
+        🔗 1. Seleccionar mi canal y añadir a @Airdayz
+    </button>
+
+    <!-- PASO 2: Botón Dorado de Verificación (Oculto por defecto con display: none) -->
+    <button id="btnAvisarRair" onclick="enviarAvisoChatPrivado()" style="display: none; background-color: #FFD700; color: #000; border: none; padding: 14px 20px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; font-size: 15px; transition: 0.3s; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);">
+        ✅ 2. ¡Ya te agregué! Avisar para verificar
     </button>
 </div>
 
@@ -1717,27 +1720,53 @@ window.Telegram.WebApp.setHeaderColor('bg_color');
             if(window.lucide) window.lucide.createIcons();
         }
 
-        function iniciarVinculacionCanal() {
+        // Función para el Paso 1: Redirigir al selector de canales de Telegram
+// Función para el Paso 1: Redirigir al selector de canales de Telegram
+function redirigirAñadirAdmin() {
     const tg = window.Telegram.WebApp;
     
-    // 1. Hacemos vibrar el teléfono para confirmar la acción
-    tg.HapticFeedback.impactOccurred('medium');
+    // Vibración sutil de respuesta física en el móvil
+    if (tg && tg.HapticFeedback) {
+        tg.HapticFeedback.impactOccurred('medium');
+    }
 
-    // 2. Tu nombre de usuario en Telegram (sin el @)
     const tuUsuario = "Airdayz"; 
-    
-    // 3. Los permisos pre-solicitados (separados por comas)
-    // post_messages = Publicar, edit_messages = Editar, delete_messages = Eliminar
     const permisos = "post_messages,edit_messages,delete_messages";
-    
-    // Enlace mágico que le ahorra tener que buscar tu @ manualmente en la configuración
     const enlaceMagico = `https://t.me/${tuUsuario}?startchannel=true&admin=${permisos}`;
     
-    // 4. Abrimos el enlace nativamente en Telegram
-    tg.openTelegramLink(enlaceMagico);
+    // Abrimos el enlace nativo
+    if (tg && tg.openTelegramLink) {
+        tg.openTelegramLink(enlaceMagico);
+    } else {
+        // Por si lo estás probando temporalmente en un navegador de PC normal
+        window.open(enlaceMagico, '_blank');
+    }
+
+    // El truco visual: Hacemos aparecer el botón dorado en tu página
+    document.getElementById("btnAvisarRair").style.display = "block";
     
-    // 5. Activamos el botón principal nativo abajo para que te avise cuando termine
-    configurarBotonAvisoManual();
+    // Opcional: Cambiamos el texto del primer botón para que sepan que ya avanzaron
+    document.getElementById("btnSeleccionarCanal").innerText = "🔄 Re-seleccionar canal";
+    document.getElementById("btnSeleccionarCanal").style.backgroundColor = "#444";
+}
+
+// Función para el Paso 2: El botón dorado que te manda el mensaje directo
+function enviarAvisoChatPrivado() {
+    const tg = window.Telegram.WebApp;
+
+    if (tg && tg.HapticFeedback) {
+        tg.HapticFeedback.notificationOccurred('success');
+    }
+
+    // Mensaje pre-formateado listo para que solo le den a "Enviar"
+    const mensajeTexto = encodeURIComponent("¡Hola! Ya te añadí como administrador con los permisos requeridos en mi canal.\n\n• Mi Canal es: ");
+    const enlaceChat = `https://t.me/Airdayz?text=${mensajeTexto}`;
+
+    if (tg && tg.openTelegramLink) {
+        tg.openTelegramLink(enlaceChat);
+    } else {
+        window.open(enlaceChat, '_blank');
+    }
 }
 
 function configurarBotonAvisoManual() {
